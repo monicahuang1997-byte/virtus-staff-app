@@ -136,6 +136,7 @@
   .summary-person-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;font-size:14px;}
   .summary-person-head > span:first-child{display:flex;align-items:center;gap:8px;}
   .summary-total{color:var(--accent2);font-weight:800;white-space:nowrap;}
+  .ferie-chip{display:inline-block;background:oklch(0.93 0.05 150);color:oklch(0.35 0.1 150);border-radius:100px;padding:3px 9px;font-size:11px;font-weight:700;margin:0 4px 4px 0;}
   .summary-dot{width:10px;height:10px;border-radius:50%;flex:none;}
   .summary-shift{font-size:12.5px;color:var(--text-muted);padding:5px 0 0 18px;}
   .center-loading{text-align:center;color:var(--text-muted2);padding:50px 0;font-size:14px;}
@@ -170,6 +171,7 @@
   var SCREEN_TITLES = {
     turni: 'Turni', checklist: 'Checklist', bacheca: 'Bacheca', vendita: 'Vendita e prodotto',
     scorte: 'Scorte', manutenzione: 'Manutenzione', documenti: 'Documenti', cruscotto: 'Cruscotto',
+    oreferie: 'Ore e ferie',
   };
 
   function esc(s){
@@ -428,6 +430,10 @@
       tiles += '<button class="home-tile" onclick="App.goto(\'cruscotto\')">' +
         '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
     }
+    if (isManager(state.user)) {
+      tiles += '<button class="home-tile" onclick="App.goto(\'oreferie\')">' +
+        '<div class="home-tile-icon">🕒</div><div class="home-tile-label">Ore e ferie</div></button>';
+    }
     var roleLabel = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
     return '<div>' +
       '<div class="greeting">Ciao, ' + esc(state.user.nome) + '</div>' +
@@ -446,6 +452,7 @@
   function renderTurni(){
     ensureLoaded('Turni');
     ensureLoaded('Utenti');
+    ensureLoaded('Ferie');
     var rows = state.cache.Turni;
     var users = state.cache.Utenti;
     var manager = isManager(state.user);
@@ -815,6 +822,73 @@
       '<div class="lb-card">' + (rowsHtml || '<div class="empty-hint">Ancora nessun dato.</div>') + '</div></div>';
   }
 
+  // ---------- Ore e ferie (Responsabile/Titolare) ----------
+  function renderOreFerie(){
+    ensureLoaded('Turni');
+    ensureLoaded('Ferie');
+    ensureLoaded('Utenti');
+    var turni = state.cache.Turni, ferie = state.cache.Ferie, users = state.cache.Utenti;
+    if (!turni || !ferie || !users) return '<div>' + renderTopBar('Ore e ferie') + '<div class="center-loading">Calcolo i dati…</div></div>';
+
+    function weekKeyFor(dataStr){ return fmtDate(mondayOf(parseDate(dataStr))); }
+    var weeks = {};
+    function ensureWeek(key){
+      if (!weeks[key]) weeks[key] = { hours: {}, ferieMap: {} };
+      return weeks[key];
+    }
+    turni.forEach(function(r){
+      var dataStr = String(val(r,'data')).slice(0,10);
+      var nome = String(val(r,'dipendente')||'').trim();
+      var oi = parseHourStr(val(r,'ora inizio'));
+      var of = parseHourStr(val(r,'ora fine'));
+      if (!dataStr || !nome || oi == null || of == null || of <= oi) return;
+      var w = ensureWeek(weekKeyFor(dataStr));
+      w.hours[nome] = (w.hours[nome] || 0) + (of - oi);
+    });
+    ferie.forEach(function(r){
+      var dataStr = String(val(r,'data')).slice(0,10);
+      var nome = String(val(r,'dipendente')||'').trim();
+      if (!dataStr || !nome) return;
+      var idField = findKey(r,'ID');
+      var id = r[idField];
+      var w = ensureWeek(weekKeyFor(dataStr));
+      if (!w.ferieMap[nome]) w.ferieMap[nome] = [];
+      w.ferieMap[nome].push({ data: dataStr, id: id });
+    });
+
+    var weekKeys = Object.keys(weeks).sort(function(a,b){ return b.localeCompare(a); });
+    var body;
+    if (!weekKeys.length) body = '<div class="empty-state">Ancora nessun dato su turni o ferie.</div>';
+    else {
+      body = weekKeys.map(function(key){
+        var w = weeks[key];
+        var monday = parseDate(key);
+        var sunday = addDays(monday, 6);
+        var label = fmtDayLabel(monday) + ' – ' + fmtDayLabel(sunday);
+        var names = {};
+        Object.keys(w.hours).forEach(function(n){ names[n] = true; });
+        Object.keys(w.ferieMap).forEach(function(n){ names[n] = true; });
+        var nameList = Object.keys(names).sort(function(a,b){ return a.localeCompare(b); });
+        var rowsHtml = nameList.map(function(nome){
+          var ore = w.hours[nome] || 0;
+          var c = personColor(nome);
+          var ferieChips = (w.ferieMap[nome] || []).map(function(f){
+            var d = parseDate(f.data);
+            var lbl = GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate();
+            var click = f.id ? ' onclick="App.removeFerie(\'' + esc(f.id) + '\',\'' + esc(nome).replace(/'/g,"\\'") + '\',\'' + lbl + '\')"' : '';
+            return '<span class="ferie-chip"' + click + '>🌴 ' + lbl + '</span>';
+          }).join('');
+          return '<div class="summary-person"><div class="summary-person-head"><span><span class="summary-dot" style="background:' + c.bg + ';"></span>' + esc(nome) + '</span>' +
+            '<span class="summary-total">' + ore + ' h</span></div>' +
+            (ferieChips ? '<div style="margin-top:8px;">' + ferieChips + '</div>' : '') +
+            '</div>';
+        }).join('');
+        return '<div class="section-label">' + esc(label) + '</div>' + rowsHtml;
+      }).join('');
+    }
+    return '<div>' + renderTopBar('Ore e ferie') + body + '</div>';
+  }
+
   // ---------- Screen dispatch ----------
   function renderScreen(){
     switch (state.screen) {
@@ -826,6 +900,7 @@
       case 'manutenzione': return renderManutenzione();
       case 'documenti': return renderDocumenti();
       case 'cruscotto': return renderCruscotto();
+      case 'oreferie': return renderOreFerie();
       default: return renderHome();
     }
   }
@@ -893,6 +968,31 @@
     var c = state.pendingCell;
     if (!c || !c.extraName || !c.extraName.trim()) { alert('Scrivi il nome della persona'); return; }
     assignTurno(c.extraName.trim());
+  }
+  function toggleFerieMode(){
+    if (!state.pendingCell) return;
+    state.pendingCell.ferieMode = !state.pendingCell.ferieMode;
+    render();
+  }
+  function assignFerie(nome){
+    var c = state.pendingCell;
+    if (!c || state.busy) return;
+    var dup = (state.cache.Ferie || []).some(function(r){
+      return String(val(r,'data')).slice(0,10) === c.data &&
+        String(val(r,'dipendente')||'').trim().toLowerCase() === nome.trim().toLowerCase();
+    });
+    if (dup) { alert(nome + ' ha già le ferie segnate in questo giorno.'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Ferie', data: { Data: c.data, Dipendente: nome, Note: '', 'Creato da': state.user.nome } })
+      .then(function(){ state.busy = false; closeModal(); reload('Ferie'); });
+  }
+  function removeFerie(id, nome, lbl){
+    if (!confirm('Togliere la ferie di ' + nome + ' (' + lbl + ')?')) return;
+    apiPost({ sheet: 'Ferie', action: 'delete', id: id }).then(function(res){
+      if (res && res.error) { alert(res.error); return; }
+      reload('Ferie');
+    });
   }
   function removeTurno(id, nome, oraInizio, oraFine){
     if (!confirm('Togliere il turno di ' + nome + ' (' + oraInizio + '–' + oraFine + ')?')) return;
@@ -1065,6 +1165,12 @@
         (c.showExtra ? '<div class="field" style="margin-top:10px;"><div class="field-label">Nome della persona</div>' +
           '<input value="' + esc(c.extraName||'') + '" oninput="App.updatePendingExtraName(this.value)" placeholder="Es. Sara (sostituzione)"/></div>' +
           '<button class="btn-submit" onclick="App.assignExtra()">Assegna</button>' : '');
+      var ferieListHtml = utenti.map(function(u){
+        var n = val(u,'nome');
+        return '<button class="login-btn" onclick="App.assignFerie(\'' + esc(n).replace(/'/g,"\\'") + '\')"><span>' + esc(n) + '</span></button>';
+      }).join('');
+      var ferieHtml = '<button class="login-btn" onclick="App.toggleFerieMode()"><span>🌴 Segna ferie per questo giorno</span></button>' +
+        (c.ferieMode ? '<div class="login-list" style="margin-top:6px;">' + (ferieListHtml || '<div class="empty-hint">Nessun nominativo trovato.</div>') + '</div>' : '');
       return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
         '<div class="sheet-header"><div class="sheet-title">Aggiungi turno</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
         '<div class="field-label">Giorno</div><div class="chips-wrap">' + giornoChips + '</div>' +
@@ -1073,6 +1179,7 @@
         '<div class="field-label">Dipendente</div>' +
         '<div class="login-list" style="margin-top:6px;">' + (listHtml || '<div class="empty-hint">Nessun nominativo trovato.</div>') + '</div>' +
         extraHtml +
+        ferieHtml +
         '</div></div>';
     }
 
@@ -1131,6 +1238,7 @@
     shiftWeek: shiftWeek, openTurnoCell: openTurnoCell, openTurnoAdd: openTurnoAdd, setPendingData: setPendingData,
     setPendingOraInizio: setPendingOraInizio, setPendingOraFine: setPendingOraFine, assignTurno: assignTurno, removeTurno: removeTurno,
     togglePendingExtra: togglePendingExtra, updatePendingExtraName: updatePendingExtraName, assignExtra: assignExtra,
+    toggleFerieMode: toggleFerieMode, assignFerie: assignFerie, removeFerie: removeFerie,
     openModal: openModal, closeModal: closeModal, updateForm: updateForm, selectFormChip: selectFormChip, submitModal: submitModal,
     openVoice: openVoice, closeVoice: closeVoice, toggleListening: toggleListening,
     updateVoiceInputText: updateVoiceInputText, runVoiceInputText: runVoiceInputText,
