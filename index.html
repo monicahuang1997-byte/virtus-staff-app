@@ -835,6 +835,7 @@
   // ---------- Scorte (raggruppate per fornitore) ----------
   function renderScorte(){
     ensureLoaded('Scorte');
+    ensureLoaded('Catalogo_Fornitori');
     var rows = state.cache.Scorte;
     var f = state.filters.scorteFilter;
     var chips = ['aperte','risolte','tutte'].map(function(k){
@@ -1154,6 +1155,41 @@
       reload('Ferie');
     });
   }
+  function toggleCatalogoProdotto(prodotto){
+    var f = state.form;
+    if (!f.selezionati) f.selezionati = [];
+    var idx = f.selezionati.indexOf(prodotto);
+    if (idx === -1) f.selezionati.push(prodotto);
+    else f.selezionati.splice(idx, 1);
+    render();
+  }
+  function submitScorteMultipli(){
+    if (state.busy) return;
+    var f = state.form;
+    var selezionati = (f.selezionati || []).slice();
+    if (!selezionati.length) return;
+    var existing = (state.cache.Scorte || []).filter(function(r){
+      var stato = String(val(r,'stato')||'').toLowerCase();
+      return stato.indexOf('risolt') !== 0 && String(val(r,'fornitore')||'').trim().toLowerCase() === f.fornitore.toLowerCase();
+    }).map(function(r){ return String(val(r,'prodotto')||'').trim().toLowerCase(); });
+    var daInviare = selezionati.filter(function(p){ return existing.indexOf(p.trim().toLowerCase()) === -1; });
+    var saltati = selezionati.length - daInviare.length;
+    if (!daInviare.length) { alert('Tutti i prodotti selezionati sono già da ordinare.'); return; }
+    state.busy = true;
+    render();
+    var chain = Promise.resolve();
+    daInviare.forEach(function(p){
+      chain = chain.then(function(){
+        return apiPost({ sheet: 'Scorte', data: { Data: todayStr(), 'Segnalato da': state.user.nome, Fornitore: f.fornitore, Prodotto: p, Note: '', Stato: 'da ordinare' } });
+      });
+    });
+    chain.then(function(){
+      state.busy = false;
+      closeModal();
+      reload('Scorte');
+      if (saltati > 0) { setTimeout(function(){ alert(saltati + ' prodott' + (saltati===1?'o era':'i erano') + ' già da ordinare e non ' + (saltati===1?'è stato':'sono stati') + ' ripetuto.'); }, 300); }
+    });
+  }
   function removeTurno(id, nome, oraInizio, oraFine){
     if (!confirm('Togliere il turno di ' + nome + ' (' + oraInizio + '–' + oraFine + ')?')) return;
     apiPost({ sheet: 'Turni', action: 'delete', id: id }).then(function(res){
@@ -1166,7 +1202,7 @@
   var MODAL_TITLES = { bacheca: 'Nuovo avviso', scorta: 'Segnala scorta', guasto: 'Segnala guasto', nota_turno: 'La tua nota sui turni', set_pin: 'Imposta il tuo PIN' };
 
   function openModal(type){
-    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '', nota: '', pin: '', pinConfirm: '', destinatario: '' };
+    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '', nota: '', pin: '', pinConfirm: '', destinatario: '', selezionati: [] };
     state.activeModal = type;
     render();
   }
@@ -1358,6 +1394,13 @@
         '</div></div>';
     }
 
+    if (type === 'scorta' && state.busy) {
+      return '<div class="overlay"><div class="sheet">' +
+        '<div class="sheet-header"><div class="sheet-title">Segnala scorta</div></div>' +
+        '<div class="center-loading">Salvataggio in corso…</div>' +
+        '</div></div>';
+    }
+
     var body = '';
 
     if (type === 'bacheca') {
@@ -1377,9 +1420,23 @@
           return '<button class="chip-select ' + (f.priorita===p?'chip-select-active':'') + '" onclick="App.selectFormChip(\'priorita\',\'' + p + '\')">' + esc(p) + '</button>';
         }).join('') + '</div>';
     } else if (type === 'scorta') {
+      var catalogo = (state.cache.Catalogo_Fornitori || []).filter(function(c){
+        return String(val(c,'fornitore')||'').trim().toLowerCase() === f.fornitore.toLowerCase();
+      });
+      var selezionati = f.selezionati || [];
+      var catalogoHtml = catalogo.length ? '<div class="field-label">Prodotti abituali (tocca per selezionare, anche più di uno)</div><div class="chips-wrap">' +
+        catalogo.map(function(c){
+          var p = val(c,'prodotto');
+          var attivo = selezionati.indexOf(p) !== -1;
+          return '<button class="chip-select ' + (attivo?'chip-select-active':'') + '" onclick="App.toggleCatalogoProdotto(\'' + esc(p).replace(/'/g,"\\'") + '\')">' + esc(p) + '</button>';
+        }).join('') + '</div>' +
+        (selezionati.length ? '<button class="btn-submit" style="margin-top:10px;" onclick="App.submitScorteMultipli()">Invia ' + selezionati.length + ' prodott' + (selezionati.length===1?'o':'i') + '</button>' : '')
+        : '';
       body = '<div class="field-label">Fornitore</div><div class="chips-wrap">' + FORNITORI.map(function(fo){
           return '<button class="chip-select ' + (f.fornitore===fo?'chip-select-active':'') + '" onclick="App.selectFormChip(\'fornitore\',\'' + fo + '\')">' + esc(fo) + '</button>';
         }).join('') + '</div>' +
+        catalogoHtml +
+        '<div class="field-label" style="margin-top:16px;">Oppure scrivi un prodotto non in lista</div>' +
         '<div class="field"><div class="field-label">Prodotto</div><input value="' + esc(f.prodotto) + '" oninput="App.updateForm(\'prodotto\', this.value)" placeholder="Es. Prosecco"/></div>' +
         '<div class="field"><div class="field-label">Note (opzionale)</div><input value="' + esc(f.note) + '" oninput="App.updateForm(\'note\', this.value)"/></div>';
     } else if (type === 'guasto') {
@@ -1457,6 +1514,7 @@
     setPendingOraInizio: setPendingOraInizio, setPendingOraFine: setPendingOraFine, assignTurno: assignTurno, removeTurno: removeTurno,
     togglePendingExtra: togglePendingExtra, updatePendingExtraName: updatePendingExtraName, assignExtra: assignExtra,
     openFerieRange: openFerieRange, updateFerieRange: updateFerieRange, assignFerieRange: assignFerieRange, removeFerie: removeFerie,
+    toggleCatalogoProdotto: toggleCatalogoProdotto, submitScorteMultipli: submitScorteMultipli,
     openModal: openModal, closeModal: closeModal, updateForm: updateForm, selectFormChip: selectFormChip, submitModal: submitModal,
     openVoice: openVoice, closeVoice: closeVoice, toggleListening: toggleListening,
     updateVoiceInputText: updateVoiceInputText, runVoiceInputText: runVoiceInputText,
