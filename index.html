@@ -11,6 +11,13 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(function(OneSignal) {
+    OneSignal.init({ appId: "71900c39-f127-4a4d-9635-d0aaefc73706" });
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -451,6 +458,20 @@
     state.usersLoaded = false;
     render();
   }
+  function enableNotifiche(){
+    if (!window.OneSignalDeferred) { alert('Le notifiche non sono disponibili in questo browser.'); return; }
+    window.OneSignalDeferred.push(function(OneSignal){
+      OneSignal.Notifications.requestPermission().then(function(){
+        if (OneSignal.Notifications.permission) {
+          alert('Notifiche attivate su questo telefono.');
+        } else {
+          alert('Notifiche non attivate. Puoi riprovare o controllare le impostazioni del telefono/browser.');
+        }
+      }).catch(function(){
+        alert('Non è stato possibile attivare le notifiche su questo dispositivo.');
+      });
+    });
+  }
   function selectLoginUser(nome){
     var row = state.users.find(function(u){ return val(u,'nome') === nome; });
     var pin = row ? String(val(row,'pin')||'').trim() : '';
@@ -539,6 +560,7 @@
       '<div class="greeting">Ciao, ' + esc(state.user.nome) + '</div>' +
       '<div class="role-badge">' + roleLabel + '</div>' +
       '<div class="home-grid">' + tiles + '</div>' +
+      '<button class="logout-link" onclick="App.enableNotifiche()">🔔 Attiva notifiche</button>' +
       '<button class="logout-link" onclick="App.openModal(\'set_pin\')">Imposta il tuo PIN</button>' +
       '<button class="logout-link" onclick="App.logout()">Cambia utente</button>' +
     '</div>';
@@ -1513,7 +1535,7 @@
   }
 
   window.App = {
-    login: login, logout: logout, goto: goto, goHome: goHome, setFilter: setFilter,
+    login: login, logout: logout, goto: goto, goHome: goHome, setFilter: setFilter, enableNotifiche: enableNotifiche,
     selectLoginUser: selectLoginUser, updateLoginPin: updateLoginPin, updateLoginPinConfirm: updateLoginPinConfirm,
     cancelLoginPin: cancelLoginPin, submitLoginPin: submitLoginPin, skipLoginPinSetup: skipLoginPinSetup, submitLoginPinSetup: submitLoginPinSetup,
     checkItem: checkItem, resolveIssue: resolveIssue, removeBacheca: removeBacheca, removeNotaTurno: removeNotaTurno,
