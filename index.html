@@ -459,16 +459,23 @@
     render();
   }
   function enableNotifiche(){
-    if (!window.OneSignalDeferred) { alert('Le notifiche non sono disponibili in questo browser.'); return; }
+    if (!window.OneSignalDeferred) { alert('OneSignal non si è caricato in questa pagina (controlla la connessione e riprova).'); return; }
     window.OneSignalDeferred.push(function(OneSignal){
-      OneSignal.Notifications.requestPermission().then(function(){
-        if (OneSignal.Notifications.permission) {
-          alert('Notifiche attivate su questo telefono.');
-        } else {
-          alert('Notifiche non attivate. Puoi riprovare o controllare le impostazioni del telefono/browser.');
+      try {
+        var supported = OneSignal.Notifications.isPushSupported();
+        if (!supported) {
+          alert('Questo dispositivo/browser non supporta le notifiche push.\n\nSu iPhone serve iOS 16.4 o più recente E l\'app aggiunta alla schermata Home (non basta aprirla da Safari).');
+          return;
         }
-      }).catch(function(){
-        alert('Non è stato possibile attivare le notifiche su questo dispositivo.');
+      } catch (e) {
+        alert('Errore nel controllo compatibilità: ' + (e && e.message ? e.message : e));
+      }
+      OneSignal.Notifications.requestPermission().then(function(){
+        setTimeout(function(){
+          alert(OneSignal.Notifications.permission ? 'Notifiche attivate su questo telefono.' : 'Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
+        }, 300);
+      }).catch(function(err){
+        alert('Errore attivazione notifiche: ' + (err && err.message ? err.message : err));
       });
     });
   }
