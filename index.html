@@ -343,6 +343,7 @@
     pendingCell: null,
     busy: false,
     voiceOpen: false, voiceListening: false, voiceTranscript: '', voiceFeedback: '', voiceInputText: '',
+    pendingLoginUser: null, loginPinInput: '', loginPinConfirm: '', loginPinError: '', loginSetupMode: false,
   };
   var recognition = null;
 
@@ -390,11 +391,33 @@
       }
       return '<div class="login-wrap"><div class="center-loading">Carico l\'elenco dello staff…</div></div>';
     }
+    if (state.pendingLoginUser && state.loginSetupMode) {
+      var setupNome = state.pendingLoginUser;
+      if (state.busy) return '<div class="login-wrap"><div class="center-loading">Salvataggio…</div></div>';
+      return '<div class="login-wrap"><div class="login-title">Ciao, ' + esc(setupNome) + '</div>' +
+        '<div class="login-sub">Vuoi impostare un PIN per proteggere il tuo accesso? (facoltativo)</div>' +
+        '<div class="field" style="margin-top:24px;"><input type="password" inputmode="numeric" maxlength="8" autofocus value="' + esc(state.loginPinInput||'') + '" oninput="App.updateLoginPin(this.value)" placeholder="Nuovo PIN"/></div>' +
+        '<div class="field"><input type="password" inputmode="numeric" maxlength="8" value="' + esc(state.loginPinConfirm||'') + '" oninput="App.updateLoginPinConfirm(this.value)" placeholder="Ripeti PIN"/></div>' +
+        (state.loginPinError ? '<div class="voice-feedback" style="background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);border-color:oklch(0.7 0.14 30);">' + esc(state.loginPinError) + '</div>' : '') +
+        '<button class="btn-submit" onclick="App.submitLoginPinSetup()">Imposta ed entra</button>' +
+        '<button class="logout-link" onclick="App.skipLoginPinSetup()">Salta per ora, entra senza PIN</button>' +
+        '</div>';
+    }
+    if (state.pendingLoginUser) {
+      var pendingNome = state.pendingLoginUser;
+      return '<div class="login-wrap"><div class="login-title">Ciao, ' + esc(pendingNome) + '</div>' +
+        '<div class="login-sub">Inserisci il tuo PIN</div>' +
+        '<div class="field" style="margin-top:24px;"><input type="password" inputmode="numeric" maxlength="8" autofocus value="' + esc(state.loginPinInput||'') + '" oninput="App.updateLoginPin(this.value)" onkeydown="if(event.key===\'Enter\') App.submitLoginPin()" placeholder="PIN"/></div>' +
+        (state.loginPinError ? '<div class="voice-feedback" style="background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);border-color:oklch(0.7 0.14 30);">' + esc(state.loginPinError) + '</div>' : '') +
+        '<button class="btn-submit" onclick="App.submitLoginPin()">Entra</button>' +
+        '<button class="logout-link" onclick="App.cancelLoginPin()">Torna indietro</button>' +
+        '</div>';
+    }
     var items = state.users.map(function(u){
       var nome = val(u, 'nome');
       var ruolo = normRole(val(u, 'ruolo'));
       var label = ruolo === 'titolare' ? 'Titolare' : ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
-      return '<button class="login-btn" onclick="App.login(\'' + esc(nome).replace(/'/g,"\\'") + '\')">' +
+      return '<button class="login-btn" onclick="App.selectLoginUser(\'' + esc(nome).replace(/'/g,"\\'") + '\')">' +
         '<span>' + esc(nome) + '</span><span class="login-role">' + label + '</span></button>';
     }).join('');
     return '<div class="login-wrap"><div class="login-title">Virtus Tennis</div>' +
@@ -407,6 +430,11 @@
     var ruolo = row ? normRole(val(row,'ruolo')) : 'dipendente';
     state.user = { nome: nome, ruolo: ruolo };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user)); } catch(e){}
+    state.pendingLoginUser = null;
+    state.loginPinInput = '';
+    state.loginPinConfirm = '';
+    state.loginPinError = '';
+    state.loginSetupMode = false;
     state.screen = 'home';
     render();
   }
@@ -416,6 +444,66 @@
     state.screen = 'login';
     state.usersLoaded = false;
     render();
+  }
+  function selectLoginUser(nome){
+    var row = state.users.find(function(u){ return val(u,'nome') === nome; });
+    var pin = row ? String(val(row,'pin')||'').trim() : '';
+    state.pendingLoginUser = nome;
+    state.loginPinInput = '';
+    state.loginPinConfirm = '';
+    state.loginPinError = '';
+    state.loginSetupMode = !pin;
+    render();
+  }
+  function updateLoginPin(value){ state.loginPinInput = value; }
+  function updateLoginPinConfirm(value){ state.loginPinConfirm = value; }
+  function cancelLoginPin(){
+    state.pendingLoginUser = null;
+    state.loginPinInput = '';
+    state.loginPinConfirm = '';
+    state.loginPinError = '';
+    state.loginSetupMode = false;
+    render();
+  }
+  function skipLoginPinSetup(){
+    login(state.pendingLoginUser);
+  }
+  function submitLoginPinSetup(){
+    var nome = state.pendingLoginUser;
+    if (!nome || state.busy) return;
+    var pin = String(state.loginPinInput||'').trim();
+    var confirmPin = String(state.loginPinConfirm||'').trim();
+    if (!pin) { state.loginPinError = 'Scrivi un PIN.'; render(); return; }
+    if (pin !== confirmPin) {
+      state.loginPinError = 'I due PIN non coincidono.';
+      state.loginPinInput = ''; state.loginPinConfirm = '';
+      render();
+      return;
+    }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: nome, data: { Pin: pin } })
+      .then(function(res){
+        state.busy = false;
+        if (res && res.error) { alert(res.error); render(); return; }
+        var row = state.users.find(function(u){ return val(u,'nome') === nome; });
+        if (row) { row[findKey(row,'pin')] = pin; }
+        login(nome);
+      });
+  }
+  function submitLoginPin(){
+    var nome = state.pendingLoginUser;
+    if (!nome) return;
+    var row = state.users.find(function(u){ return val(u,'nome') === nome; });
+    var correctPin = row ? String(val(row,'pin')||'').trim() : '';
+    var entered = String(state.loginPinInput||'').trim();
+    if (entered && entered === correctPin) {
+      login(nome);
+    } else {
+      state.loginPinError = 'PIN errato, riprova.';
+      state.loginPinInput = '';
+      render();
+    }
   }
 
   // ---------- Home ----------
@@ -442,6 +530,7 @@
       '<div class="greeting">Ciao, ' + esc(state.user.nome) + '</div>' +
       '<div class="role-badge">' + roleLabel + '</div>' +
       '<div class="home-grid">' + tiles + '</div>' +
+      '<button class="logout-link" onclick="App.openModal(\'set_pin\')">Imposta il tuo PIN</button>' +
       '<button class="logout-link" onclick="App.logout()">Cambia utente</button>' +
     '</div>';
   }
@@ -1068,10 +1157,10 @@
   }
 
   // ---------- Modals ----------
-  var MODAL_TITLES = { bacheca: 'Nuovo avviso', scorta: 'Segnala scorta', guasto: 'Segnala guasto', nota_turno: 'La tua nota sui turni' };
+  var MODAL_TITLES = { bacheca: 'Nuovo avviso', scorta: 'Segnala scorta', guasto: 'Segnala guasto', nota_turno: 'La tua nota sui turni', set_pin: 'Imposta il tuo PIN' };
 
   function openModal(type){
-    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '', nota: '' };
+    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '', nota: '', pin: '', pinConfirm: '' };
     state.activeModal = type;
     render();
   }
@@ -1285,6 +1374,10 @@
     } else if (type === 'nota_turno') {
       body = '<div class="field"><div class="field-label">Scrivi la tua nota o preferenza (es. "Preferisco i turni di mattina", "Non posso il sabato sera")</div>' +
         '<textarea oninput="App.updateForm(\'nota\', this.value)">' + esc(f.nota) + '</textarea></div>';
+    } else if (type === 'set_pin') {
+      body = '<div class="field-label" style="margin-bottom:14px;">Il PIN serve solo a evitare che qualcuno tocchi per sbaglio il tuo nome su un telefono condiviso — non è una sicurezza vera.</div>' +
+        '<div class="field"><div class="field-label">Nuovo PIN (solo numeri)</div><input type="password" inputmode="numeric" value="' + esc(f.pin) + '" oninput="App.updateForm(\'pin\', this.value)"/></div>' +
+        '<div class="field"><div class="field-label">Ripeti il PIN</div><input type="password" inputmode="numeric" value="' + esc(f.pinConfirm) + '" oninput="App.updateForm(\'pinConfirm\', this.value)"/></div>';
     }
 
     return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
@@ -1317,6 +1410,17 @@
       state.busy = true;
       apiPost({ sheet: 'Note_Turni', data: { Dipendente: state.user.nome, Nota: f.nota.trim(), 'Creato da': state.user.nome } })
         .then(function(){ state.busy = false; closeModal(); reload('Note_Turni'); });
+    } else if (type === 'set_pin') {
+      if (!f.pin || !f.pin.trim()) { alert('Scrivi un PIN'); return; }
+      if (f.pin.trim() !== f.pinConfirm.trim()) { alert('I due PIN non coincidono'); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: state.user.nome, data: { Pin: f.pin.trim() } })
+        .then(function(res){
+          state.busy = false;
+          if (res && res.error) { alert(res.error); return; }
+          closeModal();
+          alert('PIN impostato.');
+        });
     }
   }
   function removeNotaTurno(id){
@@ -1329,6 +1433,8 @@
 
   window.App = {
     login: login, logout: logout, goto: goto, goHome: goHome, setFilter: setFilter,
+    selectLoginUser: selectLoginUser, updateLoginPin: updateLoginPin, updateLoginPinConfirm: updateLoginPinConfirm,
+    cancelLoginPin: cancelLoginPin, submitLoginPin: submitLoginPin, skipLoginPinSetup: skipLoginPinSetup, submitLoginPinSetup: submitLoginPinSetup,
     checkItem: checkItem, resolveIssue: resolveIssue, removeBacheca: removeBacheca, removeNotaTurno: removeNotaTurno,
     shiftWeek: shiftWeek, openTurnoCell: openTurnoCell, openTurnoAdd: openTurnoAdd, setPendingData: setPendingData,
     setPendingOraInizio: setPendingOraInizio, setPendingOraFine: setPendingOraFine, assignTurno: assignTurno, removeTurno: removeTurno,
