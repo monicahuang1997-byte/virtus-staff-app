@@ -174,7 +174,6 @@
   var SCREEN_TITLES = {
     turni: 'Turni', checklist: 'Checklist', bacheca: 'Bacheca', vendita: 'Vendita e prodotto',
     scorte: 'Scorte', manutenzione: 'Manutenzione', documenti: 'Documenti', cruscotto: 'Cruscotto',
-    oreferie: 'Ore e ferie',
   };
 
   function esc(s){
@@ -512,18 +511,21 @@
     Object.keys(DOT_SHEETS).forEach(function(k){ ensureLoaded(DOT_SHEETS[k].sheet); });
     var mods = MODULES.slice();
     var tiles = mods.map(function(m){
-      var dc = DOT_SHEETS[m.key];
-      var dot = (dc && hasUnseen(dc.sheet, dc.urgentOnly)) ? '<span class="home-tile-dot"></span>' : '';
+      var unseen = false;
+      if (m.key === 'bacheca') {
+        var bRows = state.cache.Bacheca;
+        unseen = !!bRows && rowsLatestTs(bachecaVisibleRows(bRows), true) > getSeen('Bacheca');
+      } else {
+        var dc = DOT_SHEETS[m.key];
+        unseen = !!(dc && hasUnseen(dc.sheet, dc.urgentOnly));
+      }
+      var dot = unseen ? '<span class="home-tile-dot"></span>' : '';
       return '<button class="home-tile" onclick="App.goto(\'' + m.key + '\')">' + dot +
         '<div class="home-tile-icon">' + m.icon + '</div><div class="home-tile-label">' + m.label + '</div></button>';
     }).join('');
-    if (isTitolare(state.user)) {
+    if (isManager(state.user)) {
       tiles += '<button class="home-tile" onclick="App.goto(\'cruscotto\')">' +
         '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
-    }
-    if (isManager(state.user)) {
-      tiles += '<button class="home-tile" onclick="App.goto(\'oreferie\')">' +
-        '<div class="home-tile-icon">🕒</div><div class="home-tile-label">Ore e ferie</div></button>';
     }
     var roleLabel = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
     return '<div>' +
@@ -733,24 +735,34 @@
   }
 
   // ---------- Bacheca ----------
+  function bachecaVisibleRows(rows){
+    return rows.filter(function(r){
+      var dest = String(val(r,'destinatario')||'').trim();
+      return !dest || dest === state.user.nome || isManager(state.user);
+    });
+  }
   function renderBacheca(){
     ensureLoaded('Bacheca');
+    ensureLoaded('Utenti');
     var rows = state.cache.Bacheca;
     var body;
     if (!rows) body = '<div class="center-loading">Carico la bacheca…</div>';
     else {
-      setSeen('Bacheca', rowsLatestTs(rows, true));
-      var sorted = rows.slice().reverse();
+      var visible = bachecaVisibleRows(rows);
+      setSeen('Bacheca', rowsLatestTs(visible, true));
+      var sorted = visible.slice().reverse();
       body = sorted.length ? '<div class="list">' + sorted.map(function(r){
         var pr = String(val(r,'priorità')||val(r,'priorita')||'normale').toLowerCase();
         var urgente = pr === 'urgente';
         var idField = findKey(r,'ID');
         var id = r[idField];
         var autore = val(r,'autore');
+        var dest = String(val(r,'destinatario')||'').trim();
         var canDelete = id && (autore === state.user.nome || isManager(state.user));
         var deleteBtn = canDelete ? '<button class="btn-resolve" style="margin-top:10px;" onclick="App.removeBacheca(\'' + esc(id) + '\')">Elimina</button>' : '';
         return '<div class="list-item bacheca-item' + (urgente?' bacheca-item-urgente':'') + '">' +
           (urgente ? '<span class="badge badge-urgente" style="margin-bottom:8px;">Urgente</span>' : '') +
+          (dest ? '<span class="badge" style="background:rgba(20,15,40,0.06);color:var(--accent2);margin-bottom:8px;margin-left:6px;">Per: ' + esc(dest) + '</span>' : '') +
           '<div class="bacheca-msg">' + esc(val(r,'messaggio')) + '</div>' +
           '<div class="bacheca-meta">' + esc(autore) + ' · ' + esc(val(r,'data')) + '</div>' +
           deleteBtn +
@@ -911,8 +923,14 @@
     ensureLoaded('Scorte');
     ensureLoaded('Manutenzione');
     ensureLoaded('Utenti');
-    var log = state.cache.Checklist_Log, scorte = state.cache.Scorte, manut = state.cache.Manutenzione, users = state.cache.Utenti;
-    if (!log || !scorte || !manut || !users) return '<div>' + renderTopBar('Cruscotto') + '<div class="center-loading">Calcolo i dati…</div></div>';
+    ensureLoaded('Turni');
+    ensureLoaded('Ferie');
+    var log = state.cache.Checklist_Log, scorte = state.cache.Scorte, manut = state.cache.Manutenzione,
+      users = state.cache.Utenti, turni = state.cache.Turni, ferie = state.cache.Ferie;
+    var addBtnFerie = '<button class="btn-round" onclick="App.openFerieRange()">+</button>';
+    if (!log || !scorte || !manut || !users || !turni || !ferie) {
+      return '<div>' + renderTopBarWithAction('Cruscotto', addBtnFerie) + '<div class="center-loading">Calcolo i dati…</div></div>';
+    }
 
     var counts = {};
     users.forEach(function(u){
@@ -933,24 +951,12 @@
     }).sort(function(a,b){ return b.totale - a.totale; });
     var max = Math.max(1, list.length ? list[0].totale : 1);
 
-    var rowsHtml = list.map(function(l){
+    var lbHtml = list.map(function(l){
       var pct = Math.round(l.totale / max * 100);
       return '<div class="lb-row"><div class="lb-name">' + esc(l.nome) + '</div>' +
         '<div class="lb-count">' + l.checklist + ' checklist · ' + l.risolte + ' risolte</div>' +
         '<div class="lb-bar-track"><div class="lb-bar-fill" style="width:' + pct + '%;"></div></div></div>';
     }).join('');
-
-    return '<div>' + renderTopBar('Cruscotto') +
-      '<div class="lb-card">' + (rowsHtml || '<div class="empty-hint">Ancora nessun dato.</div>') + '</div></div>';
-  }
-
-  // ---------- Ore e ferie (Responsabile/Titolare) ----------
-  function renderOreFerie(){
-    ensureLoaded('Turni');
-    ensureLoaded('Ferie');
-    ensureLoaded('Utenti');
-    var turni = state.cache.Turni, ferie = state.cache.Ferie, users = state.cache.Utenti;
-    if (!turni || !ferie || !users) return '<div>' + renderTopBar('Ore e ferie') + '<div class="center-loading">Calcolo i dati…</div></div>';
 
     function weekKeyFor(dataStr){ return fmtDate(mondayOf(parseDate(dataStr))); }
     var weeks = {};
@@ -998,10 +1004,10 @@
     }).join('') : '<div class="empty-hint">Ancora nessun dato.</div>';
 
     var weekKeys = Object.keys(weeks).sort(function(a,b){ return b.localeCompare(a); });
-    var body;
-    if (!weekKeys.length) body = '<div class="empty-state">Nessuna feria ancora segnata.</div>';
+    var ferieBody;
+    if (!weekKeys.length) ferieBody = '<div class="empty-state">Nessuna feria ancora segnata.</div>';
     else {
-      body = weekKeys.map(function(key){
+      ferieBody = weekKeys.map(function(key){
         var w = weeks[key];
         var monday = parseDate(key);
         var sunday = addDays(monday, 6);
@@ -1022,10 +1028,11 @@
         return '<div class="section-label">' + esc(label) + '</div>' + rowsHtml;
       }).join('');
     }
-    var addBtnFerie = '<button class="btn-round" onclick="App.openFerieRange()">+</button>';
-    return '<div>' + renderTopBarWithAction('Ore e ferie', addBtnFerie) +
+
+    return '<div>' + renderTopBarWithAction('Cruscotto', addBtnFerie) +
+      '<div class="lb-card">' + (lbHtml || '<div class="empty-hint">Ancora nessun dato.</div>') + '</div>' +
       '<div class="oreferie-title">Ore del mese</div>' + monthBody +
-      '<div class="oreferie-title">Ferie per settimana</div>' + body +
+      '<div class="oreferie-title">Ferie per settimana</div>' + ferieBody +
       '</div>';
   }
 
@@ -1040,7 +1047,6 @@
       case 'manutenzione': return renderManutenzione();
       case 'documenti': return renderDocumenti();
       case 'cruscotto': return renderCruscotto();
-      case 'oreferie': return renderOreFerie();
       default: return renderHome();
     }
   }
@@ -1160,7 +1166,7 @@
   var MODAL_TITLES = { bacheca: 'Nuovo avviso', scorta: 'Segnala scorta', guasto: 'Segnala guasto', nota_turno: 'La tua nota sui turni', set_pin: 'Imposta il tuo PIN' };
 
   function openModal(type){
-    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '', nota: '', pin: '', pinConfirm: '' };
+    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '', nota: '', pin: '', pinConfirm: '', destinatario: '' };
     state.activeModal = type;
     render();
   }
@@ -1355,7 +1361,18 @@
     var body = '';
 
     if (type === 'bacheca') {
-      body = '<div class="field"><div class="field-label">Messaggio</div><textarea oninput="App.updateForm(\'messaggio\', this.value)">' + esc(f.messaggio) + '</textarea></div>' +
+      var destinatarioHtml = '';
+      if (isManager(state.user)) {
+        var utentiDest = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
+        var destChips = '<button class="chip-select ' + (!f.destinatario?'chip-select-active':'') + '" onclick="App.selectFormChip(\'destinatario\',\'\')">Tutti</button>' +
+          utentiDest.map(function(u){
+            var n = val(u,'nome');
+            return '<button class="chip-select ' + (f.destinatario===n?'chip-select-active':'') + '" onclick="App.selectFormChip(\'destinatario\',\'' + esc(n).replace(/'/g,"\\'") + '\')">' + esc(n) + '</button>';
+          }).join('');
+        destinatarioHtml = '<div class="field-label">Per chi</div><div class="chips-wrap">' + destChips + '</div>';
+      }
+      body = destinatarioHtml +
+        '<div class="field"><div class="field-label">Messaggio</div><textarea oninput="App.updateForm(\'messaggio\', this.value)">' + esc(f.messaggio) + '</textarea></div>' +
         '<div class="field-label">Priorità</div><div class="chips-wrap">' + ['normale','urgente'].map(function(p){
           return '<button class="chip-select ' + (f.priorita===p?'chip-select-active':'') + '" onclick="App.selectFormChip(\'priorita\',\'' + p + '\')">' + esc(p) + '</button>';
         }).join('') + '</div>';
@@ -1393,7 +1410,7 @@
     if (type === 'bacheca') {
       if (!f.messaggio || !f.messaggio.trim()) { alert('Scrivi un messaggio'); return; }
       state.busy = true;
-      apiPost({ sheet: 'Bacheca', data: { Data: todayStr(), Autore: state.user.nome, Messaggio: f.messaggio.trim(), 'Priorità': f.priorita } })
+      apiPost({ sheet: 'Bacheca', data: { Data: todayStr(), Autore: state.user.nome, Messaggio: f.messaggio.trim(), 'Priorità': f.priorita, Destinatario: isManager(state.user) ? (f.destinatario||'') : '' } })
         .then(function(){ state.busy = false; closeModal(); reload('Bacheca'); });
     } else if (type === 'scorta') {
       if (!f.prodotto || !f.prodotto.trim()) { alert('Indica il prodotto'); return; }
