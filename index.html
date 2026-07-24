@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Virtus Tennis - Staff</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f5f4fa">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: oklch(0.96 0.008 250);
+    --card: oklch(1 0 0);
+    --tabbar: oklch(1 0 0);
+    --input: oklch(0.94 0.01 250);
+    --sheet: oklch(1 0 0);
+    --text: oklch(0.22 0.02 250);
+    --text-muted: oklch(0.46 0.02 250);
+    --text-muted2: oklch(0.56 0.02 250);
+    --text-muted3: oklch(0.64 0.02 250);
+    --accent: oklch(0.65 0.16 235);
+    --accent2: oklch(0.65 0.15 205);
+    --danger: oklch(0.65 0.19 30);
+    --good: oklch(0.7 0.17 150);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#f5f4fa;height:100%;}
+  body{font-family:Inter,-apple-system,system-ui,sans-serif;}
+  input::placeholder,textarea::placeholder{color:oklch(0.6 0.02 250);}
+  button{cursor:pointer;font-family:inherit;}
+  .page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f4fa;padding:24px;}
+  #root{width:100%;max-width:420px;}
+  .app-shell{width:100%;max-width:420px;height:calc(100vh - 48px);max-height:880px;min-height:600px;background:var(--bg);color:var(--text);border-radius:36px;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(20,15,40,0.14);}
+  @media (max-width:480px){
+    .page{padding:0;}
+    .app-shell{max-width:100%;height:100vh;max-height:none;border-radius:0;box-shadow:none;}
+  }
+  .app-scroll{flex:1;overflow-y:auto;padding:max(48px, calc(env(safe-area-inset-top) + 16px)) 20px 24px;-webkit-overflow-scrolling:touch;}
+  .greeting{font-family:Nunito,sans-serif;font-weight:800;font-size:26px;}
+  .date-label{color:var(--text-muted);font-size:14px;margin-top:2px;}
+  .role-badge{display:inline-block;margin-top:8px;background:rgba(20,15,40,0.06);color:var(--accent2);border-radius:100px;padding:4px 12px;font-size:12px;font-weight:700;}
+  .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;}
+  .home-tile{background:var(--card);border:none;color:var(--text);border-radius:20px;padding:18px 14px;text-align:left;display:flex;flex-direction:column;gap:10px;min-height:96px;position:relative;}
+  .home-tile-dot{position:absolute;top:12px;right:12px;width:10px;height:10px;border-radius:50%;background:var(--danger);}
+  .home-tile-icon{font-size:26px;}
+  .home-tile-label{font-weight:700;font-size:14.5px;line-height:1.25;}
+  .logout-link{display:block;width:100%;text-align:center;background:none;border:none;color:var(--text-muted3);font-size:13px;margin-top:26px;padding:10px;}
+  .top-bar{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+  .back-btn{background:rgba(20,15,40,0.06);border:none;color:var(--text);width:34px;height:34px;border-radius:12px;font-size:18px;flex:none;}
+  .top-title{font-family:Nunito,sans-serif;font-weight:800;font-size:20px;flex:1;min-width:0;}
+  .screen-title{font-family:Nunito,sans-serif;font-weight:800;font-size:24px;}
+  .screen-sub{font-size:13px;color:var(--text-muted);margin-top:2px;}
+  .btn-round{background:var(--accent);color:#14121a;border:none;border-radius:12px;width:34px;height:34px;font-weight:800;font-size:19px;line-height:1;flex:none;}
+  .chip-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+  .chip{background:rgba(20,15,40,0.05);color:var(--text-muted);border:none;border-radius:100px;padding:8px 16px;font-weight:700;font-size:13px;}
+  .chip-active{background:var(--accent);color:#14121a;}
+  .list{margin-top:16px;display:flex;flex-direction:column;gap:10px;}
+  .list-item{background:var(--card);border-radius:16px;padding:14px;}
+  .bacheca-item{border-left:4px solid transparent;}
+  .bacheca-item-urgente{border-left:4px solid var(--danger);background:oklch(0.96 0.03 30);}
+  .bacheca-msg{font-size:16.5px;font-weight:700;color:var(--text);line-height:1.4;}
+  .bacheca-meta{font-size:10.5px;color:var(--text-muted3);margin-top:8px;}
+  .list-item-title{font-size:15px;font-weight:700;}
+  .list-item-sub{font-size:12px;color:var(--text-muted);margin-top:4px;line-height:1.5;}
+  .empty-hint,.empty-state{text-align:center;color:var(--text-muted3);padding:40px 0;font-size:14px;width:100%;}
+  .badge{display:inline-block;border-radius:100px;padding:3px 10px;font-size:11px;font-weight:700;}
+  .badge-urgente{background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);}
+  .badge-normale{background:rgba(20,15,40,0.06);color:var(--text-muted);}
+  .badge-aperto{background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);}
+  .badge-risolto{background:oklch(0.92 0.06 150);color:oklch(0.38 0.13 150);}
+  .row-between{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .btn-resolve{background:rgba(20,15,40,0.06);border:none;color:var(--text);border-radius:100px;padding:6px 14px;font-size:11.5px;font-weight:700;margin-top:8px;white-space:nowrap;}
+  .check-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:14px;}
+  .checkbox{width:26px;height:26px;border-radius:50%;flex:none;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;}
+  .checkbox-done{background:var(--good);border-color:var(--good);color:#14121a;}
+  .checkbox-todo{color:transparent;}
+  .check-body{flex:1;min-width:0;}
+  .check-text{font-size:14.5px;font-weight:600;}
+  .check-sub{font-size:11px;color:var(--text-muted2);margin-top:3px;}
+  .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.55);z-index:100;display:flex;align-items:flex-end;}
+  .sheet{width:100%;max-height:80%;overflow-y:auto;background:var(--sheet);border-radius:24px 24px 0 0;padding:22px 20px 30px;}
+  .sheet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .sheet-title{font-family:Nunito,sans-serif;font-weight:800;font-size:18px;}
+  .btn-close{background:rgba(20,15,40,0.06);border:none;color:var(--text);width:30px;height:30px;border-radius:50%;font-size:16px;flex:none;}
+  .field{margin-bottom:14px;}
+  .field-label{font-size:12px;color:var(--text-muted);margin-bottom:6px;}
+  .field input,.field textarea{width:100%;background:var(--input);border:1px solid rgba(20,15,40,0.1);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;font-family:inherit;}
+  .field textarea{resize:vertical;min-height:80px;}
+  .chips-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .chip-select{border:none;border-radius:100px;padding:8px 14px;font-weight:700;font-size:12px;background:rgba(20,15,40,0.05);color:var(--text-muted);}
+  .chip-select-active{background:var(--accent);color:#14121a;}
+  .btn-submit{width:100%;background:var(--accent);color:#14121a;border:none;border-radius:14px;padding:14px;font-weight:800;font-size:15px;margin-top:8px;}
+  .login-wrap{padding-top:40px;}
+  .login-title{font-family:Nunito,sans-serif;font-weight:800;font-size:22px;text-align:center;}
+  .login-sub{text-align:center;color:var(--text-muted);font-size:13.5px;margin-top:6px;}
+  .login-list{margin-top:26px;display:flex;flex-direction:column;gap:10px;}
+  .login-btn{background:var(--card);border:none;color:var(--text);border-radius:16px;padding:16px;text-align:left;font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+  .login-role{font-size:11.5px;color:var(--text-muted2);font-weight:600;}
+  .lb-row{display:flex;align-items:center;justify-content:space-between;margin-top:24px;}
+  .lb-name{font-weight:700;font-size:14px;}
+  .lb-count{font-size:12px;color:var(--text-muted);}
+  .lb-bar-track{height:10px;background:rgba(20,15,40,0.08);border-radius:5px;margin-top:6px;overflow:hidden;}
+  .lb-bar-fill{height:100%;border-radius:5px;background:var(--accent);}
+  .lb-card{background:var(--card);border-radius:18px;padding:16px;margin-top:14px;}
+  .section-label{font-weight:800;font-size:12.5px;color:var(--text-muted2);text-transform:uppercase;letter-spacing:0.03em;margin:16px 0 6px;}
+  .week-nav{display:flex;align-items:center;justify-content:space-between;margin-top:14px;}
+  .week-nav-btn{background:rgba(20,15,40,0.06);border:none;color:var(--text);width:30px;height:30px;border-radius:10px;font-size:15px;flex:none;}
+  .week-nav-label{font-weight:700;font-size:13.5px;}
+  .turni-hint{font-size:11.5px;color:var(--text-muted3);margin-top:10px;text-align:center;}
+  .fab-voice{position:absolute;right:16px;bottom:20px;width:54px;height:54px;border-radius:50%;background:var(--accent2);border:none;box-shadow:0 6px 16px rgba(20,15,40,0.25);z-index:40;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .voice-mic-wrap{display:flex;justify-content:center;margin-bottom:16px;}
+  .voice-mic{width:76px;height:76px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(20,15,40,0.2);font-size:30px;}
+  .voice-status{text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:16px;}
+  .voice-transcript{background:var(--input);border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:14px;font-style:italic;}
+  .voice-feedback{background:oklch(0.93 0.05 235);border:1px solid oklch(0.7 0.12 235);border-radius:14px;padding:12px 14px;margin-bottom:16px;font-size:14px;color:oklch(0.35 0.1 235);}
+  .voice-input-row{display:flex;gap:8px;margin-bottom:14px;}
+  .voice-input-row input{flex:1;background:var(--input);border:1px solid rgba(20,15,40,0.1);border-radius:12px;padding:12px 14px;color:var(--text);font-size:13.5px;outline:none;}
+  .voice-input-row button{background:var(--accent);color:#14121a;border:none;border-radius:12px;padding:0 16px;font-weight:800;font-size:14px;}
+  .voice-hint{font-size:11.5px;color:var(--text-muted2);line-height:1.6;}
+  .cal-headerrow{display:flex;margin-top:14px;}
+  .cal-hourcol-spacer{width:32px;flex:none;}
+  .cal-dayhead{flex:1;text-align:center;font-size:10.5px;font-weight:700;color:var(--text-muted);line-height:1.3;}
+  .cal-dayhead.cal-today{color:var(--accent);}
+  .cal-scrollwrap{display:flex;margin-top:4px;max-height:60vh;overflow-y:auto;position:relative;border-top:1px solid rgba(20,15,40,0.06);}
+  .cal-hourcol{width:32px;flex:none;position:relative;}
+  .cal-hourlabel{position:absolute;left:0;right:4px;text-align:right;font-size:9px;color:var(--text-muted3);transform:translateY(-50%);}
+  .cal-days{flex:1;display:flex;position:relative;}
+  .cal-daycol{flex:1;position:relative;border-left:1px solid rgba(20,15,40,0.06);}
+  .cal-daycol-today{background:rgba(20,15,40,0.025);}
+  .cal-hourline{position:absolute;left:0;right:0;border-top:1px solid rgba(20,15,40,0.05);}
+  .cal-bar{position:absolute;border-radius:6px;font-size:9px;font-weight:800;padding:2px 1px;overflow:hidden;z-index:5;line-height:1.15;text-align:center;}
+  .summary-person{background:var(--card);border-radius:14px;padding:12px 14px;margin-top:10px;}
+  .summary-person-head{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;}
+  .summary-dot{width:10px;height:10px;border-radius:50%;flex:none;}
+  .summary-shift{font-size:12.5px;color:var(--text-muted);padding:5px 0 0 18px;}
+  .center-loading{text-align:center;color:var(--text-muted2);padding:50px 0;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="page"><div id="root"></div></div>
+
+<script>
+(function(){
+  'use strict';
+
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhizEkaOLkMtMof6KMJ8z81ORiAsFK84TL2MaXy7968KNOAQbh6j3aneWhqd_geONl/exec';
+  var STORAGE_KEY = 'virtus-staff-user-v1';
+  var LOCALI = ['Bar interno', 'Bar piscina', 'Ristorante'];
+  var FASI = ['apertura', 'chiusura'];
+  var FORNITORI = ['Partesa', 'New Catering', 'Vini'];
+  var GIORNI_LABELS = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+  var MESI_SHORT = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  var HOUR_START = 7, HOUR_END = 24;
+  var ROW_H = 30;
+
+  var MODULES = [
+    { key: 'turni', icon: '🗓️', label: 'Turni' },
+    { key: 'checklist', icon: '✅', label: 'Checklist apertura/chiusura' },
+    { key: 'bacheca', icon: '📣', label: 'Bacheca' },
+    { key: 'vendita', icon: '🍷', label: 'Vendita e prodotto' },
+    { key: 'scorte', icon: '📦', label: 'Scorte' },
+    { key: 'manutenzione', icon: '🛠️', label: 'Manutenzione' },
+    { key: 'documenti', icon: '📄', label: 'Documenti' },
+  ];
+  var SCREEN_TITLES = {
+    turni: 'Turni', checklist: 'Checklist', bacheca: 'Bacheca', vendita: 'Vendita e prodotto',
+    scorte: 'Scorte', manutenzione: 'Manutenzione', documenti: 'Documenti', cruscotto: 'Cruscotto',
+  };
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function nowTime(){
+    var d = new Date();
+    return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+  function parseDate(s){
+    var p = String(s).slice(0,10).split('-').map(Number);
+    return new Date(p[0], p[1]-1, p[2]);
+  }
+  function fmtDate(d){
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function mondayOf(d){
+    var day = d.getDay();
+    var diff = (day === 0 ? -6 : 1 - day);
+    var m = new Date(d);
+    m.setDate(d.getDate() + diff);
+    return m;
+  }
+  function addDays(d, n){
+    var r = new Date(d);
+    r.setDate(r.getDate() + n);
+    return r;
+  }
+  function fmtDayLabel(d){
+    return d.getDate() + ' ' + MESI_SHORT[d.getMonth()];
+  }
+  function hourLabel(h){
+    return String(h % 24).padStart(2,'0') + ':00';
+  }
+  function parseHourStr(s){
+    if (s == null || s === '') return null;
+    var m = String(s).match(/(\d{1,2})/);
+    if (!m) return null;
+    var h = parseInt(m[1], 10);
+    if (h === 0) h = 24;
+    return h;
+  }
+  var PERSON_PALETTE = [
+    { bg: '#2a78d6', fg: '#ffffff' },
+    { bg: '#eb6834', fg: '#ffffff' },
+    { bg: '#1baf7a', fg: '#ffffff' },
+    { bg: '#eda100', fg: '#1a1a1a' },
+    { bg: '#e87ba4', fg: '#1a1a1a' },
+    { bg: '#008300', fg: '#ffffff' },
+    { bg: '#4a3aa7', fg: '#ffffff' },
+    { bg: '#e34948', fg: '#ffffff' },
+  ];
+  var EXTRA_COLOR = { bg: '#8a8a8a', fg: '#ffffff' };
+  function personColor(nome){
+    var users = state.cache.Utenti || [];
+    var names = users.map(function(u){ return val(u,'nome'); }).filter(Boolean);
+    var idx = names.indexOf(nome);
+    if (idx === -1) return EXTRA_COLOR;
+    return PERSON_PALETTE[idx % PERSON_PALETTE.length];
+  }
+  function initials(nome){
+    var parts = String(nome||'').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    var s = parts[0][0];
+    if (parts.length > 1) s += parts[parts.length-1][0];
+    return s.toUpperCase();
+  }
+  function layoutDayShifts(shifts){
+    var sorted = shifts.slice().sort(function(a,b){ return a.oi - b.oi || a.of - b.of; });
+    var columns = [];
+    sorted.forEach(function(s){
+      var placed = false;
+      for (var c=0; c<columns.length; c++){
+        if (columns[c] <= s.oi){ s.col = c; columns[c] = s.of; placed = true; break; }
+      }
+      if (!placed){ s.col = columns.length; columns.push(s.of); }
+    });
+    var totalCols = columns.length;
+    sorted.forEach(function(s){ s.totalCols = totalCols; });
+    return sorted;
+  }
+  function normRole(r){
+    r = String(r||'').trim().toLowerCase();
+    if (r === 'titolare') return 'titolare';
+    if (r === 'responsabile') return 'responsabile';
+    return 'dipendente';
+  }
+  function isManager(user){
+    var r = normRole(user.ruolo);
+    return r === 'responsabile' || r === 'titolare';
+  }
+  function isTitolare(user){
+    return normRole(user.ruolo) === 'titolare';
+  }
+  function findKey(row, partial){
+    var keys = Object.keys(row);
+    var k = keys.find(function(k){ return k.trim().toLowerCase() === partial.toLowerCase(); });
+    if (k) return k;
+    k = keys.find(function(k){ return k.trim().toLowerCase().indexOf(partial.toLowerCase()) === 0; });
+    return k || partial;
+  }
+  function val(row, partial){
+    return row[findKey(row, partial)];
+  }
+
+  function rowsLatestTs(rows, urgentOnly){
+    var max = 0;
+    (rows || []).forEach(function(r){
+      if (urgentOnly) {
+        var pr = String(val(r,'priorità')||val(r,'priorita')||'').toLowerCase();
+        if (pr !== 'urgente') return;
+      }
+      var idField = findKey(r,'ID');
+      var id = r[idField];
+      var ts = id ? parseInt(String(id).split('-')[0], 10) : 0;
+      if (ts > max) max = ts;
+    });
+    return max;
+  }
+  function seenKey(sheetName){
+    return 'virtus-staff-seen-' + sheetName + '-' + (state.user ? state.user.nome : '');
+  }
+  function getSeen(sheetName){
+    try { return parseInt(localStorage.getItem(seenKey(sheetName)) || '0', 10); } catch(e){ return 0; }
+  }
+  function setSeen(sheetName, ts){
+    try { localStorage.setItem(seenKey(sheetName), String(ts)); } catch(e){}
+  }
+  function hasUnseen(sheetName, urgentOnly){
+    var rows = state.cache[sheetName];
+    if (!rows) return false;
+    return rowsLatestTs(rows, urgentOnly) > getSeen(sheetName);
+  }
+
+  // ---------- API ----------
+  function apiGet(sheet){
+    return fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet))
+      .then(function(r){ return r.json(); })
+      .then(function(data){ return Array.isArray(data) ? data : []; })
+      .catch(function(){ return null; });
+  }
+  function apiPost(body){
+    return fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(body) })
+      .then(function(r){ return r.json(); })
+      .catch(function(){ return { error: 'Connessione non riuscita' }; });
+  }
+
+  // ---------- State ----------
+  var state = {
+    screen: 'login',
+    user: null,
+    users: [],
+    usersLoaded: false,
+    cache: {},
+    loading: {},
+    activeModal: null,
+    form: {},
+    filters: { locale: LOCALI[0], fase: FASI[0], scorteFilter: 'aperte', manutenzioneFilter: 'aperte' },
+    turniWeekStart: fmtDate(mondayOf(new Date())),
+    pendingCell: null,
+    busy: false,
+    voiceOpen: false, voiceListening: false, voiceTranscript: '', voiceFeedback: '', voiceInputText: '',
+  };
+  var recognition = null;
+
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { state.user = JSON.parse(saved); state.screen = 'home'; }
+  } catch(e){}
+
+  function render(){
+    var inner = state.screen === 'login' ? renderLogin() : renderScreen();
+    var showVoice = state.screen !== 'login';
+    var html = '<div class="app-shell"><div class="app-scroll">' + inner + '</div>' +
+      (showVoice ? '<button class="fab-voice" onclick="App.openVoice()">🎙️</button>' : '') +
+      '</div>' +
+      (state.screen !== 'login' && state.activeModal ? renderModal() : '') +
+      (state.voiceOpen ? renderVoiceSheet() : '');
+    document.getElementById('root').innerHTML = html;
+  }
+
+  function ensureLoaded(sheet){
+    if (state.cache[sheet] || state.loading[sheet]) return;
+    state.loading[sheet] = true;
+    apiGet(sheet).then(function(data){
+      state.loading[sheet] = false;
+      state.cache[sheet] = data || [];
+      render();
+    });
+  }
+  function reload(sheet){
+    state.cache[sheet] = null;
+    ensureLoaded(sheet);
+  }
+
+  // ---------- Login ----------
+  function renderLogin(){
+    if (!state.usersLoaded) {
+      if (!state.loading.Utenti) {
+        state.loading.Utenti = true;
+        apiGet('Utenti').then(function(data){
+          state.loading.Utenti = false;
+          state.usersLoaded = true;
+          state.users = (data || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
+          render();
+        });
+      }
+      return '<div class="login-wrap"><div class="center-loading">Carico l\'elenco dello staff…</div></div>';
+    }
+    var items = state.users.map(function(u){
+      var nome = val(u, 'nome');
+      var ruolo = normRole(val(u, 'ruolo'));
+      var label = ruolo === 'titolare' ? 'Titolare' : ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
+      return '<button class="login-btn" onclick="App.login(\'' + esc(nome).replace(/'/g,"\\'") + '\')">' +
+        '<span>' + esc(nome) + '</span><span class="login-role">' + label + '</span></button>';
+    }).join('');
+    return '<div class="login-wrap"><div class="login-title">Virtus Tennis</div>' +
+      '<div class="login-sub">Tocca il tuo nome per entrare</div>' +
+      '<div class="login-list">' + (items || '<div class="empty-hint">Nessun nominativo trovato nel foglio Utenti.</div>') + '</div></div>';
+  }
+
+  function login(nome){
+    var row = state.users.find(function(u){ return val(u,'nome') === nome; });
+    var ruolo = row ? normRole(val(row,'ruolo')) : 'dipendente';
+    state.user = { nome: nome, ruolo: ruolo };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user)); } catch(e){}
+    state.screen = 'home';
+    render();
+  }
+  function logout(){
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+    state.user = null;
+    state.screen = 'login';
+    state.usersLoaded = false;
+    render();
+  }
+
+  // ---------- Home ----------
+  var DOT_SHEETS = { bacheca: { sheet: 'Bacheca', urgentOnly: true }, turni: { sheet: 'Turni', urgentOnly: false }, scorte: { sheet: 'Scorte', urgentOnly: false }, manutenzione: { sheet: 'Manutenzione', urgentOnly: false } };
+  function renderHome(){
+    Object.keys(DOT_SHEETS).forEach(function(k){ ensureLoaded(DOT_SHEETS[k].sheet); });
+    var mods = MODULES.slice();
+    var tiles = mods.map(function(m){
+      var dc = DOT_SHEETS[m.key];
+      var dot = (dc && hasUnseen(dc.sheet, dc.urgentOnly)) ? '<span class="home-tile-dot"></span>' : '';
+      return '<button class="home-tile" onclick="App.goto(\'' + m.key + '\')">' + dot +
+        '<div class="home-tile-icon">' + m.icon + '</div><div class="home-tile-label">' + m.label + '</div></button>';
+    }).join('');
+    if (isTitolare(state.user)) {
+      tiles += '<button class="home-tile" onclick="App.goto(\'cruscotto\')">' +
+        '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
+    }
+    var roleLabel = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
+    return '<div>' +
+      '<div class="greeting">Ciao, ' + esc(state.user.nome) + '</div>' +
+      '<div class="role-badge">' + roleLabel + '</div>' +
+      '<div class="home-grid">' + tiles + '</div>' +
+      '<button class="logout-link" onclick="App.logout()">Cambia utente</button>' +
+    '</div>';
+  }
+
+  function renderTopBar(title){
+    return '<div class="top-bar"><button class="back-btn" onclick="App.goHome()">‹</button>' +
+      '<div class="top-title">' + esc(title) + '</div></div>';
+  }
+
+  // ---------- Turni ----------
+  function renderTurni(){
+    ensureLoaded('Turni');
+    ensureLoaded('Utenti');
+    var rows = state.cache.Turni;
+    var users = state.cache.Utenti;
+    var manager = isManager(state.user);
+
+    var weekStart = parseDate(state.turniWeekStart);
+    var days = [];
+    for (var i=0;i<7;i++) days.push(addDays(weekStart, i));
+    var t = todayStr();
+
+    var weekNav = '<div class="week-nav"><button class="week-nav-btn" onclick="App.shiftWeek(-1)">‹</button>' +
+      '<div class="week-nav-label">' + esc(fmtDayLabel(days[0])) + ' – ' + esc(fmtDayLabel(days[6])) + '</div>' +
+      '<button class="week-nav-btn" onclick="App.shiftWeek(1)">›</button></div>';
+
+    var body;
+    if (!rows || !users) body = '<div class="center-loading">Carico i turni…</div>';
+    else {
+      setSeen('Turni', rowsLatestTs(rows, false));
+      var totalHours = HOUR_END - HOUR_START;
+      var gridHeight = totalHours * ROW_H;
+
+      var hourLabelsHtml = '';
+      for (var idx=0; idx<totalHours; idx++){
+        hourLabelsHtml += '<div class="cal-hourlabel" style="top:' + (idx*ROW_H) + 'px;">' + hourLabel(HOUR_START+idx) + '</div>';
+      }
+
+      var dayHeaderHtml = days.map(function(d){
+        var isToday = fmtDate(d) === t;
+        return '<div class="cal-dayhead' + (isToday?' cal-today':'') + '">' + GIORNI_LABELS[(d.getDay()+6)%7] + '<br>' + d.getDate() + '</div>';
+      }).join('');
+
+      var dayColsHtml = days.map(function(d){
+        var dateStr = fmtDate(d);
+        var isToday = dateStr === t;
+        var lines = '';
+        for (var i2=0; i2<totalHours; i2++){
+          var hourStart = HOUR_START + i2;
+          var click = manager ? ' onclick="App.openTurnoCell(\'' + dateStr + '\',' + hourStart + ')"' : '';
+          lines += '<div class="cal-hourline" style="top:' + (i2*ROW_H) + 'px;height:' + ROW_H + 'px;"' + click + '></div>';
+        }
+        var dayTurni = rows.filter(function(r){ return String(val(r,'data')).slice(0,10) === dateStr; });
+        var shifts = dayTurni.map(function(r){
+          var oi = parseHourStr(val(r,'ora inizio'));
+          var of = parseHourStr(val(r,'ora fine'));
+          var idField = findKey(r,'ID');
+          return { oi: oi, of: of, id: r[idField], nome: String(val(r,'dipendente')||'') };
+        }).filter(function(s){ return s.oi != null && s.of != null && s.of > s.oi; });
+        var laidOut = layoutDayShifts(shifts);
+        var barsHtml = laidOut.map(function(s){
+          var top = (s.oi - HOUR_START) * ROW_H;
+          var height = (s.of - s.oi) * ROW_H;
+          var leftPct = (s.col / s.totalCols) * 100;
+          var widthPct = (1 / s.totalCols) * 100;
+          var c = personColor(s.nome);
+          var click = (manager && s.id) ? ' onclick="App.removeTurno(\'' + esc(s.id) + '\',\'' + esc(s.nome).replace(/'/g,"\\'") + '\',\'' + hourLabel(s.oi) + '\',\'' + hourLabel(s.of) + '\')"' : '';
+          return '<div class="cal-bar"' + click + ' style="top:' + top + 'px;height:' + height + 'px;left:calc(' + leftPct + '% + 1px);width:calc(' + widthPct + '% - 2px);background:' + c.bg + ';color:' + c.fg + ';" title="' + esc(s.nome) + ' ' + hourLabel(s.oi) + '–' + hourLabel(s.of) + '">' + esc(initials(s.nome)) + '</div>';
+        }).join('');
+        return '<div class="cal-daycol' + (isToday?' cal-daycol-today':'') + '" style="height:' + gridHeight + 'px;">' + lines + barsHtml + '</div>';
+      }).join('');
+
+      body = '<div class="cal-headerrow"><div class="cal-hourcol-spacer"></div>' + dayHeaderHtml + '</div>' +
+        '<div class="cal-scrollwrap"><div class="cal-hourcol" style="height:' + gridHeight + 'px;">' + hourLabelsHtml + '</div>' +
+        '<div class="cal-days">' + dayColsHtml + '</div></div>' +
+        (manager ? '<div class="turni-hint">Tocca una cella vuota per aggiungere, tocca una barra per rimuoverla.</div>' : '') +
+        renderTurniSummary(days, rows);
+    }
+    var addBtn = manager ? '<button class="btn-round" onclick="App.openTurnoAdd()">+</button>' : '';
+    return '<div>' + renderTopBarWithAction('Turni', addBtn) + weekNav + body + '</div>';
+  }
+
+  function renderTurniSummary(days, rows){
+    var weekDates = days.map(function(d){ return fmtDate(d); });
+    var weekRows = rows.filter(function(r){ return weekDates.indexOf(String(val(r,'data')).slice(0,10)) !== -1; });
+    var byPerson = {};
+    weekRows.forEach(function(r){
+      var nome = String(val(r,'dipendente')||'').trim();
+      var oi = parseHourStr(val(r,'ora inizio'));
+      var of = parseHourStr(val(r,'ora fine'));
+      if (!nome || oi == null || of == null) return;
+      if (!byPerson[nome]) byPerson[nome] = [];
+      byPerson[nome].push({ data: String(val(r,'data')).slice(0,10), oi: oi, of: of });
+    });
+    var names = Object.keys(byPerson).sort(function(a,b){ return a.localeCompare(b); });
+    var content = names.length ? names.map(function(nome){
+      var shifts = byPerson[nome].sort(function(a,b){ return a.data.localeCompare(b.data) || a.oi - b.oi; });
+      var c = personColor(nome);
+      var shiftsHtml = shifts.map(function(s){
+        var d = parseDate(s.data);
+        var giorno = GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate();
+        return '<div class="summary-shift">' + esc(giorno) + ' · ' + hourLabel(s.oi) + '–' + hourLabel(s.of) + '</div>';
+      }).join('');
+      return '<div class="summary-person">' +
+        '<div class="summary-person-head"><span class="summary-dot" style="background:' + c.bg + ';"></span>' + esc(nome) + '</div>' +
+        shiftsHtml +
+        '</div>';
+    }).join('') : '<div class="empty-hint">Nessun turno questa settimana.</div>';
+    return '<div class="section-label">Riepilogo settimana</div>' + content;
+  }
+
+  function renderTopBarWithAction(title, actionHtml){
+    return '<div class="top-bar"><button class="back-btn" onclick="App.goHome()">‹</button>' +
+      '<div class="top-title">' + esc(title) + '</div>' + actionHtml + '</div>';
+  }
+
+  // ---------- Checklist ----------
+  function renderChecklist(){
+    ensureLoaded('Checklist');
+    ensureLoaded('Checklist_Log');
+    var items = state.cache.Checklist;
+    var log = state.cache.Checklist_Log;
+    var f = state.filters;
+
+    var localeChips = LOCALI.map(function(l){
+      return '<button class="chip-select ' + (f.locale===l?'chip-select-active':'') + '" onclick="App.setFilter(\'locale\',\'' + l + '\')">' + esc(l) + '</button>';
+    }).join('');
+    var faseChips = FASI.map(function(fa){
+      return '<button class="chip-select ' + (f.fase===fa?'chip-select-active':'') + '" onclick="App.setFilter(\'fase\',\'' + fa + '\')">' + esc(fa) + '</button>';
+    }).join('');
+
+    var body;
+    if (!items || !log) body = '<div class="center-loading">Carico la checklist…</div>';
+    else {
+      var t = todayStr();
+      var matching = items.filter(function(it){
+        return String(val(it,'locale')).trim().toLowerCase() === f.locale.toLowerCase() &&
+          String(val(it,'fase')).trim().toLowerCase() === f.fase.toLowerCase();
+      });
+      body = matching.length ? '<div class="list">' + matching.map(function(it){
+        var attivita = val(it,'attività') || val(it,'attivita');
+        var doneEntry = log.find(function(l){
+          return String(val(l,'data')) === t &&
+            String(val(l,'locale')).trim().toLowerCase() === f.locale.toLowerCase() &&
+            String(val(l,'fase')).trim().toLowerCase() === f.fase.toLowerCase() &&
+            String(val(l,'attività')||val(l,'attivita')) === String(attivita);
+        });
+        var done = !!doneEntry;
+        var idSafe = esc(attivita).replace(/'/g,"\\'");
+        return '<div class="check-item">' +
+          '<div class="checkbox ' + (done?'checkbox-done':'checkbox-todo') + '" onclick="' + (done?'':'App.checkItem(\'' + idSafe + '\')') + '">' + (done?'✓':'') + '</div>' +
+          '<div class="check-body"><div class="check-text">' + esc(attivita) + '</div>' +
+          (done ? '<div class="check-sub">Fatto da ' + esc(val(doneEntry,'dipendente')) + ' alle ' + esc(val(doneEntry,'ora')) + '</div>' : '') +
+          '</div></div>';
+      }).join('') + '</div>' : '<div class="empty-state">Nessuna attività impostata per ' + esc(f.locale) + ' · ' + esc(f.fase) + '.</div>';
+    }
+    return '<div>' + renderTopBar('Checklist') +
+      '<div class="chip-row">' + localeChips + '</div>' +
+      '<div class="chip-row">' + faseChips + '</div>' +
+      body + '</div>';
+  }
+
+  function checkItem(attivita){
+    var f = state.filters;
+    var data = { Data: todayStr(), Dipendente: state.user.nome, Locale: f.locale, Fase: f.fase, 'Attività': attivita, Ora: nowTime() };
+    apiPost({ sheet: 'Checklist_Log', data: data }).then(function(){ reload('Checklist_Log'); });
+  }
+
+  // ---------- Bacheca ----------
+  function renderBacheca(){
+    ensureLoaded('Bacheca');
+    var rows = state.cache.Bacheca;
+    var body;
+    if (!rows) body = '<div class="center-loading">Carico la bacheca…</div>';
+    else {
+      setSeen('Bacheca', rowsLatestTs(rows, true));
+      var sorted = rows.slice().reverse();
+      body = sorted.length ? '<div class="list">' + sorted.map(function(r){
+        var pr = String(val(r,'priorità')||val(r,'priorita')||'normale').toLowerCase();
+        var urgente = pr === 'urgente';
+        var idField = findKey(r,'ID');
+        var id = r[idField];
+        var autore = val(r,'autore');
+        var canDelete = id && (autore === state.user.nome || isManager(state.user));
+        var deleteBtn = canDelete ? '<button class="btn-resolve" style="margin-top:10px;" onclick="App.removeBacheca(\'' + esc(id) + '\')">Elimina</button>' : '';
+        return '<div class="list-item bacheca-item' + (urgente?' bacheca-item-urgente':'') + '">' +
+          (urgente ? '<span class="badge badge-urgente" style="margin-bottom:8px;">Urgente</span>' : '') +
+          '<div class="bacheca-msg">' + esc(val(r,'messaggio')) + '</div>' +
+          '<div class="bacheca-meta">' + esc(autore) + ' · ' + esc(val(r,'data')) + '</div>' +
+          deleteBtn +
+          '</div>';
+      }).join('') + '</div>' : '<div class="empty-state">Nessun avviso.</div>';
+    }
+    var addBtn = '<button class="btn-round" onclick="App.openModal(\'bacheca\')">+</button>';
+    return '<div>' + renderTopBarWithAction('Bacheca', addBtn) + body + '</div>';
+  }
+
+  // ---------- Vendita/Prodotto ----------
+  function renderVendita(){
+    ensureLoaded('Vendita_Prodotto');
+    var rows = state.cache.Vendita_Prodotto;
+    var body;
+    if (!rows) body = '<div class="center-loading">Carico le schede…</div>';
+    else {
+      body = rows.length ? '<div class="list">' + rows.map(function(r){
+        return '<div class="list-item"><div class="row-between"><div class="list-item-title">' + esc(val(r,'nome prodotto')) + '</div>' +
+          '<div class="list-item-title">' + esc(val(r,'prezzo')) + '</div></div>' +
+          '<div class="list-item-sub">' + esc(val(r,'categoria')) + '</div>' +
+          (val(r,'descrizione') ? '<div class="list-item-sub">' + esc(val(r,'descrizione')) + '</div>' : '') +
+          (val(r,'abbinamento') ? '<div class="list-item-sub">Abbinamento: ' + esc(val(r,'abbinamento')) + '</div>' : '') +
+          '</div>';
+      }).join('') + '</div>' : '<div class="empty-state">Nessuna scheda prodotto ancora.</div>';
+    }
+    return '<div>' + renderTopBar('Vendita e prodotto') + body + '</div>';
+  }
+
+  // ---------- Scorte / Manutenzione (schema comune) ----------
+  function renderIssueScreen(sheetName, filterKey, itemLabelField, formType, screenTitle){
+    ensureLoaded(sheetName);
+    var rows = state.cache[sheetName];
+    var f = state.filters[filterKey];
+    var chips = ['aperte','risolte','tutte'].map(function(k){
+      var lbl = { aperte:'Aperte', risolte:'Risolte', tutte:'Tutte' }[k];
+      return '<button class="chip ' + (f===k?'chip-active':'') + '" onclick="App.setFilter(\'' + filterKey + '\',\'' + k + '\')">' + lbl + '</button>';
+    }).join('');
+    var body;
+    if (!rows) body = '<div class="center-loading">Carico…</div>';
+    else {
+      setSeen(sheetName, rowsLatestTs(rows, false));
+      var filtered = rows.filter(function(r){
+        var stato = String(val(r,'stato')||'').toLowerCase();
+        var resolved = stato.indexOf('risolt') === 0;
+        if (f === 'aperte') return !resolved;
+        if (f === 'risolte') return resolved;
+        return true;
+      });
+      body = filtered.length ? '<div class="list">' + filtered.map(function(r){
+        var stato = String(val(r,'stato')||'').toLowerCase();
+        var resolved = stato.indexOf('risolt') === 0;
+        var idField = findKey(r, 'ID');
+        var id = r[idField];
+        return '<div class="list-item"><div class="row-between"><div class="list-item-title">' + esc(val(r,itemLabelField)) + '</div>' +
+          '<span class="badge badge-' + (resolved?'risolto':'aperto') + '">' + (resolved?'Risolto':(val(r,'stato')||'Aperto')) + '</span></div>' +
+          '<div class="list-item-sub">' + esc(val(r,'locale')) + ' · segnalato da ' + esc(val(r,'segnalato da')) + ' · ' + esc(val(r,'data')) + '</div>' +
+          (val(r,'note') ? '<div class="list-item-sub">' + esc(val(r,'note')) + '</div>' : '') +
+          (resolved ? '<div class="list-item-sub">Risolto da ' + esc(val(r,'risolto da')) + '</div>' :
+            (id ? '<button class="btn-resolve" onclick="App.resolveIssue(\'' + sheetName + '\',\'' + esc(id) + '\')">Segna risolto</button>' :
+              '<div class="list-item-sub" style="color:var(--text-muted3);">Aggiungi la colonna ID nel foglio per poter risolvere da qui.</div>')) +
+          '</div>';
+      }).join('') + '</div>' : '<div class="empty-state">Nessuna segnalazione.</div>';
+    }
+    var addBtn = '<button class="btn-round" onclick="App.openModal(\'' + formType + '\')">+</button>';
+    return '<div>' + renderTopBarWithAction(screenTitle, addBtn) + '<div class="chip-row">' + chips + '</div>' + body + '</div>';
+  }
+  function renderManutenzione(){ return renderIssueScreen('Manutenzione', 'manutenzioneFilter', 'problema', 'guasto', 'Manutenzione'); }
+
+  // ---------- Scorte (raggruppate per fornitore) ----------
+  function renderScorte(){
+    ensureLoaded('Scorte');
+    var rows = state.cache.Scorte;
+    var f = state.filters.scorteFilter;
+    var chips = ['aperte','risolte','tutte'].map(function(k){
+      var lbl = { aperte:'Da ordinare', risolte:'Ordinati', tutte:'Tutte' }[k];
+      return '<button class="chip ' + (f===k?'chip-active':'') + '" onclick="App.setFilter(\'scorteFilter\',\'' + k + '\')">' + lbl + '</button>';
+    }).join('');
+    var body;
+    if (!rows) body = '<div class="center-loading">Carico…</div>';
+    else {
+      setSeen('Scorte', rowsLatestTs(rows, false));
+      var filtered = rows.filter(function(r){
+        var stato = String(val(r,'stato')||'').toLowerCase();
+        var resolved = stato.indexOf('risolt') === 0;
+        if (f === 'aperte') return !resolved;
+        if (f === 'risolte') return resolved;
+        return true;
+      });
+      var groups = FORNITORI.concat(['Altro']);
+      var sectionsHtml = groups.map(function(g){
+        var itemsInGroup = filtered.filter(function(r){
+          var fo = String(val(r,'fornitore')||'').trim();
+          if (g === 'Altro') return !FORNITORI.some(function(x){ return x.toLowerCase() === fo.toLowerCase(); });
+          return fo.toLowerCase() === g.toLowerCase();
+        });
+        if (!itemsInGroup.length) return '';
+        var itemsHtml = itemsInGroup.map(function(r){
+          var stato = String(val(r,'stato')||'').toLowerCase();
+          var resolved = stato.indexOf('risolt') === 0;
+          var idField = findKey(r, 'ID');
+          var id = r[idField];
+          return '<div class="list-item"><div class="row-between"><div class="list-item-title">' + esc(val(r,'prodotto')) + '</div>' +
+            '<span class="badge badge-' + (resolved?'risolto':'aperto') + '">' + (resolved?'Ordinato':'Da ordinare') + '</span></div>' +
+            '<div class="list-item-sub">segnalato da ' + esc(val(r,'segnalato da')) + ' · ' + esc(val(r,'data')) + '</div>' +
+            (val(r,'note') ? '<div class="list-item-sub">' + esc(val(r,'note')) + '</div>' : '') +
+            (resolved ? '<div class="list-item-sub">Ordinato da ' + esc(val(r,'risolto da')) + '</div>' :
+              (id ? '<button class="btn-resolve" onclick="App.resolveIssue(\'Scorte\',\'' + esc(id) + '\')">Segna come ordinato</button>' :
+                '<div class="list-item-sub" style="color:var(--text-muted3);">Aggiungi la colonna ID nel foglio per poter aggiornare da qui.</div>')) +
+            '</div>';
+        }).join('');
+        return '<div class="section-label">' + esc(g) + '</div><div class="list">' + itemsHtml + '</div>';
+      }).join('');
+      body = sectionsHtml || '<div class="empty-state">Nessuna segnalazione.</div>';
+    }
+    var addBtn = '<button class="btn-round" onclick="App.openModal(\'scorta\')">+</button>';
+    return '<div>' + renderTopBarWithAction('Scorte', addBtn) + '<div class="chip-row">' + chips + '</div>' + body + '</div>';
+  }
+
+  function resolveIssue(sheetName, id){
+    apiPost({ sheet: sheetName, action: 'update', id: id, data: { Stato: 'risolto', 'Risolto da': state.user.nome } })
+      .then(function(res){
+        if (res && res.error) { alert(res.error); return; }
+        reload(sheetName);
+      });
+  }
+
+  function removeBacheca(id){
+    if (!confirm('Eliminare questo messaggio?')) return;
+    apiPost({ sheet: 'Bacheca', action: 'delete', id: id }).then(function(res){
+      if (res && res.error) { alert(res.error); return; }
+      reload('Bacheca');
+    });
+  }
+
+  // ---------- Documenti ----------
+  function renderDocumenti(){
+    ensureLoaded('Documenti');
+    var rows = state.cache.Documenti;
+    var body;
+    if (!rows) body = '<div class="center-loading">Carico i documenti…</div>';
+    else {
+      body = rows.length ? '<div class="list">' + rows.map(function(r){
+        var contenuto = val(r,'contenuto') || val(r,'link') || '';
+        var isLink = /^https?:\/\//i.test(String(contenuto).trim());
+        return '<div class="list-item"><div class="list-item-title">' + esc(val(r,'titolo')) + '</div>' +
+          '<div class="list-item-sub">' + esc(val(r,'categoria')) + '</div>' +
+          '<div class="list-item-sub">' + (isLink ? '<a href="' + esc(contenuto) + '" target="_blank" style="color:var(--accent2);">Apri link</a>' : esc(contenuto)) + '</div>' +
+          '</div>';
+      }).join('') + '</div>' : '<div class="empty-state">Nessun documento ancora.</div>';
+    }
+    return '<div>' + renderTopBar('Documenti') + body + '</div>';
+  }
+
+  // ---------- Cruscotto (Titolare) ----------
+  function renderCruscotto(){
+    ensureLoaded('Checklist_Log');
+    ensureLoaded('Scorte');
+    ensureLoaded('Manutenzione');
+    ensureLoaded('Utenti');
+    var log = state.cache.Checklist_Log, scorte = state.cache.Scorte, manut = state.cache.Manutenzione, users = state.cache.Utenti;
+    if (!log || !scorte || !manut || !users) return '<div>' + renderTopBar('Cruscotto') + '<div class="center-loading">Calcolo i dati…</div></div>';
+
+    var counts = {};
+    users.forEach(function(u){
+      var nome = val(u,'nome');
+      if (nome) counts[nome] = { checklist: 0, risolte: 0 };
+    });
+    log.forEach(function(l){
+      var n = val(l,'dipendente');
+      if (n && counts[n]) counts[n].checklist++;
+    });
+    scorte.concat(manut).forEach(function(r){
+      var n = val(r,'risolto da');
+      if (n && counts[n]) counts[n].risolte++;
+    });
+    var list = Object.keys(counts).map(function(n){
+      var c = counts[n];
+      return { nome: n, checklist: c.checklist, risolte: c.risolte, totale: c.checklist + c.risolte };
+    }).sort(function(a,b){ return b.totale - a.totale; });
+    var max = Math.max(1, list.length ? list[0].totale : 1);
+
+    var rowsHtml = list.map(function(l){
+      var pct = Math.round(l.totale / max * 100);
+      return '<div class="lb-row"><div class="lb-name">' + esc(l.nome) + '</div>' +
+        '<div class="lb-count">' + l.checklist + ' checklist · ' + l.risolte + ' risolte</div>' +
+        '<div class="lb-bar-track"><div class="lb-bar-fill" style="width:' + pct + '%;"></div></div></div>';
+    }).join('');
+
+    return '<div>' + renderTopBar('Cruscotto') +
+      '<div class="lb-card">' + (rowsHtml || '<div class="empty-hint">Ancora nessun dato.</div>') + '</div></div>';
+  }
+
+  // ---------- Screen dispatch ----------
+  function renderScreen(){
+    switch (state.screen) {
+      case 'turni': return renderTurni();
+      case 'checklist': return renderChecklist();
+      case 'bacheca': return renderBacheca();
+      case 'vendita': return renderVendita();
+      case 'scorte': return renderScorte();
+      case 'manutenzione': return renderManutenzione();
+      case 'documenti': return renderDocumenti();
+      case 'cruscotto': return renderCruscotto();
+      default: return renderHome();
+    }
+  }
+
+  function goto(screen){ state.screen = screen; state.activeModal = null; render(); }
+  function goHome(){ state.screen = 'home'; state.activeModal = null; render(); }
+  function setFilter(key, value){ state.filters[key] = value; render(); }
+
+  function shiftWeek(delta){
+    state.turniWeekStart = fmtDate(addDays(parseDate(state.turniWeekStart), delta*7));
+    render();
+  }
+  function openTurnoCell(dateStr, oraInizio){
+    state.pendingCell = { data: dateStr, oraInizio: oraInizio, oraFine: Math.min(HOUR_END, oraInizio+1) };
+    state.activeModal = 'turnoCell';
+    render();
+  }
+  function openTurnoAdd(){
+    var weekStart = parseDate(state.turniWeekStart);
+    state.pendingCell = { data: fmtDate(weekStart), oraInizio: HOUR_START, oraFine: HOUR_START+1 };
+    state.activeModal = 'turnoCell';
+    render();
+  }
+  function setPendingData(dateStr){
+    if (state.pendingCell) state.pendingCell.data = dateStr;
+    render();
+  }
+  function setPendingOraInizio(h){
+    if (!state.pendingCell) return;
+    state.pendingCell.oraInizio = h;
+    if (state.pendingCell.oraFine <= h) state.pendingCell.oraFine = Math.min(HOUR_END, h+1);
+    render();
+  }
+  function setPendingOraFine(h){
+    if (state.pendingCell) state.pendingCell.oraFine = h;
+    render();
+  }
+  function assignTurno(nome){
+    var c = state.pendingCell;
+    if (!c || state.busy) return;
+    if (c.oraFine <= c.oraInizio) { alert("L'ora di fine deve essere dopo l'ora di inizio"); return; }
+    var nomeNorm = nome.trim().toLowerCase();
+    var dup = (state.cache.Turni || []).some(function(r){
+      return String(val(r,'data')).slice(0,10) === c.data &&
+        parseHourStr(val(r,'ora inizio')) === c.oraInizio &&
+        parseHourStr(val(r,'ora fine')) === c.oraFine &&
+        String(val(r,'dipendente')||'').trim().toLowerCase() === nomeNorm;
+    });
+    if (dup) { alert(nome + ' ha già questo turno in questo giorno e orario.'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Turni', data: { Data: c.data, 'Ora inizio': hourLabel(c.oraInizio), 'Ora fine': hourLabel(c.oraFine), Dipendente: nome, Note: '', 'Creato da': state.user.nome } })
+      .then(function(){ state.busy = false; closeModal(); reload('Turni'); });
+  }
+  function togglePendingExtra(){
+    if (!state.pendingCell) return;
+    state.pendingCell.showExtra = !state.pendingCell.showExtra;
+    if (state.pendingCell.extraName == null) state.pendingCell.extraName = '';
+    render();
+  }
+  function updatePendingExtraName(v){
+    if (state.pendingCell) state.pendingCell.extraName = v;
+  }
+  function assignExtra(){
+    var c = state.pendingCell;
+    if (!c || !c.extraName || !c.extraName.trim()) { alert('Scrivi il nome della persona'); return; }
+    assignTurno(c.extraName.trim());
+  }
+  function removeTurno(id, nome, oraInizio, oraFine){
+    if (!confirm('Togliere il turno di ' + nome + ' (' + oraInizio + '–' + oraFine + ')?')) return;
+    apiPost({ sheet: 'Turni', action: 'delete', id: id }).then(function(res){
+      if (res && res.error) { alert(res.error); return; }
+      reload('Turni');
+    });
+  }
+
+  // ---------- Modals ----------
+  var MODAL_TITLES = { bacheca: 'Nuovo avviso', scorta: 'Segnala scorta', guasto: 'Segnala guasto' };
+
+  function openModal(type){
+    state.form = { locale: LOCALI[0], fornitore: FORNITORI[0], note: '', messaggio: '', priorita: 'normale', prodotto: '', problema: '' };
+    state.activeModal = type;
+    render();
+  }
+  function closeModal(){ state.activeModal = null; render(); }
+  function updateForm(field, value){ state.form[field] = value; }
+  function selectFormChip(field, value){ state.form[field] = value; render(); }
+
+  // ---------- Assistente vocale ----------
+  function openVoice(){ state.voiceOpen = true; state.voiceTranscript = ''; state.voiceFeedback = ''; state.voiceInputText = ''; render(); }
+  function closeVoice(){ if (recognition) { try { recognition.stop(); } catch(e){} } state.voiceOpen = false; state.voiceListening = false; render(); }
+  function updateVoiceInputText(value){ state.voiceInputText = value; }
+  function runVoiceInputText(){
+    var text = state.voiceInputText.trim();
+    if (!text) return;
+    state.voiceTranscript = text;
+    runVoiceCommand(text);
+  }
+  function toggleListening(){
+    if (!recognition) { state.voiceFeedback = 'Il microfono non è disponibile in questo browser (serve anche una pagina caricata con https). Scrivi il comando qui sotto.'; render(); return; }
+    if (state.voiceListening) { recognition.stop(); state.voiceListening = false; render(); return; }
+    state.voiceTranscript = ''; state.voiceFeedback = '';
+    state.voiceListening = true;
+    render();
+    try { recognition.start(); } catch(e) { state.voiceListening = false; render(); }
+  }
+
+  var FORNITORE_KEYWORDS = [
+    { k: 'new catering', v: 'New Catering' },
+    { k: 'catering', v: 'New Catering' },
+    { k: 'partesa', v: 'Partesa' },
+    { k: 'vini', v: 'Vini' },
+    { k: 'vino', v: 'Vini' },
+  ];
+  function afterKeyword(text, keyword){
+    var idx = text.indexOf(keyword);
+    return text.slice(idx + keyword.length);
+  }
+  function cleanSpoken(s){
+    s = String(s||'').replace(/^[\s,:;-]+/, '').replace(/^(nella lista|nella|lista|di|del|della|dei|delle)\s+/,'').trim();
+    if (!s) return s;
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function runVoiceCommand(rawText){
+    var text = rawText.toLowerCase().trim();
+    var feedback = 'Non ho capito il comando, riprova.';
+
+    if (text.indexOf('vai a') !== -1 || text.indexOf('apri') !== -1) {
+      var screenMap = { turni: 'turni', checklist: 'checklist', bacheca: 'bacheca', vendita: 'vendita', scort: 'scorte', manutenzione: 'manutenzione', document: 'documenti' };
+      var foundKey = Object.keys(screenMap).find(function(k){ return text.indexOf(k) !== -1; });
+      if (foundKey) { state.screen = screenMap[foundKey]; state.activeModal = null; feedback = 'Ok, apro ' + screenMap[foundKey] + '.'; }
+    } else if (text.indexOf('scort') !== -1) {
+      var fm = FORNITORE_KEYWORDS.find(function(f){ return text.indexOf(f.k) !== -1; });
+      var fornitore = fm ? fm.v : '';
+      var rest = fm ? afterKeyword(text, fm.k) : text.replace(/.*scort[ae]/, '');
+      rest = rest.replace(/^(aggiungimi|aggiungi)\s*/,'');
+      var prodotto = cleanSpoken(rest);
+      if (!prodotto) { state.voiceFeedback = 'Dimmi anche il prodotto da segnalare, es. "scorte Partesa acqua naturale in plastica".'; render(); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Scorte', data: { Data: todayStr(), 'Segnalato da': state.user.nome, Fornitore: fornitore, Prodotto: prodotto, Note: '', Stato: 'da ordinare' } })
+        .then(function(){ state.busy = false; reload('Scorte'); });
+      feedback = 'Aggiunto a Scorte' + (fornitore ? ' (' + fornitore + ')' : '') + ': "' + prodotto + '".';
+    } else if (text.indexOf('guast') !== -1 || text.indexOf('rott') !== -1 || text.indexOf('manutenzione') !== -1) {
+      var localeMatch = LOCALI.find(function(l){ return text.indexOf(l.toLowerCase()) !== -1; });
+      var restG = text.replace(/.*(guasto|guasta|rotto|rotta|manutenzione)/, '').replace(/^(aggiungimi|aggiungi|segnala)\s*/,'');
+      var problema = cleanSpoken(restG);
+      if (!problema) { state.voiceFeedback = 'Dimmi anche il problema da segnalare.'; render(); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Manutenzione', data: { Data: todayStr(), 'Segnalato da': state.user.nome, Locale: localeMatch || LOCALI[0], Problema: problema, Note: '', Stato: 'aperto' } })
+        .then(function(){ state.busy = false; reload('Manutenzione'); });
+      feedback = 'Segnalato guasto: "' + problema + '".';
+    } else if (text.indexOf('avviso') !== -1 || text.indexOf('bacheca') !== -1) {
+      var urgente = text.indexOf('urgente') !== -1;
+      var restB = text.replace(/.*(avviso|bacheca)/, '').replace(/^(aggiungimi|aggiungi)\s*/,'');
+      var messaggio = cleanSpoken(restB);
+      if (!messaggio) { state.voiceFeedback = 'Dimmi anche il messaggio da mettere in bacheca.'; render(); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Bacheca', data: { Data: todayStr(), Autore: state.user.nome, Messaggio: messaggio, 'Priorità': urgente ? 'urgente' : 'normale' } })
+        .then(function(){ state.busy = false; reload('Bacheca'); });
+      feedback = 'Aggiunto avviso in bacheca: "' + messaggio + '".';
+    }
+
+    state.voiceFeedback = feedback;
+    render();
+  }
+
+  function renderVoiceSheet(){
+    var micBg = state.voiceListening ? 'var(--danger)' : 'var(--accent2)';
+    var statusLabel = state.voiceListening ? 'Ti ascolto...' : 'Tocca il microfono e parla';
+    var transcriptHtml = state.voiceTranscript ? '<div class="voice-transcript">“' + esc(state.voiceTranscript) + '”</div>' : '';
+    var feedbackHtml = state.voiceFeedback ? '<div class="voice-feedback">' + esc(state.voiceFeedback) + '</div>' : '';
+    return '<div class="overlay" style="z-index:110;" onclick="App.closeVoice()"><div class="sheet" onclick="event.stopPropagation()">' +
+      '<div class="sheet-header"><div class="sheet-title">Assistente vocale</div><button class="btn-close" onclick="App.closeVoice()">&times;</button></div>' +
+      '<div class="voice-mic-wrap"><button class="voice-mic" style="background:' + micBg + ';" onclick="App.toggleListening()">🎙️</button></div>' +
+      '<div class="voice-status">' + statusLabel + '</div>' +
+      transcriptHtml + feedbackHtml +
+      '<div class="field-label">Oppure scrivi il comando</div>' +
+      '<div class="voice-input-row"><input value="' + esc(state.voiceInputText) + '" oninput="App.updateVoiceInputText(this.value)" placeholder="Es. scorte Partesa acqua naturale in plastica"/>' +
+      '<button onclick="App.runVoiceInputText()">Esegui</button></div>' +
+      '<div class="voice-hint">Prova: "scorte Partesa acqua naturale in plastica" · "guasto macchina caffè bar interno" · "avviso urgente finito il ghiaccio" · "vai a turni"</div>' +
+      '</div></div>';
+  }
+
+  function initSpeech(){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    recognition = new SR();
+    recognition.lang = 'it-IT';
+    recognition.interimResults = false;
+    recognition.onresult = function(ev){
+      var text = ev.results[0][0].transcript;
+      state.voiceTranscript = text;
+      state.voiceListening = false;
+      render();
+      runVoiceCommand(text);
+    };
+    recognition.onerror = function(){ state.voiceListening = false; state.voiceFeedback = 'Non ho sentito bene, riprova o scrivi il comando qui sotto.'; render(); };
+    recognition.onend = function(){ state.voiceListening = false; render(); };
+  }
+
+  function renderModal(){
+    var type = state.activeModal;
+    var f = state.form;
+
+    if (type === 'turnoCell') {
+      var c = state.pendingCell;
+      if (state.busy) {
+        return '<div class="overlay"><div class="sheet">' +
+          '<div class="sheet-header"><div class="sheet-title">Aggiungi turno</div></div>' +
+          '<div class="center-loading">Salvataggio in corso…</div>' +
+          '</div></div>';
+      }
+      var utenti = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
+      var weekStart2 = parseDate(state.turniWeekStart);
+      var giornoChips = '';
+      for (var di=0; di<7; di++){
+        var d2 = addDays(weekStart2, di);
+        var ds2 = fmtDate(d2);
+        giornoChips += '<button class="chip-select ' + (c.data===ds2?'chip-select-active':'') + '" onclick="App.setPendingData(\'' + ds2 + '\')">' + GIORNI_LABELS[di] + ' ' + d2.getDate() + '</button>';
+      }
+      var oraInizioOptions = [];
+      for (var hi=HOUR_START; hi<HOUR_END; hi++) oraInizioOptions.push(hi);
+      var oraInizioChips = oraInizioOptions.map(function(h){
+        return '<button class="chip-select ' + (c.oraInizio===h?'chip-select-active':'') + '" onclick="App.setPendingOraInizio(' + h + ')">' + hourLabel(h) + '</button>';
+      }).join('');
+      var oraFineOptions = [];
+      for (var h = c.oraInizio+1; h <= HOUR_END; h++) oraFineOptions.push(h);
+      var chipsHtml = oraFineOptions.map(function(h){
+        return '<button class="chip-select ' + (c.oraFine===h?'chip-select-active':'') + '" onclick="App.setPendingOraFine(' + h + ')">' + hourLabel(h) + '</button>';
+      }).join('');
+      var listHtml = utenti.map(function(u){
+        var n = val(u,'nome');
+        return '<button class="login-btn" onclick="App.assignTurno(\'' + esc(n).replace(/'/g,"\\'") + '\')"><span>' + esc(n) + '</span></button>';
+      }).join('');
+      var extraHtml = '<button class="login-btn" onclick="App.togglePendingExtra()"><span>+ Persona extra</span></button>' +
+        (c.showExtra ? '<div class="field" style="margin-top:10px;"><div class="field-label">Nome della persona</div>' +
+          '<input value="' + esc(c.extraName||'') + '" oninput="App.updatePendingExtraName(this.value)" placeholder="Es. Sara (sostituzione)"/></div>' +
+          '<button class="btn-submit" onclick="App.assignExtra()">Assegna</button>' : '');
+      return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
+        '<div class="sheet-header"><div class="sheet-title">Aggiungi turno</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+        '<div class="field-label">Giorno</div><div class="chips-wrap">' + giornoChips + '</div>' +
+        '<div class="field-label">Dalle</div><div class="chips-wrap">' + oraInizioChips + '</div>' +
+        '<div class="field-label">Fino alle</div><div class="chips-wrap">' + chipsHtml + '</div>' +
+        '<div class="field-label">Dipendente</div>' +
+        '<div class="login-list" style="margin-top:6px;">' + (listHtml || '<div class="empty-hint">Nessun nominativo trovato.</div>') + '</div>' +
+        extraHtml +
+        '</div></div>';
+    }
+
+    var body = '';
+
+    if (type === 'bacheca') {
+      body = '<div class="field"><div class="field-label">Messaggio</div><textarea oninput="App.updateForm(\'messaggio\', this.value)">' + esc(f.messaggio) + '</textarea></div>' +
+        '<div class="field-label">Priorità</div><div class="chips-wrap">' + ['normale','urgente'].map(function(p){
+          return '<button class="chip-select ' + (f.priorita===p?'chip-select-active':'') + '" onclick="App.selectFormChip(\'priorita\',\'' + p + '\')">' + esc(p) + '</button>';
+        }).join('') + '</div>';
+    } else if (type === 'scorta') {
+      body = '<div class="field-label">Fornitore</div><div class="chips-wrap">' + FORNITORI.map(function(fo){
+          return '<button class="chip-select ' + (f.fornitore===fo?'chip-select-active':'') + '" onclick="App.selectFormChip(\'fornitore\',\'' + fo + '\')">' + esc(fo) + '</button>';
+        }).join('') + '</div>' +
+        '<div class="field"><div class="field-label">Prodotto</div><input value="' + esc(f.prodotto) + '" oninput="App.updateForm(\'prodotto\', this.value)" placeholder="Es. Prosecco"/></div>' +
+        '<div class="field"><div class="field-label">Note (opzionale)</div><input value="' + esc(f.note) + '" oninput="App.updateForm(\'note\', this.value)"/></div>';
+    } else if (type === 'guasto') {
+      body = '<div class="field-label">Locale</div><div class="chips-wrap">' + LOCALI.map(function(l){
+          return '<button class="chip-select ' + (f.locale===l?'chip-select-active':'') + '" onclick="App.selectFormChip(\'locale\',\'' + l + '\')">' + esc(l) + '</button>';
+        }).join('') + '</div>' +
+        '<div class="field"><div class="field-label">Problema</div><input value="' + esc(f.problema) + '" oninput="App.updateForm(\'problema\', this.value)" placeholder="Es. Macchina caffè non si accende"/></div>' +
+        '<div class="field"><div class="field-label">Note (opzionale)</div><input value="' + esc(f.note) + '" oninput="App.updateForm(\'note\', this.value)"/></div>';
+    }
+
+    return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
+      '<div class="sheet-header"><div class="sheet-title">' + MODAL_TITLES[type] + '</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+      body + '<button class="btn-submit" onclick="App.submitModal()">Salva</button>' +
+    '</div></div>';
+  }
+
+  function submitModal(){
+    var type = state.activeModal, f = state.form;
+    if (state.busy) return;
+
+    if (type === 'bacheca') {
+      if (!f.messaggio || !f.messaggio.trim()) { alert('Scrivi un messaggio'); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Bacheca', data: { Data: todayStr(), Autore: state.user.nome, Messaggio: f.messaggio.trim(), 'Priorità': f.priorita } })
+        .then(function(){ state.busy = false; closeModal(); reload('Bacheca'); });
+    } else if (type === 'scorta') {
+      if (!f.prodotto || !f.prodotto.trim()) { alert('Indica il prodotto'); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Scorte', data: { Data: todayStr(), 'Segnalato da': state.user.nome, Fornitore: f.fornitore, Prodotto: f.prodotto.trim(), Note: f.note || '', Stato: 'da ordinare' } })
+        .then(function(){ state.busy = false; closeModal(); reload('Scorte'); });
+    } else if (type === 'guasto') {
+      if (!f.problema || !f.problema.trim()) { alert('Descrivi il problema'); return; }
+      state.busy = true;
+      apiPost({ sheet: 'Manutenzione', data: { Data: todayStr(), 'Segnalato da': state.user.nome, Locale: f.locale, Problema: f.problema.trim(), Note: f.note || '', Stato: 'aperto' } })
+        .then(function(){ state.busy = false; closeModal(); reload('Manutenzione'); });
+    }
+  }
+
+  window.App = {
+    login: login, logout: logout, goto: goto, goHome: goHome, setFilter: setFilter,
+    checkItem: checkItem, resolveIssue: resolveIssue, removeBacheca: removeBacheca,
+    shiftWeek: shiftWeek, openTurnoCell: openTurnoCell, openTurnoAdd: openTurnoAdd, setPendingData: setPendingData,
+    setPendingOraInizio: setPendingOraInizio, setPendingOraFine: setPendingOraFine, assignTurno: assignTurno, removeTurno: removeTurno,
+    togglePendingExtra: togglePendingExtra, updatePendingExtraName: updatePendingExtraName, assignExtra: assignExtra,
+    openModal: openModal, closeModal: closeModal, updateForm: updateForm, selectFormChip: selectFormChip, submitModal: submitModal,
+    openVoice: openVoice, closeVoice: closeVoice, toggleListening: toggleListening,
+    updateVoiceInputText: updateVoiceInputText, runVoiceInputText: runVoiceInputText,
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    if (state.user) ensureLoaded('Utenti');
+    initSpeech();
+    render();
+  });
+})();
+</script>
+</body>
+</html>
