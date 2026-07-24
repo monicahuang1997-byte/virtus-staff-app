@@ -274,6 +274,9 @@
   function isTitolare(user){
     return normRole(user.ruolo) === 'titolare';
   }
+  function canManageTurni(user){
+    return isManager(user) || !!(user && user.gestisceTurni);
+  }
   function findKey(row, partial){
     var keys = Object.keys(row);
     var k = keys.find(function(k){ return k.trim().toLowerCase() === partial.toLowerCase(); });
@@ -427,7 +430,8 @@
   function login(nome){
     var row = state.users.find(function(u){ return val(u,'nome') === nome; });
     var ruolo = row ? normRole(val(row,'ruolo')) : 'dipendente';
-    state.user = { nome: nome, ruolo: ruolo };
+    var gestisceTurni = row ? !!String(val(row,'gestisce turni')||'').trim() : false;
+    state.user = { nome: nome, ruolo: ruolo, gestisceTurni: gestisceTurni };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user)); } catch(e){}
     state.pendingLoginUser = null;
     state.loginPinInput = '';
@@ -549,7 +553,7 @@
     ensureLoaded('Ferie');
     var rows = state.cache.Turni;
     var users = state.cache.Utenti;
-    var manager = isManager(state.user);
+    var manager = canManageTurni(state.user);
 
     var weekStart = parseDate(state.turniWeekStart);
     var days = [];
