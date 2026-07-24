@@ -886,7 +886,8 @@
         return '<div class="section-label">' + esc(label) + '</div>' + rowsHtml;
       }).join('');
     }
-    return '<div>' + renderTopBar('Ore e ferie') + body + '</div>';
+    var addBtnFerie = '<button class="btn-round" onclick="App.openFerieRange()">+</button>';
+    return '<div>' + renderTopBarWithAction('Ore e ferie', addBtnFerie) + body + '</div>';
   }
 
   // ---------- Screen dispatch ----------
@@ -969,23 +970,37 @@
     if (!c || !c.extraName || !c.extraName.trim()) { alert('Scrivi il nome della persona'); return; }
     assignTurno(c.extraName.trim());
   }
-  function toggleFerieMode(){
-    if (!state.pendingCell) return;
-    state.pendingCell.ferieMode = !state.pendingCell.ferieMode;
+  function openFerieRange(){
+    state.pendingFerie = { dataInizio: todayStr(), dataFine: todayStr() };
+    state.activeModal = 'ferieRange';
     render();
   }
-  function assignFerie(nome){
-    var c = state.pendingCell;
-    if (!c || state.busy) return;
-    var dup = (state.cache.Ferie || []).some(function(r){
-      return String(val(r,'data')).slice(0,10) === c.data &&
-        String(val(r,'dipendente')||'').trim().toLowerCase() === nome.trim().toLowerCase();
-    });
-    if (dup) { alert(nome + ' ha già le ferie segnate in questo giorno.'); return; }
+  function updateFerieRange(field, value){
+    if (state.pendingFerie) state.pendingFerie[field] = value;
+  }
+  function assignFerieRange(nome){
+    var f = state.pendingFerie;
+    if (!f || state.busy) return;
+    if (!f.dataInizio || !f.dataFine || f.dataFine < f.dataInizio) { alert("Controlla le date: quella di fine deve essere uguale o dopo quella di inizio."); return; }
+    var dates = [];
+    var cur = parseDate(f.dataInizio);
+    var end = parseDate(f.dataFine);
+    while (fmtDate(cur) <= fmtDate(end)) { dates.push(fmtDate(cur)); cur = addDays(cur, 1); }
+    if (dates.length > 60) { alert('Intervallo troppo lungo (massimo 60 giorni).'); return; }
+    var existing = (state.cache.Ferie || [])
+      .filter(function(r){ return String(val(r,'dipendente')||'').trim().toLowerCase() === nome.trim().toLowerCase(); })
+      .map(function(r){ return String(val(r,'data')).slice(0,10); });
+    var toCreate = dates.filter(function(d){ return existing.indexOf(d) === -1; });
+    if (!toCreate.length) { alert(nome + ' ha già le ferie segnate in tutto questo periodo.'); return; }
     state.busy = true;
     render();
-    apiPost({ sheet: 'Ferie', data: { Data: c.data, Dipendente: nome, Note: '', 'Creato da': state.user.nome } })
-      .then(function(){ state.busy = false; closeModal(); reload('Ferie'); });
+    var chain = Promise.resolve();
+    toCreate.forEach(function(d){
+      chain = chain.then(function(){
+        return apiPost({ sheet: 'Ferie', data: { Data: d, Dipendente: nome, Note: '', 'Creato da': state.user.nome } });
+      });
+    });
+    chain.then(function(){ state.busy = false; closeModal(); reload('Ferie'); });
   }
   function removeFerie(id, nome, lbl){
     if (!confirm('Togliere la ferie di ' + nome + ' (' + lbl + ')?')) return;
@@ -1131,6 +1146,28 @@
     var type = state.activeModal;
     var f = state.form;
 
+    if (type === 'ferieRange') {
+      var pf = state.pendingFerie;
+      if (state.busy) {
+        return '<div class="overlay"><div class="sheet">' +
+          '<div class="sheet-header"><div class="sheet-title">Segna ferie</div></div>' +
+          '<div class="center-loading">Salvataggio in corso…</div>' +
+          '</div></div>';
+      }
+      var utentiF = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
+      var listHtmlF = utentiF.map(function(u){
+        var n = val(u,'nome');
+        return '<button class="login-btn" onclick="App.assignFerieRange(\'' + esc(n).replace(/'/g,"\\'") + '\')"><span>' + esc(n) + '</span></button>';
+      }).join('');
+      return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
+        '<div class="sheet-header"><div class="sheet-title">🌴 Segna ferie</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+        '<div class="field"><div class="field-label">Dal</div><input type="date" value="' + esc(pf.dataInizio) + '" oninput="App.updateFerieRange(\'dataInizio\', this.value)"/></div>' +
+        '<div class="field"><div class="field-label">Al</div><input type="date" value="' + esc(pf.dataFine) + '" oninput="App.updateFerieRange(\'dataFine\', this.value)"/></div>' +
+        '<div class="field-label">Persona</div>' +
+        '<div class="login-list" style="margin-top:6px;">' + (listHtmlF || '<div class="empty-hint">Nessun nominativo trovato.</div>') + '</div>' +
+        '</div></div>';
+    }
+
     if (type === 'turnoCell') {
       var c = state.pendingCell;
       if (state.busy) {
@@ -1165,12 +1202,6 @@
         (c.showExtra ? '<div class="field" style="margin-top:10px;"><div class="field-label">Nome della persona</div>' +
           '<input value="' + esc(c.extraName||'') + '" oninput="App.updatePendingExtraName(this.value)" placeholder="Es. Sara (sostituzione)"/></div>' +
           '<button class="btn-submit" onclick="App.assignExtra()">Assegna</button>' : '');
-      var ferieListHtml = utenti.map(function(u){
-        var n = val(u,'nome');
-        return '<button class="login-btn" onclick="App.assignFerie(\'' + esc(n).replace(/'/g,"\\'") + '\')"><span>' + esc(n) + '</span></button>';
-      }).join('');
-      var ferieHtml = '<button class="login-btn" onclick="App.toggleFerieMode()"><span>🌴 Segna ferie per questo giorno</span></button>' +
-        (c.ferieMode ? '<div class="login-list" style="margin-top:6px;">' + (ferieListHtml || '<div class="empty-hint">Nessun nominativo trovato.</div>') + '</div>' : '');
       return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
         '<div class="sheet-header"><div class="sheet-title">Aggiungi turno</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
         '<div class="field-label">Giorno</div><div class="chips-wrap">' + giornoChips + '</div>' +
@@ -1179,7 +1210,6 @@
         '<div class="field-label">Dipendente</div>' +
         '<div class="login-list" style="margin-top:6px;">' + (listHtml || '<div class="empty-hint">Nessun nominativo trovato.</div>') + '</div>' +
         extraHtml +
-        ferieHtml +
         '</div></div>';
     }
 
@@ -1238,7 +1268,7 @@
     shiftWeek: shiftWeek, openTurnoCell: openTurnoCell, openTurnoAdd: openTurnoAdd, setPendingData: setPendingData,
     setPendingOraInizio: setPendingOraInizio, setPendingOraFine: setPendingOraFine, assignTurno: assignTurno, removeTurno: removeTurno,
     togglePendingExtra: togglePendingExtra, updatePendingExtraName: updatePendingExtraName, assignExtra: assignExtra,
-    toggleFerieMode: toggleFerieMode, assignFerie: assignFerie, removeFerie: removeFerie,
+    openFerieRange: openFerieRange, updateFerieRange: updateFerieRange, assignFerieRange: assignFerieRange, removeFerie: removeFerie,
     openModal: openModal, closeModal: closeModal, updateForm: updateForm, selectFormChip: selectFormChip, submitModal: submitModal,
     openVoice: openVoice, closeVoice: closeVoice, toggleListening: toggleListening,
     updateVoiceInputText: updateVoiceInputText, runVoiceInputText: runVoiceInputText,
