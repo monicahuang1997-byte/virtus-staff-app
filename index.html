@@ -1440,16 +1440,13 @@
     var body = '';
 
     if (type === 'bacheca') {
-      var destinatarioHtml = '';
-      if (isManager(state.user)) {
-        var utentiDest = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
-        var destChips = '<button class="chip-select ' + (!f.destinatario?'chip-select-active':'') + '" onclick="App.selectFormChip(\'destinatario\',\'\')">Tutti</button>' +
-          utentiDest.map(function(u){
-            var n = val(u,'nome');
-            return '<button class="chip-select ' + (f.destinatario===n?'chip-select-active':'') + '" onclick="App.selectFormChip(\'destinatario\',\'' + esc(n).replace(/'/g,"\\'") + '\')">' + esc(n) + '</button>';
-          }).join('');
-        destinatarioHtml = '<div class="field-label">Per chi</div><div class="chips-wrap">' + destChips + '</div>';
-      }
+      var utentiDest = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
+      var destChips = '<button class="chip-select ' + (!f.destinatario?'chip-select-active':'') + '" onclick="App.selectFormChip(\'destinatario\',\'\')">Tutti</button>' +
+        utentiDest.map(function(u){
+          var n = val(u,'nome');
+          return '<button class="chip-select ' + (f.destinatario===n?'chip-select-active':'') + '" onclick="App.selectFormChip(\'destinatario\',\'' + esc(n).replace(/'/g,"\\'") + '\')">' + esc(n) + '</button>';
+        }).join('');
+      var destinatarioHtml = '<div class="field-label">Per chi</div><div class="chips-wrap">' + destChips + '</div>';
       body = destinatarioHtml +
         '<div class="field"><div class="field-label">Messaggio</div><textarea oninput="App.updateForm(\'messaggio\', this.value)">' + esc(f.messaggio) + '</textarea></div>' +
         '<div class="field-label">Priorità</div><div class="chips-wrap">' + ['normale','urgente'].map(function(p){
@@ -1503,7 +1500,7 @@
     if (type === 'bacheca') {
       if (!f.messaggio || !f.messaggio.trim()) { alert('Scrivi un messaggio'); return; }
       state.busy = true;
-      apiPost({ sheet: 'Bacheca', data: { Data: todayStr(), Autore: state.user.nome, Messaggio: f.messaggio.trim(), 'Priorità': f.priorita, Destinatario: isManager(state.user) ? (f.destinatario||'') : '' } })
+      apiPost({ sheet: 'Bacheca', data: { Data: todayStr(), Autore: state.user.nome, Messaggio: f.messaggio.trim(), 'Priorità': f.priorita, Destinatario: f.destinatario || '' } })
         .then(function(){ state.busy = false; closeModal(); reload('Bacheca'); });
     } else if (type === 'scorta') {
       if (!f.prodotto || !f.prodotto.trim()) { alert('Indica il prodotto'); return; }
