@@ -482,15 +482,22 @@
           return;
         }
         OneSignal.Notifications.requestPermission().then(function(){
-          setTimeout(function(){
-            if (!OneSignal.Notifications.permission) {
-              alert('Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
-              return;
-            }
+          if (!OneSignal.Notifications.permission) {
+            alert('Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
+            return;
+          }
+          var tries = 0;
+          var check = function(){
+            tries++;
             var sub = OneSignal.User.PushSubscription;
-            var info = 'Permesso: concesso\nIscritto: ' + (sub.optedIn ? 'si' : 'no') + '\nID iscrizione: ' + (sub.id || '(nessuno)');
-            alert('Notifiche attivate su questo telefono.\n\n' + info);
-          }, 1500);
+            if (sub.id || tries >= 10) {
+              var info = 'Permesso: concesso\nIscritto: ' + (sub.optedIn ? 'si' : 'no') + '\nID iscrizione: ' + (sub.id || '(nessuno dopo ' + tries + ' tentativi)');
+              alert('Notifiche attivate su questo telefono.\n\n' + info);
+            } else {
+              setTimeout(check, 1000);
+            }
+          };
+          check();
         }).catch(function(err){
           alert('Errore attivazione notifiche: ' + (err && err.message ? err.message : err));
         });
