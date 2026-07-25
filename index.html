@@ -483,8 +483,14 @@
         }
         OneSignal.Notifications.requestPermission().then(function(){
           setTimeout(function(){
-            alert(OneSignal.Notifications.permission ? 'Notifiche attivate su questo telefono.' : 'Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
-          }, 300);
+            if (!OneSignal.Notifications.permission) {
+              alert('Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
+              return;
+            }
+            var sub = OneSignal.User.PushSubscription;
+            var info = 'Permesso: concesso\nIscritto: ' + (sub.optedIn ? 'si' : 'no') + '\nID iscrizione: ' + (sub.id || '(nessuno)');
+            alert('Notifiche attivate su questo telefono.\n\n' + info);
+          }, 1500);
         }).catch(function(err){
           alert('Errore attivazione notifiche: ' + (err && err.message ? err.message : err));
         });
