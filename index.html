@@ -15,7 +15,11 @@
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(function(OneSignal) {
-    OneSignal.init({ appId: "7ad21254-c48a-4b34-8581-08d2abd4d3c9" });
+    OneSignal.init({
+      appId: "7ad21254-c48a-4b34-8581-08d2abd4d3c9",
+      serviceWorkerParam: { scope: '/virtus-staff-app/' },
+      serviceWorkerPath: '/virtus-staff-app/OneSignalSDKWorker.js'
+    });
   });
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
