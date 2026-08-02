@@ -513,6 +513,22 @@
       }
     }
   }
+  function diagnosticaNotifiche(){
+    if (!('serviceWorker' in navigator)) {
+      alert('Diagnostica: questo browser non supporta i service worker (necessari per le notifiche).');
+      return;
+    }
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      var elenco = regs.length ? regs.map(function(r){ return '- scope: ' + r.scope + (r.active ? ' (attivo)' : ' (non attivo)'); }).join('\n') : '(nessuna registrazione trovata)';
+      navigator.serviceWorker.register('/virtus-staff-app/OneSignalSDKWorker.js', { scope: '/virtus-staff-app/' }).then(function(reg){
+        alert('Diagnostica notifiche\n\nRegistrazioni esistenti:\n' + elenco + '\n\nNuova registrazione: RIUSCITA\nScope: ' + reg.scope);
+      }).catch(function(err){
+        alert('Diagnostica notifiche\n\nRegistrazioni esistenti:\n' + elenco + '\n\nNuova registrazione: FALLITA\nErrore: ' + (err && err.message ? err.message : err));
+      });
+    }).catch(function(err){
+      alert('Diagnostica: errore nel leggere le registrazioni esistenti: ' + (err && err.message ? err.message : err));
+    });
+  }
   function selectLoginUser(nome){
     var row = state.users.find(function(u){ return val(u,'nome') === nome; });
     var pin = row ? String(val(row,'pin')||'').trim() : '';
@@ -602,6 +618,7 @@
       '<div class="role-badge">' + roleLabel + '</div>' +
       '<div class="home-grid">' + tiles + '</div>' +
       '<button class="logout-link" onclick="App.enableNotifiche()">🔔 Attiva notifiche</button>' +
+      '<button class="logout-link" onclick="App.diagnosticaNotifiche()">🔧 Diagnostica notifiche</button>' +
       '<button class="logout-link" onclick="App.openModal(\'set_pin\')">Imposta il tuo PIN</button>' +
       '<button class="logout-link" onclick="App.logout()">Cambia utente</button>' +
     '</div>';
@@ -1573,7 +1590,7 @@
   }
 
   window.App = {
-    login: login, logout: logout, goto: goto, goHome: goHome, setFilter: setFilter, enableNotifiche: enableNotifiche,
+    login: login, logout: logout, goto: goto, goHome: goHome, setFilter: setFilter, enableNotifiche: enableNotifiche, diagnosticaNotifiche: diagnosticaNotifiche,
     selectLoginUser: selectLoginUser, updateLoginPin: updateLoginPin, updateLoginPinConfirm: updateLoginPinConfirm,
     cancelLoginPin: cancelLoginPin, submitLoginPin: submitLoginPin, skipLoginPinSetup: skipLoginPinSetup, submitLoginPinSetup: submitLoginPinSetup,
     checkItem: checkItem, resolveIssue: resolveIssue, removeBacheca: removeBacheca, removeNotaTurno: removeNotaTurno,
