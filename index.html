@@ -463,31 +463,31 @@
     render();
   }
   function enableNotifiche(){
-    var responded = false;
+    var done = false;
+    function finish(msg){
+      if (done) return;
+      done = true;
+      alert(msg);
+    }
     setTimeout(function(){
-      if (!responded) {
-        responded = true;
-        alert('Il sistema delle notifiche non ha risposto entro pochi secondi.\n\nControlla la connessione internet e riprova. Se continua, verifichiamo insieme la configurazione OneSignal.');
-      }
-    }, 4000);
+      finish('Il sistema delle notifiche non ha risposto entro 20 secondi.\n\nControlla la connessione internet e riprova. Se continua, verifichiamo insieme la configurazione OneSignal.');
+    }, 20000);
     try {
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       window.OneSignalDeferred.push(function(OneSignal){
-        if (responded) return;
-        responded = true;
         try {
           var supported = OneSignal.Notifications.isPushSupported();
           if (!supported) {
-            alert('Questo dispositivo/browser non supporta le notifiche push.\n\nSu iPhone serve iOS 16.4 o più recente E l\'app aggiunta alla schermata Home (non basta aprirla da Safari).');
+            finish('Questo dispositivo/browser non supporta le notifiche push.\n\nSu iPhone serve iOS 16.4 o più recente E l\'app aggiunta alla schermata Home (non basta aprirla da Safari).');
             return;
           }
         } catch (e) {
-          alert('Errore nel controllo compatibilità: ' + (e && e.message ? e.message : e));
+          finish('Errore nel controllo compatibilità: ' + (e && e.message ? e.message : e));
           return;
         }
         OneSignal.Notifications.requestPermission().then(function(){
           if (!OneSignal.Notifications.permission) {
-            alert('Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
+            finish('Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
             return;
           }
           var tries = 0;
@@ -496,21 +496,18 @@
             var sub = OneSignal.User.PushSubscription;
             if (sub.id || tries >= 10) {
               var info = 'Permesso: concesso\nIscritto: ' + (sub.optedIn ? 'si' : 'no') + '\nID iscrizione: ' + (sub.id || '(nessuno dopo ' + tries + ' tentativi)');
-              alert('Notifiche attivate su questo telefono.\n\n' + info);
+              finish('Notifiche attivate su questo telefono.\n\n' + info);
             } else {
               setTimeout(check, 1000);
             }
           };
           check();
         }).catch(function(err){
-          alert('Errore attivazione notifiche: ' + (err && err.message ? err.message : err));
+          finish('Errore attivazione notifiche: ' + (err && err.message ? err.message : err));
         });
       });
     } catch (e) {
-      if (!responded) {
-        responded = true;
-        alert('Errore avvio notifiche: ' + (e && e.message ? e.message : e));
-      }
+      finish('Errore avvio notifiche: ' + (e && e.message ? e.message : e));
     }
   }
   function diagnosticaNotifiche(){
