@@ -369,6 +369,16 @@
     var saved = localStorage.getItem(STORAGE_KEY);
     if (saved) { state.user = JSON.parse(saved); state.screen = 'home'; }
   } catch(e){}
+  if (state.user && state.user.nome) identifyOneSignalUser(state.user.nome);
+
+  function identifyOneSignalUser(nome){
+    try {
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(function(OneSignal){
+        OneSignal.login(nome).catch(function(){});
+      });
+    } catch(e){}
+  }
 
   function render(){
     var inner = state.screen === 'login' ? renderLogin() : renderScreen();
@@ -449,6 +459,7 @@
     var gestisceTurni = row ? !!String(val(row,'gestisce turni')||'').trim() : false;
     state.user = { nome: nome, ruolo: ruolo, gestisceTurni: gestisceTurni };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user)); } catch(e){}
+    identifyOneSignalUser(nome);
     state.pendingLoginUser = null;
     state.loginPinInput = '';
     state.loginPinConfirm = '';
@@ -459,6 +470,10 @@
   }
   function logout(){
     try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+    try {
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(function(OneSignal){ OneSignal.logout().catch(function(){}); });
+    } catch(e){}
     state.user = null;
     state.screen = 'login';
     state.usersLoaded = false;
