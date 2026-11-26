@@ -25,7 +25,12 @@ var TOKEN_DAYS = 30;
 
 // Schede e colonne che l'app si aspetta
 var SCHEMA = {
-  Utenti:             ['Nome', 'Ruolo', 'Pin', 'Gestisce turni', 'Tipo', 'Ore contratto', 'Telefono'],
+  Utenti:             ['Nome', 'Ruolo', 'Pin', 'Gestisce turni', 'Tipo', 'Ore contratto', 'Telefono', 'Giorni ferie anno', 'Ore permesso anno'],
+  Assenze:            ['ID', 'Dipendente', 'Tipo', 'Dal', 'Al', 'Dalle', 'Alle', 'Giorni', 'Ore', 'Stato', 'Nota', 'Motivo rifiuto', 'Richiesto il', 'Gestito da'],
+  Tipi_Assenza:       ['ID', 'Nome', 'Colore', 'A ore', 'Scala ferie', 'Scala permessi', 'Approvazione'],
+  Richieste_Turno:    ['ID', 'Dipendente', 'Data', 'Modello', 'Dalle', 'Alle', 'Riposo', 'Motivo', 'Stato', 'Risposta', 'Richiesto il', 'Gestito da'],
+  Festivi:            ['ID', 'Data', 'Nome'],
+  Impostazioni:       ['Chiave', 'Valore'],
   Turni:              ['ID', 'Data', 'Ora inizio', 'Ora fine', 'Dipendente', 'Modello', 'Note', 'Creato da'],
   Turni_Modello:      ['ID', 'Nome', 'Ora inizio', 'Ora fine', 'Colore'],
   Note_Turni:         ['ID', 'Dipendente', 'Nota', 'Creato da'],
@@ -42,6 +47,22 @@ var SCHEMA = {
 
 // Schede che solo titolare e responsabili possono modificare
 var PROTETTE = { Turni: true, Turni_Modello: true, Utenti: true, Ferie: true };
+// Schede che solo la titolare può modificare (regole di ferie e permessi)
+var SOLO_TITOLARE = { Tipi_Assenza: true, Festivi: true, Impostazioni: true };
+
+var TIPI_ASSENZA_INIZIALI = [
+  // Nome, Colore, A ore, Scala ferie, Scala permessi, Approvazione
+  ['Ferie',               'verde',   '',   'si', '',   'si'],
+  ['Permesso',            'azzurro', 'si', '',   'si', 'si'],
+  ['Malattia',            'rosa',    '',   '',   '',   ''],
+  ['Riposo compensativo', 'lilla',   '',   '',   '',   'si'],
+  ['Altro',               'giallo',  '',   '',   '',   'si']
+];
+var IMPOSTAZIONI_INIZIALI = [
+  ['Giorni ferie base', '26'],
+  ['Max assenti stesso giorno', '2'],
+  ['Conta domeniche', 'no']
+];
 
 var MODELLI_INIZIALI = [
   ['Colazione',  '07:00', '12:00', 'giallo'],
@@ -78,6 +99,20 @@ function setup() {
       appendObj_(tm, { ID: (Date.now() + i) + '-m', Nome: m[0], 'Ora inizio': m[1], 'Ora fine': m[2], Colore: m[3] });
     });
   }
+  var ta = ss.getSheetByName('Tipi_Assenza');
+  if (ta.getLastRow() < 2) {
+    TIPI_ASSENZA_INIZIALI.forEach(function (t, i) {
+      appendObj_(ta, { ID: (Date.now() + i) + '-t', Nome: t[0], Colore: t[1], 'A ore': t[2], 'Scala ferie': t[3], 'Scala permessi': t[4], Approvazione: t[5] });
+    });
+  }
+  var im = ss.getSheetByName('Impostazioni');
+  var giaPresenti = readRows_('Impostazioni').map(function (r) { return String(r.Chiave).trim(); });
+  IMPOSTAZIONI_INIZIALI.forEach(function (x) {
+    if (giaPresenti.indexOf(x[0]) === -1) appendObj_(im, { Chiave: x[0], Valore: x[1] });
+  });
+  // Promemoria automatico ogni mattina alle 8
+  var haTrigger = ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'promemoriaAssenze'; });
+  if (!haTrigger) ScriptApp.newTrigger('promemoriaAssenze').timeBased().everyDays(1).atHour(8).inTimezone('Europe/Rome').create();
   secret_();
   Logger.log('Setup completato: ' + Object.keys(SCHEMA).length + ' schede pronte.');
 }
@@ -88,6 +123,14 @@ function doGet(e) {
   var nome = p.sheet;
   if (!nome || !SCHEMA[nome]) return json_({ error: 'Scheda non valida' });
   var rows = readRows_(nome);
+  if (nome === 'Assenze' || nome === 'Richieste_Turno') {
+    // Privacy: la titolare e i responsabili vedono tutto, gli altri solo le proprie righe
+    var io = userFromToken_(p.token);
+    if (!(io && isManager_(io))) {
+      var chi = String(io ? io.nome : (p.nome || '')).trim().toLowerCase();
+      rows = chi ? rows.filter(function (r) { return String(r.Dipendente || '').trim().toLowerCase() === chi; }) : [];
+    }
+  }
   if (nome === 'Utenti') {
     var me = userFromToken_(p.token);
     var manager = !!(me && isManager_(me));
@@ -122,6 +165,16 @@ function doPost(e) {
     if (!nome || !SCHEMA[nome]) return json_({ error: 'Scheda non valida' });
     var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(nome);
     if (!sh) return json_({ error: 'Scheda "' + nome + '" non trovata. Esegui setup.' });
+
+    if (nome === 'Assenze') return json_(assenze_(sh, body, action));
+    if (nome === 'Richieste_Turno') return json_(richiesteTurno_(sh, body, action));
+
+    if (SOLO_TITOLARE[nome]) {
+      var tit = userFromToken_(body.token);
+      if (!tit || tit.ruolo !== 'titolare') {
+        return json_({ error: 'Queste impostazioni le può cambiare solo la titolare. Esci e rientra con il tuo PIN.', auth: !tit });
+      }
+    }
 
     if (PROTETTE[nome]) {
       var me = userFromToken_(body.token);
@@ -245,6 +298,170 @@ function getUser_(nome) {
 }
 function isManager_(u) {
   return u.ruolo === 'titolare' || u.ruolo === 'responsabile' || !!u.gestisce;
+}
+
+// ---------- FERIE E PERMESSI ----------
+function assenze_(sh, body, action) {
+  var me = userFromToken_(body.token);
+  var titolare = !!(me && me.ruolo === 'titolare');
+  var data = body.data || {};
+
+  if (action === 'add') {
+    var chi = String(data.Dipendente || '').trim();
+    if (!titolare) {
+      if (me) chi = me.nome;                         // chi è entrato col PIN chiede solo per sé
+      else if (!getUser_(chi)) return { error: 'Nome non trovato.' };
+    }
+    if (!chi) return { error: 'Manca il nome della persona.' };
+    var tipo = tipoAssenza_(data.Tipo);
+    if (!tipo) return { error: 'Tipo di assenza non valido.' };
+    var serveOk = String(tipo.Approvazione || '').trim().toLowerCase() === 'si';
+    var row = {
+      ID: Date.now() + '-' + Math.floor(Math.random() * 10000),
+      Dipendente: chi, Tipo: tipo.Nome,
+      Dal: String(data.Dal || ''), Al: String(data.Al || data.Dal || ''),
+      Dalle: String(data.Dalle || ''), Alle: String(data.Alle || ''),
+      Giorni: String(data.Giorni || ''), Ore: String(data.Ore || ''),
+      Stato: titolare || !serveOk ? 'approvata' : 'in attesa',
+      Nota: String(data.Nota || ''), 'Motivo rifiuto': '',
+      'Richiesto il': Utilities.formatDate(new Date(), 'Europe/Rome', 'yyyy-MM-dd HH:mm'),
+      'Gestito da': titolare ? me.nome : ''
+    };
+    if (!row.Dal) return { error: 'Manca la data.' };
+    appendObj_(sh, row);
+    try {
+      var periodo = periodoTxt_(row);
+      if (titolare && chi !== me.nome) {
+        sendPush_('🌴 Assenza registrata', row.Tipo + ' · ' + periodo, [chi]);
+      } else if (row.Stato === 'in attesa') {
+        sendPush_('📝 Nuova richiesta da ' + chi, row.Tipo + ' · ' + periodo, titolari_());
+      } else {
+        sendPush_('ℹ️ ' + chi + ': ' + row.Tipo, periodo, titolari_());
+      }
+    } catch (err) { Logger.log('Notifica non inviata: ' + err.message); }
+    return { ok: true, id: row.ID, stato: row.Stato };
+  }
+
+  var rowIndex = findRow_(sh, body);
+  if (rowIndex < 0) return { error: 'Richiesta non trovata.' };
+  var attuale = rowAsObj_(sh, rowIndex);
+
+  if (action === 'delete') {
+    var mia = me && String(attuale.Dipendente).trim().toLowerCase() === me.nome.toLowerCase();
+    if (!titolare && !(mia && attuale.Stato === 'in attesa')) {
+      return { error: 'Puoi annullare solo le tue richieste ancora in attesa.', auth: !me };
+    }
+    sh.deleteRow(rowIndex);
+    return { ok: true };
+  }
+
+  if (action === 'update') {
+    if (!titolare) return { error: 'Solo la titolare può approvare o modificare le assenze.', auth: !me };
+    var upd = {};
+    ['Stato', 'Motivo rifiuto', 'Nota', 'Dal', 'Al', 'Dalle', 'Alle', 'Giorni', 'Ore', 'Tipo'].forEach(function (k) {
+      if (data[k] != null) upd[k] = String(data[k]);
+    });
+    if (upd.Stato) upd['Gestito da'] = me.nome;
+    var hs = ensureHeaders_(sh, Object.keys(upd));
+    Object.keys(upd).forEach(function (k) {
+      sh.getRange(rowIndex, hs.indexOf(k) + 1).setNumberFormat('@').setValue(upd[k]);
+    });
+    try {
+      if (upd.Stato === 'approvata') sendPush_('✅ Richiesta approvata', attuale.Tipo + ' · ' + periodoTxt_(attuale), [attuale.Dipendente]);
+      if (upd.Stato === 'rifiutata') sendPush_('❌ Richiesta rifiutata', attuale.Tipo + ' · ' + periodoTxt_(attuale) + (upd['Motivo rifiuto'] ? ' — ' + upd['Motivo rifiuto'] : ''), [attuale.Dipendente]);
+    } catch (err) { Logger.log('Notifica non inviata: ' + err.message); }
+    return { ok: true };
+  }
+  return { error: 'Azione sconosciuta' };
+}
+
+// ---------- RICHIESTE DI TURNO (es. "il 3 dicembre vorrei fare la mattina") ----------
+function richiesteTurno_(sh, body, action) {
+  var me = userFromToken_(body.token);
+  var titolare = !!(me && me.ruolo === 'titolare');
+  var data = body.data || {};
+
+  if (action === 'add') {
+    var chi = me ? me.nome : String(data.Dipendente || '').trim();
+    if (!me && !getUser_(chi)) return { error: 'Nome non trovato.' };
+    if (!data.Data) return { error: 'Manca il giorno.' };
+    var row = {
+      ID: Date.now() + '-' + Math.floor(Math.random() * 10000),
+      Dipendente: chi, Data: String(data.Data).slice(0, 10),
+      Modello: String(data.Modello || ''), Dalle: String(data.Dalle || ''), Alle: String(data.Alle || ''),
+      Riposo: data.Riposo ? 'si' : '', Motivo: String(data.Motivo || ''),
+      Stato: 'in attesa', Risposta: '',
+      'Richiesto il': Utilities.formatDate(new Date(), 'Europe/Rome', 'yyyy-MM-dd HH:mm'), 'Gestito da': ''
+    };
+    appendObj_(sh, row);
+    try { sendPush_('📝 Richiesta turno da ' + chi, richiestaTxt_(row), titolari_()); } catch (err) { Logger.log(err.message); }
+    return { ok: true, id: row.ID, stato: row.Stato };
+  }
+
+  var rowIndex = findRow_(sh, body);
+  if (rowIndex < 0) return { error: 'Richiesta non trovata.' };
+  var attuale = rowAsObj_(sh, rowIndex);
+
+  if (action === 'delete') {
+    var mia = me && String(attuale.Dipendente).trim().toLowerCase() === me.nome.toLowerCase();
+    if (!titolare && !(mia && attuale.Stato === 'in attesa')) return { error: 'Puoi annullare solo le tue richieste ancora in attesa.', auth: !me };
+    sh.deleteRow(rowIndex);
+    return { ok: true };
+  }
+
+  if (action === 'update') {
+    if (!titolare) return { error: 'Solo la titolare può approvare le richieste di turno.', auth: !me };
+    var upd = {};
+    ['Stato', 'Risposta'].forEach(function (k) { if (data[k] != null) upd[k] = String(data[k]); });
+    if (upd.Stato) upd['Gestito da'] = me.nome;
+    var hs = ensureHeaders_(sh, Object.keys(upd));
+    Object.keys(upd).forEach(function (k) { sh.getRange(rowIndex, hs.indexOf(k) + 1).setNumberFormat('@').setValue(upd[k]); });
+    try {
+      if (upd.Stato === 'approvata') sendPush_('✅ Richiesta turno approvata', richiestaTxt_(attuale), [attuale.Dipendente]);
+      if (upd.Stato === 'rifiutata') sendPush_('❌ Richiesta turno non accolta', richiestaTxt_(attuale) + (upd.Risposta ? ' — ' + upd.Risposta : ''), [attuale.Dipendente]);
+    } catch (err) { Logger.log(err.message); }
+    return { ok: true };
+  }
+  return { error: 'Azione sconosciuta' };
+}
+function richiestaTxt_(r) {
+  var cosa = r.Riposo === 'si' ? 'giorno di riposo' : ((r.Modello ? r.Modello + ' ' : '') + r.Dalle + '–' + r.Alle);
+  return fmtIt_(String(r.Data).slice(0, 10)) + ' · ' + cosa + (r.Motivo ? ' (' + r.Motivo + ')' : '');
+}
+
+function tipoAssenza_(nome) {
+  var key = String(nome || '').trim().toLowerCase();
+  return readRows_('Tipi_Assenza').filter(function (t) { return String(t.Nome).trim().toLowerCase() === key; })[0] || null;
+}
+function titolari_() {
+  return readRows_('Utenti')
+    .filter(function (u) { return String(u.Ruolo || '').trim().toLowerCase() === 'titolare'; })
+    .map(function (u) { return String(u.Nome).trim(); });
+}
+function periodoTxt_(r) {
+  var dal = fmtIt_(String(r.Dal).slice(0, 10)), al = fmtIt_(String(r.Al || r.Dal).slice(0, 10));
+  var txt = dal === al ? dal : 'dal ' + dal + ' al ' + al;
+  if (r.Dalle && r.Alle) txt += ' · ' + r.Dalle + '–' + r.Alle;
+  return txt;
+}
+function rowAsObj_(sh, rowIndex) {
+  var h = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  var v = sh.getRange(rowIndex, 1, 1, sh.getLastColumn()).getValues()[0];
+  var o = {};
+  h.forEach(function (k, i) { if (String(k).trim()) o[String(k).trim()] = String(v[i]); });
+  return o;
+}
+
+// Parte da solo ogni mattina alle 8 (creato da setup): avvisa chi inizia un'assenza domani
+function promemoriaAssenze() {
+  var domani = Utilities.formatDate(new Date(Date.now() + 86400000), 'Europe/Rome', 'yyyy-MM-dd');
+  var chi = [];
+  readRows_('Assenze').forEach(function (r) {
+    if (r.Stato !== 'approvata' || String(r.Dal).slice(0, 10) !== domani) return;
+    sendPush_('⏰ Promemoria: domani ' + r.Tipo, periodoTxt_(r), [String(r.Dipendente).trim()]);
+    chi.push(r.Dipendente + ' (' + r.Tipo + ')');
+  });
+  if (chi.length) sendPush_('⏰ Domani assenti', chi.join(', '), titolari_());
 }
 
 // ---------- NOTIFICHE ----------

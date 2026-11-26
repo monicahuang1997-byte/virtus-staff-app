@@ -162,7 +162,7 @@
   /* ---------- Pianificatore turni ---------- */
   #root.root-wide{max-width:1200px;}
   .app-shell.app-shell-wide{max-width:1200px;}
-  #root.root-wide .sheet{max-width:560px;margin:0 auto;}
+  #root .sheet{max-width:560px;margin:0 auto;}
   .pl-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
   .pl-btn{background:var(--card);border:1px solid rgba(20,15,40,0.08);border-radius:100px;padding:8px 14px;font-weight:700;font-size:12.5px;color:var(--text);}
   .pl-btn-primary{background:var(--accent);border-color:var(--accent);color:#14121a;}
@@ -189,7 +189,7 @@
   .pl-shift-name{font-size:10.5px;opacity:0.85;margin-top:2px;}
   .pl-ferie{display:block;text-align:center;border-radius:12px;padding:7px 4px;margin-bottom:5px;background:rgba(20,15,40,0.05);color:var(--text-muted);font-size:11px;font-weight:700;}
   .pl-add{width:100%;border:1px dashed rgba(20,15,40,0.15);background:none;border-radius:12px;color:var(--text-muted3);font-size:16px;padding:4px 0;}
-  .pl-foot td{font-size:11px;color:var(--text-muted2);padding:9px 6px;text-align:center;background:rgba(20,15,40,0.025);position:sticky;bottom:0;}
+  .pl-foot td{font-size:11px;color:var(--text-muted2);padding:9px 6px;text-align:center;background:#f6f5fa;position:sticky;bottom:0;z-index:2;box-shadow:0 -1px 0 rgba(20,15,40,0.08);}
   .pl-foot td.pl-name{background:#f3f2f8;font-weight:700;}
   .pl-model-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
   .pl-model{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid;border-radius:14px;padding:10px 12px;text-align:left;width:100%;}
@@ -201,6 +201,88 @@
   .btn-danger-soft{width:100%;background:oklch(0.95 0.03 30);color:oklch(0.45 0.16 30);border:none;border-radius:14px;padding:12px;font-weight:800;font-size:14px;margin-top:10px;}
   .pl-sub{font-size:13px;color:var(--text-muted);margin:-8px 0 16px;}
   #root,.app-scroll{min-width:0;}
+  /* ---------- Ferie e permessi ---------- */
+  .as-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0;}
+  .rt-badge{display:block;width:100%;border:1px dashed #e0b84a;background:#fff8e1;color:#7a5a00;border-radius:10px;padding:5px 4px;font-size:10.5px;font-weight:700;margin-bottom:5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rt-badge-ok{border-style:solid;border-color:#a9d98b;background:#eef9e6;color:#2f5a14;}
+  .plm-day-body .rt-badge{font-size:12.5px;padding:8px;border-radius:12px;margin:0;}
+  .week-nav.nav-center{justify-content:center;gap:14px;}
+  .nav-center .week-nav-label{min-width:150px;text-align:center;}
+  .app-scroll{padding-bottom:96px !important;}
+  /* Titolare/responsabili su computer: schermate più larghe */
+  #root.root-mid{max-width:920px;}
+  .app-shell.app-shell-mid{max-width:920px;}
+  .app-shell-mid .home-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));}
+  .app-shell-mid .asm-d{min-height:72px;}
+  .as-saldo-card{background:var(--card);border-radius:16px;padding:14px;margin-top:10px;}
+  .as-saldo-card .as-saldo{margin-top:8px;}
+  .as-tabs .chip{flex:none;position:relative;}
+  .as-count{display:inline-block;min-width:18px;height:18px;line-height:18px;border-radius:9px;background:var(--danger);color:#fff;font-size:10.5px;text-align:center;margin-left:6px;padding:0 5px;}
+  .as-card{background:var(--card);border-radius:18px;padding:14px;margin-top:14px;}
+  .as-saldo{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
+  .as-saldo div{background:rgba(20,15,40,0.04);border-radius:12px;padding:10px 6px;text-align:center;}
+  .as-saldo b{display:block;font-family:Nunito,sans-serif;font-size:20px;font-weight:800;}
+  .as-saldo span{font-size:10.5px;color:var(--text-muted);}
+  .as-title{font-family:Nunito,sans-serif;font-weight:800;font-size:16px;}
+  .as-year{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:12px;}
+  .as-month-name{font-weight:800;font-size:12.5px;margin-bottom:6px;}
+  .as-mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .as-dh{font-size:8.5px;color:var(--text-muted3);text-align:center;font-weight:700;}
+  .as-d{font-size:10px;text-align:center;border-radius:6px;padding:3px 0;color:var(--text);border:1px solid transparent;}
+  .as-d-out{visibility:hidden;}
+  .as-d-fest{color:var(--danger);font-weight:700;}
+  .as-d-sun{color:var(--text-muted3);}
+  .as-d-today{border-color:var(--accent);font-weight:800;}
+  .as-d-pend{border-style:dashed !important;background:transparent !important;}
+  .as-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--text-muted);}
+  .as-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px;border:1px solid;}
+  .as-item{background:var(--card);border-radius:16px;padding:14px;margin-top:10px;border-left:5px solid;}
+  .as-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .as-item-title{font-weight:800;font-size:14.5px;}
+  .as-item-sub{font-size:12px;color:var(--text-muted);margin-top:4px;line-height:1.5;}
+  .as-warn{background:oklch(0.96 0.04 70);color:oklch(0.42 0.12 60);border-radius:10px;padding:8px 10px;font-size:12px;margin-top:8px;line-height:1.45;}
+  .as-stato{border-radius:100px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .as-stato-attesa{background:oklch(0.95 0.06 85);color:oklch(0.45 0.12 70);}
+  .as-stato-approvata{background:oklch(0.92 0.06 150);color:oklch(0.38 0.13 150);}
+  .as-stato-rifiutata{background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);}
+  .as-btn-row{display:flex;gap:8px;margin-top:10px;}
+  .as-btn-row button{flex:1;border:none;border-radius:12px;padding:10px;font-weight:800;font-size:13px;}
+  .as-ok{background:var(--good);color:#14121a;}
+  .as-no{background:oklch(0.95 0.03 30);color:oklch(0.45 0.16 30);}
+  .as-team-wrap{margin-top:12px;overflow:auto;max-height:calc(100vh - 250px);background:var(--card);border-radius:18px;}
+  .as-team{border-collapse:separate;border-spacing:0;width:100%;}
+  .as-team th,.as-team td{border-bottom:1px solid rgba(20,15,40,0.06);text-align:center;padding:0;}
+  .as-team th{position:sticky;top:0;background:var(--card);z-index:2;font-size:9.5px;color:var(--text-muted);padding:6px 0;min-width:28px;}
+  .as-team th b{display:block;font-size:11.5px;color:var(--text);}
+  .as-team .as-tname{position:sticky;left:0;background:var(--card);z-index:1;text-align:left;padding:8px 10px;font-size:12.5px;font-weight:700;min-width:110px;max-width:130px;border-right:1px solid rgba(20,15,40,0.06);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .as-team th.as-tname{z-index:3;}
+  .as-team .as-off{background:rgba(20,15,40,0.035);}
+  .as-tc{height:34px;cursor:pointer;}
+  .as-tc span{display:block;margin:4px 2px;height:24px;border-radius:6px;border:1px solid;}
+  .as-tcount td{font-size:10.5px;font-weight:700;color:var(--text-muted2);padding:6px 0;position:sticky;bottom:0;background:#f3f2f8;}
+  .as-tcount td.as-over{color:#fff;background:var(--danger);}
+  .as-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .as-table th{font-size:11px;color:var(--text-muted);text-align:right;padding:8px 6px;font-weight:700;}
+  .as-table td{padding:10px 6px;border-top:1px solid rgba(20,15,40,0.06);text-align:right;}
+  .as-table th:first-child,.as-table td:first-child{text-align:left;}
+  .as-toggle{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13.5px;}
+  .as-toggle input{width:20px;height:20px;}
+  .as-row-x{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-top:1px solid rgba(20,15,40,0.06);font-size:13px;}
+  .as-x{background:rgba(20,15,40,0.06);border:none;border-radius:50%;width:26px;height:26px;font-size:14px;flex:none;}
+  .field select{width:100%;background:var(--input);border:1px solid rgba(20,15,40,0.1);border-radius:12px;padding:12px 14px;font-size:14px;}
+  .asm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px;}
+  .asm-dh{font-size:11px;font-weight:700;color:var(--text-muted3);text-align:center;padding-bottom:2px;}
+  .asm-d{min-height:56px;border-radius:12px;border:1px solid rgba(20,15,40,0.07);background:rgba(20,15,40,0.015);padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--text);font-family:inherit;}
+  .asm-out{visibility:hidden;}
+  .asm-n{font-weight:800;font-size:15px;}
+  .asm-t{font-size:9px;line-height:1.15;font-weight:700;text-align:center;overflow:hidden;width:100%;white-space:nowrap;text-overflow:ellipsis;padding:0 2px;}
+  .asm-e{font-size:13px;line-height:1;}
+  .asm-fest .asm-n{color:var(--danger);}
+  .asm-sun .asm-n{color:var(--text-muted3);}
+  .asm-today{border:2px solid var(--accent);}
+  .asm-pend{border-style:dashed !important;background:transparent !important;}
+  .asm-fest-list{font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6;}
+  @media (max-width:700px){ .as-year{grid-template-columns:repeat(2,1fr);gap:10px;} .as-saldo b{font-size:17px;} }
   /* Pianificatore su telefono: una persona alla volta, giorni in verticale */
   .plm-people{display:flex;gap:8px;overflow-x:auto;margin:14px -12px 0;padding:0 12px 4px;-webkit-overflow-scrolling:touch;}
   .plm-chip{flex:none;background:var(--card);border:1px solid rgba(20,15,40,0.08);border-radius:14px;padding:8px 12px;text-align:left;color:var(--text);}
@@ -262,6 +344,7 @@
 
   var MODULES = [
     { key: 'turni', icon: '🗓️', label: 'Turni' },
+    { key: 'assenze', icon: '🌴', label: 'Ferie e permessi' },
     { key: 'checklist', icon: '✅', label: 'Checklist apertura/chiusura' },
     { key: 'bacheca', icon: '📣', label: 'Bacheca' },
     { key: 'vendita', icon: '🍷', label: 'Vendita e prodotto' },
@@ -419,7 +502,8 @@
   function userToken(){ return (state.user && state.user.token) || ''; }
   function apiGet(sheet){
     var tk = userToken();
-    return fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet) + (tk ? '&token=' + encodeURIComponent(tk) : ''))
+    var who = state.user && state.user.nome ? '&nome=' + encodeURIComponent(state.user.nome) : '';
+    return fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet) + (tk ? '&token=' + encodeURIComponent(tk) : '') + who)
       .then(function(r){ return r.json(); })
       .then(function(data){ return Array.isArray(data) ? data : []; })
       .catch(function(){ return null; });
@@ -474,15 +558,25 @@
 
   function render(){
     var inner = state.screen === 'login' ? renderLogin() : renderScreen();
-    var showVoice = state.screen !== 'login' && state.screen !== 'planner';
-    var wide = state.screen === 'planner';
-    document.getElementById('root').className = wide ? 'root-wide' : '';
-    var html = '<div class="app-shell' + (wide ? ' app-shell-wide' : '') + '"><div class="app-scroll">' + inner + '</div>' +
+    var wide = state.screen === 'planner' || (state.screen === 'assenze' && state.asTab === 'team');
+    // Su computer chi gestisce vede tutte le schermate più larghe
+    var mid = !wide && state.screen !== 'login' && state.user && isManager(state.user) && window.innerWidth >= 900;
+    var showVoice = state.screen !== 'login' && !wide;
+    document.getElementById('root').className = wide ? 'root-wide' : mid ? 'root-mid' : '';
+    var html = '<div class="app-shell' + (wide ? ' app-shell-wide' : mid ? ' app-shell-mid' : '') + '"><div class="app-scroll">' + inner + '</div>' +
       (showVoice ? '<button class="fab-voice" onclick="App.openVoice()">🎙️</button>' : '') +
       '</div>' +
       (state.screen !== 'login' && state.activeModal ? renderModal() : '') +
       (state.voiceOpen ? renderVoiceSheet() : '');
     document.getElementById('root').innerHTML = html;
+    // Panoramica Team: porta in vista il giorno di oggi (utile sul telefono)
+    if (state.screen === 'assenze' && state.asTab === 'team' && state.asScrolledMonth !== state.asMonth) {
+      var oggi = document.querySelector('.as-team th[data-today]'), wrap = document.querySelector('.as-team-wrap');
+      if (wrap && document.querySelector('.as-team')) {
+        if (oggi) wrap.scrollLeft = Math.max(0, oggi.offsetLeft - 150);
+        state.asScrolledMonth = state.asMonth;
+      }
+    }
   }
 
   function ensureLoaded(sheet){
@@ -711,7 +805,12 @@
     var mods = MODULES.slice();
     var tiles = mods.map(function(m){
       var unseen = false;
-      if (m.key === 'bacheca') {
+      if (m.key === 'assenze') {
+        if (isTitolare(state.user)) {
+          ensureLoaded('Assenze');
+          unseen = !!state.cache.Assenze && asRows().some(function(a){ return a.stato === 'in attesa'; });
+        }
+      } else if (m.key === 'bacheca') {
         var bRows = state.cache.Bacheca;
         unseen = !!bRows && rowsLatestTs(bachecaVisibleRows(bRows), true) > getSeen('Bacheca');
       } else {
@@ -723,7 +822,12 @@
         '<div class="home-tile-icon">' + m.icon + '</div><div class="home-tile-label">' + m.label + '</div></button>';
     }).join('');
     if (canManageTurni(state.user)) {
-      tiles = '<button class="home-tile" style="grid-column:1 / -1;background:var(--accent);" onclick="App.goto(\'planner\')">' +
+      var rtDot = '';
+      if (isTitolare(state.user)) {
+        ensureLoaded('Richieste_Turno');
+        if (state.cache.Richieste_Turno && rtPending().length) rtDot = '<span class="home-tile-dot"></span>';
+      }
+      tiles = '<button class="home-tile" style="grid-column:1 / -1;background:var(--accent);" onclick="App.goto(\'planner\')">' + rtDot +
         '<div class="home-tile-icon">🧩</div><div class="home-tile-label">Pianificatore turni<br><span style="font-weight:500;font-size:12px;">Crea i turni di tutto lo staff</span></div></button>' + tiles;
     }
     if (isManager(state.user)) {
@@ -818,7 +922,7 @@
         renderTurniSummary(days, rows);
     }
     var addBtn = manager ? '<button class="btn-round" onclick="App.openTurnoAdd()">+</button>' : '';
-    return '<div>' + renderTopBarWithAction('Turni', addBtn) + weekNav + body + renderNotePreferenze() + '</div>';
+    return '<div>' + renderTopBarWithAction('Turni', addBtn) + weekNav + body + renderMieRichiesteTurno() + renderNotePreferenze() + '</div>';
   }
 
   function renderNotePreferenze(){
@@ -1133,7 +1237,7 @@
     ensureLoaded('Ferie');
     var log = state.cache.Checklist_Log, scorte = state.cache.Scorte, manut = state.cache.Manutenzione,
       users = state.cache.Utenti, turni = state.cache.Turni, ferie = state.cache.Ferie;
-    var addBtnFerie = '<button class="btn-round" onclick="App.openFerieRange()">+</button>';
+    var addBtnFerie = '';
     if (!log || !scorte || !manut || !users || !turni || !ferie) {
       return '<div>' + renderTopBarWithAction('Cruscotto', addBtnFerie) + '<div class="center-loading">Calcolo i dati…</div></div>';
     }
@@ -1238,7 +1342,9 @@
     return '<div>' + renderTopBarWithAction('Cruscotto', addBtnFerie) +
       '<div class="lb-card">' + (lbHtml || '<div class="empty-hint">Ancora nessun dato.</div>') + '</div>' +
       '<div class="oreferie-title">Ore del mese</div>' + monthBody +
-      '<div class="oreferie-title">Ferie per settimana</div>' + ferieBody +
+      '<div class="oreferie-title">Ferie e assenze</div>' +
+      '<button class="btn-submit" onclick="App.goto(\'assenze\')">🌴 Apri Ferie e permessi</button>' +
+      (weekKeys.length ? '<div class="section-label" style="margin-top:20px;">Ferie segnate con il vecchio sistema</div>' + ferieBody : '') +
       '</div>';
   }
 
@@ -1294,18 +1400,32 @@
     }).filter(function(s){ return s.oi != null && s.of != null; })
       .sort(function(a,b){ return a.oi - b.oi; });
   }
-  function plHasFerie(nome, dateStr){
+  // Assenza approvata (nuovo sistema "Ferie e permessi") o ferie del vecchio foglio Ferie
+  function plAssenzaDi(nome, dateStr){
+    var a = state.cache.Assenze ? asOn(nome, dateStr, false)[0] : null;
+    if (a) {
+      var col = asColore(a.tipo);
+      return { label: asEmoji(a.tipo) + ' ' + a.tipo + (a.dalle ? ' ' + a.dalle + '–' + a.alle : ''), tipo: a.tipo, col: col };
+    }
     var key = String(nome).trim().toLowerCase();
-    return (state.cache.Ferie || []).some(function(r){
+    var old = (state.cache.Ferie || []).some(function(r){
       return String(val(r,'data')).slice(0,10) === dateStr && String(val(r,'dipendente')||'').trim().toLowerCase() === key;
     });
+    return old ? { label: '🌴 Ferie', tipo: 'Ferie', col: null } : null;
+  }
+  function plHasFerie(nome, dateStr){ return !!plAssenzaDi(nome, dateStr); }
+  function plAssenzaHtml(nome, dateStr, cls){
+    var a = plAssenzaDi(nome, dateStr);
+    if (!a) return '';
+    var st = a.col ? ' style="background:' + a.col.bg + ';color:' + a.col.fg + ';"' : '';
+    return '<div class="' + cls + '"' + st + '>' + esc(a.label) + '</div>';
   }
   function plPeople(dates){
     var ORD = { fisso:0, extra:1, chiamata:2 };
     var people = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); }).map(function(u){
       return { nome: String(val(u,'nome')).trim(), tipo: tipoOf(u), ruolo: normRole(val(u,'ruolo')),
         ore: parseFloat(String(val(u,'ore contratto')||'').replace(',','.')) || 0,
-        tel: String(val(u,'telefono')||''), inFoglio: true };
+        tel: String(val(u,'telefono')||''), gf: String(val(u,'giorni ferie anno')||''), op: String(val(u,'ore permesso anno')||''), inFoglio: true };
     });
     // Chi ha turni in settimana ma non è nel foglio Utenti (es. extra scritti a mano)
     var known = people.map(function(p){ return p.nome.toLowerCase(); });
@@ -1320,21 +1440,23 @@
   }
 
   function renderPlanner(){
-    ['Turni','Utenti','Ferie','Turni_Modello'].forEach(function(s){ ensureLoaded(s); });
+    ['Turni','Utenti','Ferie','Turni_Modello','Assenze','Tipi_Assenza','Richieste_Turno'].forEach(function(s){ ensureLoaded(s); });
+    var rtN = state.cache.Richieste_Turno ? rtPending().length : 0;
     var days = plDays();
     var dates = days.map(fmtDate);
     var t = todayStr();
-    var weekNav = '<div class="week-nav" style="max-width:420px;"><button class="week-nav-btn" onclick="App.shiftWeek(-1)">‹</button>' +
+    var weekNav = '<div class="week-nav nav-center"><button class="week-nav-btn" onclick="App.shiftWeek(-1)">‹</button>' +
       '<div class="week-nav-label">' + esc(fmtDayLabel(days[0])) + ' – ' + esc(fmtDayLabel(days[6])) + '</div>' +
       '<button class="week-nav-btn" onclick="App.shiftWeek(1)">›</button></div>';
     var actions = '<div class="pl-actions">' +
       '<button class="pl-btn" onclick="App.plOpenPersona(-1)">+ Persona</button>' +
       '<button class="pl-btn" onclick="App.plOpenModelli()">🎨 Turni modello</button>' +
+      '<button class="pl-btn" onclick="App.rtOpenLista()">📝 Richieste turno' + (rtN ? '<span class="as-count">' + rtN + '</span>' : '') + '</button>' +
       '<button class="pl-btn pl-btn-primary" onclick="App.plNotifica()">📣 Avvisa lo staff</button></div>';
 
     var c = state.cache;
     var body;
-    if (!c.Turni || !c.Utenti || !c.Ferie || !c.Turni_Modello) body = '<div class="center-loading">Carico il pianificatore…</div>';
+    if (!c.Turni || !c.Utenti || !c.Ferie || !c.Turni_Modello || !c.Assenze || !c.Tipi_Assenza) body = '<div class="center-loading">Carico il pianificatore…</div>';
     else {
       var people = plPeople(dates);
       state.plPeople = people;
@@ -1350,7 +1472,7 @@
         var cells = dates.map(function(ds, di){
           var shifts = plShiftsOf(p.nome, ds);
           if (shifts.length) dayTot[di].persone++;
-          var html = plHasFerie(p.nome, ds) ? '<span class="pl-ferie">🌴 Ferie</span>' : '';
+          var html = plAssenzaHtml(p.nome, ds, 'pl-ferie') + rtBadge(p.nome, ds);
           html += shifts.map(function(s){
             var ore = s.of - s.oi;
             oreSett += ore; dayTot[di].ore += ore;
@@ -1424,7 +1546,7 @@
       var d = parseDate(ds);
       var shifts = plShiftsOf(p.nome, ds);
       var inTurno = people.filter(function(x){ return plShiftsOf(x.nome, ds).length; }).length;
-      var html = plHasFerie(p.nome, ds) ? '<div class="plm-ferie">🌴 Ferie</div>' : '';
+      var html = plAssenzaHtml(p.nome, ds, 'plm-ferie') + rtBadge(p.nome, ds);
       html += shifts.map(function(s){
         var col = plColor(s.modello, s.oi);
         return '<button class="plm-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
@@ -1443,8 +1565,8 @@
   // Se la finestra passa da "computer" a "telefono" (o viceversa) ridisegna il pianificatore
   var plWasPhone = null;
   window.addEventListener('resize', function(){
-    var now = plIsPhone();
-    if (state.screen === 'planner' && now !== plWasPhone && !state.activeModal) render();
+    var now = plIsPhone() + '|' + (window.innerWidth >= 900);
+    if (plWasPhone !== null && now !== plWasPhone && state.screen !== 'login' && !state.activeModal) render();
     plWasPhone = now;
   });
 
@@ -1488,7 +1610,8 @@
     if (e.of <= e.oi) { alert("L'ora di fine deve essere dopo l'ora di inizio"); return; }
     var overlap = plShiftsOf(e.nome, e.data).some(function(s){ return String(s.id) !== String(e.id) && s.oi < e.of && e.oi < s.of; });
     if (overlap && !confirm(e.nome + ' ha già un turno che si sovrappone in questo giorno. Salvare comunque?')) return;
-    if (!e.id && plHasFerie(e.nome, e.data) && !confirm(e.nome + ' è in ferie questo giorno. Salvare comunque?')) return;
+    var ass = !e.id ? plAssenzaDi(e.nome, e.data) : null;
+    if (ass && !confirm(e.nome + ' quel giorno è assente (' + ass.tipo + '). Salvare comunque?')) return;
     var data = { 'Ora inizio': hourLabel(e.oi), 'Ora fine': hourLabel(e.of), Modello: e.modello || '' };
     var req;
     if (e.id) req = { sheet: 'Turni', action: 'update', id: e.id, data: data };
@@ -1513,8 +1636,8 @@
   function plOpenPersona(pi){
     var p = pi >= 0 && state.plPeople ? state.plPeople[pi] : null;
     state.plPersona = p
-      ? { orig: p.inFoglio ? p.nome : '', nome: p.nome, tipo: p.tipo, ruolo: p.ruolo, ore: p.ore ? String(p.ore) : '', tel: p.tel }
-      : { orig: '', nome: '', tipo: 'extra', ruolo: 'dipendente', ore: '', tel: '' };
+      ? { orig: p.inFoglio ? p.nome : '', nome: p.nome, tipo: p.tipo, ruolo: p.ruolo, ore: p.ore ? String(p.ore) : '', tel: p.tel, gf: p.gf || '', op: p.op || '' }
+      : { orig: '', nome: '', tipo: 'extra', ruolo: 'dipendente', ore: '', tel: '', gf: '', op: '' };
     state.activeModal = 'pl_persona';
     render();
   }
@@ -1526,7 +1649,8 @@
     var nome = String(p.nome || '').trim();
     if (!nome) { alert('Scrivi il nome'); return; }
     var data = { Tipo: p.tipo, Ruolo: p.tipo === 'fisso' ? p.ruolo : 'dipendente',
-      'Ore contratto': String(p.ore || '').trim(), Telefono: String(p.tel || '').trim() };
+      'Ore contratto': String(p.ore || '').trim(), Telefono: String(p.tel || '').trim(),
+      'Giorni ferie anno': String(p.gf || '').trim(), 'Ore permesso anno': String(p.op || '').trim() };
     var req;
     if (p.orig) req = { sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: p.orig, data: data };
     else {
@@ -1662,6 +1786,8 @@
         ruoloHtml +
         '<div class="field"><div class="field-label">Ore settimanali da contratto (facoltativo)</div><input inputmode="decimal" value="' + esc(p.ore) + '" oninput="App.plPersonaField(\'ore\', this.value)" placeholder="Es. 40"/></div>' +
         '<div class="field"><div class="field-label">Telefono (facoltativo)</div><input type="tel" value="' + esc(p.tel) + '" oninput="App.plPersonaField(\'tel\', this.value)"/></div>' +
+        (p.tipo === 'fisso' ? '<div class="field"><div class="field-label">Giorni di ferie all\'anno (vuoto = valore base)</div><input inputmode="decimal" value="' + esc(p.gf) + '" oninput="App.plPersonaField(\'gf\', this.value)" placeholder="Es. 26"/></div>' +
+          '<div class="field"><div class="field-label">Ore di permesso all\'anno (facoltativo)</div><input inputmode="decimal" value="' + esc(p.op) + '" oninput="App.plPersonaField(\'op\', this.value)"/></div>' : '') +
         (p.tel && !isNew ? '<a href="tel:' + esc(p.tel) + '" class="pl-btn" style="display:inline-block;text-decoration:none;margin-bottom:12px;">📞 Chiama</a>' : '') +
         '<button class="btn-submit" onclick="App.plSavePersona()">Salva</button>' +
         (!isNew ? '<button class="btn-danger-soft" onclick="App.plDeletePersona()">Rimuovi dallo staff</button>' : '') + close;
@@ -1688,6 +1814,859 @@
     return '';
   }
 
+  // ---------- Ferie e permessi ----------
+  var MESI_LUNGHI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  function siNo(v){ var s = String(v||'').trim().toLowerCase(); return s === 'si' || s === 'sì' || s === 'true'; }
+  function numIt(v){ var n = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isNaN(n) ? null : n; }
+  function impost(chiave, def){
+    var r = (state.cache.Impostazioni || []).find(function(x){ return String(val(x,'chiave')||'').trim().toLowerCase() === chiave.toLowerCase(); });
+    var v = r ? String(val(r,'valore')||'').trim() : '';
+    return v !== '' ? v : def;
+  }
+  function asLimite(){ return parseInt(impost('Max assenti stesso giorno', '2'), 10) || 2; }
+  function asTipi(){
+    return (state.cache.Tipi_Assenza || []).filter(function(t){ return String(val(t,'nome')||'').trim(); }).map(function(t){
+      return { id: t[findKey(t,'ID')], nome: String(val(t,'nome')).trim(), colore: String(val(t,'colore')||'').trim().toLowerCase(),
+        aOre: siNo(val(t,'a ore')), scalaFerie: siNo(val(t,'scala ferie')), scalaPermessi: siNo(val(t,'scala permessi')), approvazione: siNo(val(t,'approvazione')) };
+    });
+  }
+  function asTipo(nome){
+    var k = String(nome||'').trim().toLowerCase();
+    return asTipi().find(function(t){ return t.nome.toLowerCase() === k; }) ||
+      { nome: nome || 'Assenza', colore: 'giallo', aOre: false, scalaFerie: false, scalaPermessi: false, approvazione: true };
+  }
+  function asColore(nome){ return PL_COLORI[asTipo(nome).colore] || PL_COLORI.giallo; }
+  function asEmoji(nome){
+    var k = String(nome||'').toLowerCase();
+    if (k.indexOf('ferie') !== -1) return '🌴';
+    if (k.indexOf('malatt') !== -1) return '🤒';
+    if (k.indexOf('permess') !== -1) return '⏱️';
+    if (k.indexOf('riposo') !== -1) return '😴';
+    return '📅';
+  }
+  var asMemo = { src: null, rows: [] };
+  function asRows(){
+    var src = state.cache.Assenze;
+    if (asMemo.src === src) return asMemo.rows;
+    asMemo.src = src;
+    asMemo.rows = (src || []).map(function(r){
+      return { id: r[findKey(r,'ID')], nome: String(val(r,'dipendente')||'').trim(), tipo: String(val(r,'tipo')||'').trim(),
+        dal: String(val(r,'dal')||'').slice(0,10), al: String(val(r,'al')||val(r,'dal')||'').slice(0,10),
+        dalle: String(val(r,'dalle')||''), alle: String(val(r,'alle')||''),
+        giorni: numIt(val(r,'giorni')) || 0, ore: numIt(val(r,'ore')) || 0,
+        stato: String(val(r,'stato')||'').trim().toLowerCase(), nota: String(val(r,'nota')||''),
+        motivo: String(val(r,'motivo rifiuto')||''), gestito: String(val(r,'gestito da')||'') };
+    }).filter(function(a){ return a.nome && a.dal; });
+    return asMemo.rows;
+  }
+  function asOn(nome, ds, includePending){
+    var k = String(nome).toLowerCase();
+    return asRows().filter(function(a){
+      return a.nome.toLowerCase() === k && a.dal <= ds && a.al >= ds && (a.stato === 'approvata' || (includePending && a.stato === 'in attesa'));
+    });
+  }
+
+  // Festivi nazionali (calcolati, Pasqua compresa) + festivi aggiunti dalla titolare
+  function pasqua(y){
+    var a=y%19, b=Math.floor(y/100), c=y%100, d=Math.floor(b/4), e=b%4, f=Math.floor((b+8)/25), g=Math.floor((b-f+1)/3),
+      h=(19*a+b-d-g+15)%30, i=Math.floor(c/4), k=c%4, l=(32+2*e+2*i-h-k)%7, m=Math.floor((a+11*h+22*l)/451),
+      month=Math.floor((h+l-7*m+114)/31), day=((h+l-7*m+114)%31)+1;
+    return new Date(y, month-1, day);
+  }
+  var festiviCache = {};
+  function festiviNazionali(y){
+    if (festiviCache[y]) return festiviCache[y];
+    var f = {};
+    function add(m, d, n){ f[y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0')] = n; }
+    add(1,1,'Capodanno'); add(1,6,'Epifania'); add(4,25,'Festa della Liberazione'); add(5,1,'Festa del lavoro');
+    add(6,2,'Festa della Repubblica'); add(8,15,'Ferragosto'); add(11,1,'Ognissanti'); add(12,8,'Immacolata');
+    add(12,25,'Natale'); add(12,26,'Santo Stefano');
+    var p = pasqua(y);
+    f[fmtDate(p)] = 'Pasqua'; f[fmtDate(addDays(p,1))] = 'Lunedì dell\'Angelo';
+    festiviCache[y] = f;
+    return f;
+  }
+  function festivoNome(ds){
+    var n = festiviNazionali(parseInt(ds.slice(0,4),10))[ds];
+    if (n) return n;
+    var c = (state.cache.Festivi || []).find(function(r){ return String(val(r,'data')).slice(0,10) === ds; });
+    return c ? (String(val(c,'nome')||'').trim() || 'Festivo') : '';
+  }
+  function asContaDomeniche(){ return siNo(impost('Conta domeniche', 'no')); }
+  function asContaGiorni(dal, al){
+    if (!dal || !al || al < dal) return 0;
+    var dom = asContaDomeniche(), n = 0, cur = parseDate(dal), end = fmtDate(parseDate(al)), guard = 0;
+    while (fmtDate(cur) <= end && guard++ < 400) {
+      if (!(cur.getDay() === 0 && !dom) && !festivoNome(fmtDate(cur))) n++;
+      cur = addDays(cur, 1);
+    }
+    return n;
+  }
+  function asRegolaTxt(){ return asContaDomeniche() ? 'esclusi i festivi' : 'escluse domeniche e festivi'; }
+
+  // Saldi
+  function asUtente(nome){
+    var k = String(nome).toLowerCase();
+    return (state.cache.Utenti || []).find(function(u){ return String(val(u,'nome')||'').trim().toLowerCase() === k; });
+  }
+  function asSaldo(nome, anno){
+    var u = asUtente(nome);
+    var g = u ? numIt(val(u,'giorni ferie anno')) : null;
+    if (g == null) g = numIt(impost('Giorni ferie base', '26')) || 0;
+    var o = u ? numIt(val(u,'ore permesso anno')) : null;
+    var s = { spettanti: g, approvate: 0, attesa: 0, oreSpettanti: o || 0, oreUsate: 0, oreAttesa: 0 };
+    var k = String(nome).toLowerCase();
+    asRows().forEach(function(a){
+      if (a.nome.toLowerCase() !== k || a.dal.slice(0,4) !== String(anno)) return;
+      var t = asTipo(a.tipo);
+      if (t.scalaFerie) { if (a.stato === 'approvata') s.approvate += a.giorni; else if (a.stato === 'in attesa') s.attesa += a.giorni; }
+      if (t.scalaPermessi) { if (a.stato === 'approvata') s.oreUsate += a.ore; else if (a.stato === 'in attesa') s.oreAttesa += a.ore; }
+    });
+    s.residue = s.spettanti - s.approvate;
+    return s;
+  }
+
+  // Sovrapposizioni con altre persone
+  function asOverlap(nome, dal, al, exceptId){
+    var k = String(nome).toLowerCase();
+    return asRows().filter(function(x){
+      return String(x.id) !== String(exceptId) && x.nome.toLowerCase() !== k &&
+        (x.stato === 'approvata' || x.stato === 'in attesa') && x.dal <= al && x.al >= dal;
+    });
+  }
+  function asMaxAssenti(nome, dal, al, exceptId){
+    var others = asOverlap(nome, dal, al, exceptId), max = 0, cur = parseDate(dal), end = fmtDate(parseDate(al)), g = 0;
+    while (fmtDate(cur) <= end && g++ < 400) {
+      var ds = fmtDate(cur), names = [];
+      others.forEach(function(x){ if (x.dal <= ds && x.al >= ds && names.indexOf(x.nome.toLowerCase()) === -1) names.push(x.nome.toLowerCase()); });
+      if (names.length + 1 > max) max = names.length + 1;
+      cur = addDays(cur, 1);
+    }
+    return max;
+  }
+  function asOverlapWarn(nome, dal, al, exceptId){
+    var others = asOverlap(nome, dal, al, exceptId);
+    if (!others.length) return '';
+    var max = asMaxAssenti(nome, dal, al, exceptId);
+    return '<div class="as-warn">' + (max >= asLimite() ? '⚠️ <b>' + max + ' persone assenti</b> nello stesso giorno. ' : '') +
+      'Nello stesso periodo: ' + others.map(function(x){
+        return esc(x.nome) + ' (' + esc(x.tipo) + ', ' + asPeriodo(x) + (x.stato === 'in attesa' ? ', in attesa' : '') + ')';
+      }).join('; ') + '</div>';
+  }
+
+  function asPeriodo(a){
+    var d1 = parseDate(a.dal), d2 = parseDate(a.al);
+    function f(d){ return d.getDate() + ' ' + MESI_SHORT[d.getMonth()]; }
+    var s = a.dal === a.al ? GIORNI_LABELS[(d1.getDay()+6)%7] + ' ' + f(d1) + ' ' + d1.getFullYear() : f(d1) + ' – ' + f(d2) + ' ' + d2.getFullYear();
+    if (a.dalle && a.alle) s += ' · ' + a.dalle + '–' + a.alle;
+    return s;
+  }
+  function asQuanto(a){
+    if (asTipo(a.tipo).aOre || a.dalle) return fmtOre(a.ore) + ' h';
+    return fmtOre(a.giorni) + (a.giorni === 1 ? ' giorno' : ' giorni');
+  }
+  function asStatoHtml(s){
+    var m = { 'in attesa': ['attesa','In attesa'], 'approvata': ['approvata','Approvata'], 'rifiutata': ['rifiutata','Rifiutata'] }[s] || ['attesa', s || '—'];
+    return '<span class="as-stato as-stato-' + m[0] + '">' + m[1] + '</span>';
+  }
+  function asItemHtml(a, ctx){
+    var col = asColore(a.tipo);
+    var html = '<div class="as-item" style="border-left-color:' + col.bd + ';"><div class="as-item-head"><div>' +
+      '<div class="as-item-title">' + (ctx === 'mie' ? '' : esc(a.nome) + ' · ') + asEmoji(a.tipo) + ' ' + esc(a.tipo) + '</div>' +
+      '<div class="as-item-sub">' + asPeriodo(a) + ' · ' + asQuanto(a) + '</div></div>' + asStatoHtml(a.stato) + '</div>';
+    if (a.nota) html += '<div class="as-item-sub">📝 ' + esc(a.nota) + '</div>';
+    if (a.stato === 'rifiutata' && a.motivo) html += '<div class="as-item-sub">Motivo: ' + esc(a.motivo) + '</div>';
+    if (a.gestito && a.stato !== 'in attesa' && ctx !== 'mie') html += '<div class="as-item-sub">Gestita da ' + esc(a.gestito) + '</div>';
+    if (ctx === 'approva') {
+      html += asOverlapWarn(a.nome, a.dal, a.al, a.id) +
+        '<div class="as-btn-row"><button class="as-ok" onclick="App.asDecidi(\'' + esc(a.id) + '\',\'approvata\')">Approva</button>' +
+        '<button class="as-no" onclick="App.asDecidi(\'' + esc(a.id) + '\',\'rifiutata\')">Rifiuta</button></div>';
+    } else if (ctx === 'mie' && a.stato === 'in attesa') {
+      html += '<button class="btn-resolve" onclick="App.asAnnulla(\'' + esc(a.id) + '\')">Annulla richiesta</button>';
+    } else if (ctx === 'tutte' && isTitolare(state.user)) {
+      html += '<button class="btn-resolve" onclick="App.asAnnulla(\'' + esc(a.id) + '\')">Elimina</button>';
+    }
+    return html + '</div>';
+  }
+  function asLegend(){
+    return '<div class="as-legend">' + asTipi().map(function(t){
+      var c = PL_COLORI[t.colore] || PL_COLORI.giallo;
+      return '<span><i style="background:' + c.bg + ';border-color:' + c.bd + ';"></i>' + esc(t.nome) + '</span>';
+    }).join('') + '<span><i style="background:transparent;border:1px dashed #999;"></i>in attesa</span>' +
+      '<span style="color:var(--danger);font-weight:700;">rosso = festivo</span></div>';
+  }
+  function asPeople(){
+    var ORD = { fisso:0, extra:1, chiamata:2 };
+    var ppl = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); })
+      .map(function(u){ return { nome: String(val(u,'nome')).trim(), tipo: tipoOf(u) }; });
+    var known = ppl.map(function(p){ return p.nome.toLowerCase(); });
+    asRows().forEach(function(a){
+      if (known.indexOf(a.nome.toLowerCase()) === -1) { known.push(a.nome.toLowerCase()); ppl.push({ nome: a.nome, tipo: 'extra' }); }
+    });
+    return ppl.sort(function(a,b){ return (ORD[a.tipo] - ORD[b.tipo]) || a.nome.localeCompare(b.nome); });
+  }
+  function asNav(label, fn){
+    return '<div class="week-nav nav-center"><button class="week-nav-btn" onclick="App.' + fn + '(-1)">‹</button>' +
+      '<div class="week-nav-label">' + label + '</div><button class="week-nav-btn" onclick="App.' + fn + '(1)">›</button></div>';
+  }
+
+  // -- Schermata principale --
+  function renderAssenze(){
+    if (!state.asYear) state.asYear = new Date().getFullYear();
+    if (!state.asMonth) state.asMonth = todayStr().slice(0,7);
+    ['Assenze','Tipi_Assenza','Impostazioni','Festivi','Utenti'].forEach(function(s){ ensureLoaded(s); });
+    var c = state.cache, tit = isTitolare(state.user), man = isManager(state.user);
+    var pend = c.Assenze ? asRows().filter(function(a){ return a.stato === 'in attesa'; }).length : 0;
+    var tabs = [{ k:'mie', l:'Le mie' }];
+    if (tit) tabs.push({ k:'approva', l:'Da approvare', n: pend });
+    if (man) { tabs.push({ k:'team', l:'Team' }); tabs.push({ k:'saldi', l:'Saldi' }); }
+    if (tit) tabs.push({ k:'impost', l:'Impostazioni' });
+    if (!tabs.some(function(t){ return t.k === state.asTab; })) state.asTab = 'mie';
+    var tabsHtml = tabs.length > 1 ? '<div class="as-tabs">' + tabs.map(function(t){
+      return '<button class="chip ' + (state.asTab === t.k ? 'chip-active' : '') + '" onclick="App.asSetTab(\'' + t.k + '\')">' + t.l +
+        (t.n ? '<span class="as-count">' + t.n + '</span>' : '') + '</button>';
+    }).join('') + '</div>' : '';
+    var body;
+    if (!c.Assenze || !c.Tipi_Assenza || !c.Impostazioni || !c.Festivi || !c.Utenti) body = '<div class="center-loading">Carico ferie e permessi…</div>';
+    else body = ({ mie: asRenderMie, approva: asRenderApprova, team: asRenderTeam, saldi: asRenderSaldi, impost: asRenderImpost })[state.asTab]();
+    var addBtn = '<button class="btn-round" onclick="App.asOpenRichiesta(-1,\'\',false)">+</button>';
+    return '<div>' + renderTopBarWithAction('Ferie e permessi', addBtn) + tabsHtml + body + '</div>';
+  }
+
+  function asRenderMie(){
+    if (!state.asCalMonth) state.asCalMonth = todayStr().slice(0,7);
+    var me = state.user.nome, y = parseInt(state.asCalMonth.slice(0,4), 10), s = asSaldo(me, y);
+    var saldo = '<div class="as-card"><div class="as-title">Le tue ferie ' + y + '</div><div class="as-saldo">' +
+      '<div><b>' + fmtOre(s.spettanti) + '</b><span>spettanti</span></div>' +
+      '<div><b>' + fmtOre(s.approvate) + '</b><span>approvate</span></div>' +
+      '<div><b>' + fmtOre(s.attesa) + '</b><span>in attesa</span></div>' +
+      '<div><b style="color:' + (s.residue < 0 ? 'var(--danger)' : 'oklch(0.5 0.13 150)') + ';">' + fmtOre(s.residue) + '</b><span>residue</span></div></div>' +
+      (s.oreSpettanti || s.oreUsate ? '<div class="as-item-sub" style="margin-top:10px;">⏱️ Permessi: <b>' + fmtOre(s.oreUsate) + ' h</b> usate' +
+        (s.oreSpettanti ? ' su ' + fmtOre(s.oreSpettanti) + ' · residue <b>' + fmtOre(s.oreSpettanti - s.oreUsate) + ' h</b>' : '') +
+        (s.oreAttesa ? ' · ' + fmtOre(s.oreAttesa) + ' h in attesa' : '') + '</div>' : '') +
+      '<div class="as-item-sub" style="margin-top:6px;">Giorni contati ' + asRegolaTxt() + '.</div>' +
+      '<button class="btn-submit" style="margin-top:12px;" onclick="App.asOpenRichiesta(-1,\'\',false)">+ Richiedi ferie o permesso</button></div>';
+    var cm = state.asCalMonth.split('-');
+    var cal = '<div class="as-card">' + asNav(MESI_LUNGHI[parseInt(cm[1],10)-1] + ' ' + cm[0], 'asShiftCalMonth') +
+      asMonthCalendar(me, state.asCalMonth) + asLegend() + '</div>';
+    var mine = asRows().filter(function(a){ return a.nome.toLowerCase() === me.toLowerCase() && a.dal.slice(0,4) === String(y); })
+      .sort(function(a,b){ return b.dal.localeCompare(a.dal); });
+    var list = mine.length ? mine.map(function(a){ return asItemHtml(a, 'mie'); }).join('') : '<div class="empty-hint">Nessuna richiesta nel ' + y + '.</div>';
+    return cal + saldo + '<div class="section-label">Le tue richieste ' + y + '</div>' + list;
+  }
+
+  // Calendario di un mese, grande: tocca un giorno per chiedere o vedere un'assenza
+  function asMonthCalendar(nome, ym){
+    var p = ym.split('-'), y = +p[0], m = +p[1] - 1, t = todayStr(), k = String(nome).toLowerCase();
+    var mine = asRows().filter(function(a){ return a.nome.toLowerCase() === k && (a.stato === 'approvata' || a.stato === 'in attesa'); });
+    var lead = (new Date(y, m, 1).getDay() + 6) % 7, dim = new Date(y, m+1, 0).getDate();
+    var cells = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].map(function(x){ return '<div class="asm-dh">' + x + '</div>'; }).join('');
+    for (var i = 0; i < lead; i++) cells += '<div class="asm-d asm-out"></div>';
+    var festList = [];
+    for (var d = 1; d <= dim; d++) {
+      var dt = new Date(y, m, d), ds = fmtDate(dt), fest = festivoNome(ds);
+      if (fest) festList.push(d + ' ' + MESI_SHORT[m] + ' · ' + fest);
+      var a = mine.find(function(x){ return x.dal <= ds && x.al >= ds; });
+      var cls = 'asm-d' + (fest ? ' asm-fest' : '') + (dt.getDay() === 0 && !fest ? ' asm-sun' : '') + (ds === t ? ' asm-today' : '');
+      var style = '', label = '';
+      if (a) {
+        var col = asColore(a.tipo);
+        style = ' style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';"';
+        if (a.stato === 'in attesa') cls += ' asm-pend';
+        label = '<div class="asm-e">' + asEmoji(a.tipo) + '</div><div class="asm-t">' + esc(a.tipo) + '</div>';
+      }
+      var click = a ? 'App.asApriDettaglio(\'' + esc(a.id) + '\')' : 'App.asOpenRichiesta(-1,\'' + ds + '\',false)';
+      cells += '<button class="' + cls + '"' + style + ' onclick="' + click + '"><div class="asm-n">' + d + '</div>' + label + '</button>';
+    }
+    return '<div class="asm-grid">' + cells + '</div>' +
+      (festList.length ? '<div class="asm-fest-list">🔴 Festivi: ' + festList.map(esc).join(' · ') + '</div>' : '') +
+      '<div class="turni-hint">Tocca un giorno libero per fare una richiesta</div>';
+  }
+
+  function asYearCalendar(nome, y){
+    var t = todayStr(), k = String(nome).toLowerCase();
+    var mine = asRows().filter(function(a){ return a.nome.toLowerCase() === k && (a.stato === 'approvata' || a.stato === 'in attesa'); });
+    var out = '<div class="as-year">';
+    for (var m = 0; m < 12; m++) {
+      var lead = (new Date(y, m, 1).getDay() + 6) % 7, dim = new Date(y, m+1, 0).getDate();
+      var cells = ['L','M','M','G','V','S','D'].map(function(x){ return '<div class="as-dh">' + x + '</div>'; }).join('');
+      for (var i = 0; i < lead; i++) cells += '<div class="as-d as-d-out">.</div>';
+      for (var d = 1; d <= dim; d++) {
+        var dt = new Date(y, m, d), ds = fmtDate(dt), fest = festivoNome(ds);
+        var a = mine.find(function(x){ return x.dal <= ds && x.al >= ds; });
+        var cls = 'as-d' + (fest ? ' as-d-fest' : '') + (dt.getDay() === 0 && !fest ? ' as-d-sun' : '') + (ds === t ? ' as-d-today' : '');
+        var style = '';
+        if (a) {
+          var col = asColore(a.tipo);
+          style = ' style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';"';
+          if (a.stato === 'in attesa') cls += ' as-d-pend';
+        }
+        var title = [fest, a ? a.tipo + (a.stato === 'in attesa' ? ' (in attesa)' : '') : ''].filter(Boolean).join(' · ');
+        cells += '<div class="' + cls + '"' + style + (title ? ' title="' + esc(title) + '"' : '') + '>' + d + '</div>';
+      }
+      out += '<div><div class="as-month-name">' + MESI_LUNGHI[m] + '</div><div class="as-mgrid">' + cells + '</div></div>';
+    }
+    return out + '</div>';
+  }
+
+  function asRenderApprova(){
+    var pend = asRows().filter(function(a){ return a.stato === 'in attesa'; }).sort(function(a,b){ return a.dal.localeCompare(b.dal); });
+    var recenti = asRows().filter(function(a){ return a.stato !== 'in attesa'; }).sort(function(a,b){ return b.dal.localeCompare(a.dal); }).slice(0, 15);
+    return '<button class="btn-submit" style="margin-top:14px;" onclick="App.asOpenRichiesta(-1,\'\',true)">+ Registra un\'assenza per un dipendente</button>' +
+      '<div class="section-label">In attesa</div>' +
+      (pend.length ? pend.map(function(a){ return asItemHtml(a, 'approva'); }).join('') : '<div class="empty-hint">Nessuna richiesta da approvare 🎉</div>') +
+      (recenti.length ? '<div class="section-label">Ultime gestite</div>' + recenti.map(function(a){ return asItemHtml(a, 'tutte'); }).join('') : '');
+  }
+
+  function asRenderTeam(){
+    var p = state.asMonth.split('-'), y = +p[0], m = +p[1] - 1, dim = new Date(y, m+1, 0).getDate();
+    var t = todayStr(), tit = isTitolare(state.user), lim = asLimite(), GL = ['D','L','M','M','G','V','S'];
+    var days = [];
+    for (var d = 1; d <= dim; d++) days.push(fmtDate(new Date(y, m, d)));
+    var people = asPeople();
+    state.asPeople = people;
+    var head = '<tr><th class="as-tname">Persone</th>' + days.map(function(ds){
+      var dt = parseDate(ds), fest = festivoNome(ds), off = dt.getDay() === 0 || fest;
+      return '<th class="' + (off ? 'as-off' : '') + '"' + (ds === t ? ' data-today="1"' : '') + (fest ? ' title="' + esc(fest) + '"' : '') + '>' + GL[dt.getDay()] +
+        '<b style="' + (ds === t ? 'color:var(--accent);' : fest ? 'color:var(--danger);' : '') + '">' + dt.getDate() + '</b></th>';
+    }).join('') + '</tr>';
+    var counts = days.map(function(){ return 0; });
+    var rows = people.map(function(pp, pi){
+      return '<tr><td class="as-tname" title="' + esc(pp.nome) + '">' + esc(pp.nome) + '</td>' + days.map(function(ds, di){
+        var dt = parseDate(ds), off = dt.getDay() === 0 || festivoNome(ds);
+        var a = asOn(pp.nome, ds, true)[0], inner = '';
+        if (a) {
+          counts[di]++;
+          var col = asColore(a.tipo), pendente = a.stato === 'in attesa';
+          inner = '<span title="' + esc(pp.nome + ' · ' + a.tipo + (pendente ? ' (in attesa)' : '')) + '" style="background:' + (pendente ? 'transparent' : col.bg) +
+            ';border-color:' + col.bd + ';' + (pendente ? 'border-style:dashed;' : '') + '"></span>';
+        }
+        var click = tit ? ' onclick="App.asCellClick(' + pi + ',\'' + ds + '\')"' : '';
+        return '<td class="as-tc' + (off ? ' as-off' : '') + '"' + click + '>' + inner + '</td>';
+      }).join('') + '</tr>';
+    }).join('');
+    var foot = '<tr class="as-tcount"><td class="as-tname">Assenti</td>' + counts.map(function(n){
+      return '<td class="' + (n >= lim ? 'as-over' : '') + '">' + (n || '') + '</td>';
+    }).join('') + '</tr>';
+    var over = counts.filter(function(n){ return n >= lim; }).length;
+    return asNav(MESI_LUNGHI[m] + ' ' + y, 'asShiftMonth') +
+      '<div class="pl-actions"><button class="pl-btn" onclick="App.asEsporta()">⬇️ Esporta il mese (Excel)</button>' +
+      (tit ? '<button class="pl-btn" onclick="App.asOpenRichiesta(-1,\'\',true)">+ Registra assenza</button>' : '') + '</div>' +
+      (over ? '<div class="as-warn">⚠️ In ' + over + ' giorn' + (over === 1 ? 'o' : 'i') + ' di questo mese ci sono ' + lim + ' o più persone assenti (in rosso in fondo).</div>' : '') +
+      '<div class="as-team-wrap"><table class="as-team"><thead>' + head + '</thead><tbody>' + rows + foot + '</tbody></table></div>' +
+      asLegend() + (tit ? '<div class="turni-hint">Tocca una casella per registrare un\'assenza o gestire quella esistente</div>' : '');
+  }
+
+  function asRenderSaldi(){
+    var y = state.asYear, tit = isTitolare(state.user);
+    var ppl = asPeople().filter(function(p){ return p.tipo === 'fisso'; });
+    state.asSaldiPeople = ppl;
+    if (plIsPhone()) {
+      // Telefono: una scheda per persona invece della tabella
+      var cards = ppl.map(function(p, i){
+        var s = asSaldo(p.nome, y);
+        return '<div class="as-saldo-card"' + (tit ? ' style="cursor:pointer;" onclick="App.asEditSaldo(' + i + ')"' : '') + '>' +
+          '<div class="row-between"><div class="as-title">' + esc(p.nome) + '</div>' + (tit ? '<span class="as-item-sub" style="margin:0;">✏️ modifica</span>' : '') + '</div>' +
+          '<div class="as-saldo"><div><b>' + fmtOre(s.spettanti) + '</b><span>spettanti</span></div><div><b>' + fmtOre(s.approvate) + '</b><span>approvate</span></div>' +
+          '<div><b>' + fmtOre(s.attesa) + '</b><span>in attesa</span></div><div><b style="color:' + (s.residue < 0 ? 'var(--danger)' : 'oklch(0.5 0.13 150)') + ';">' + fmtOre(s.residue) + '</b><span>residue</span></div></div>' +
+          (s.oreSpettanti || s.oreUsate ? '<div class="as-item-sub">⏱️ Permessi: ' + fmtOre(s.oreUsate) + (s.oreSpettanti ? ' / ' + fmtOre(s.oreSpettanti) : '') + ' h</div>' : '') + '</div>';
+      }).join('');
+      return asNav(String(y), 'asShiftYear') + (cards || '<div class="empty-hint">Nessun dipendente fisso.</div>') +
+        '<div class="turni-hint">Giorni di ferie, ' + asRegolaTxt() + '.</div>';
+    }
+    var rows = ppl.map(function(p, i){
+      var s = asSaldo(p.nome, y);
+      return '<tr' + (tit ? ' style="cursor:pointer;" onclick="App.asEditSaldo(' + i + ')"' : '') + '><td><b>' + esc(p.nome) + '</b></td>' +
+        '<td>' + fmtOre(s.spettanti) + '</td><td>' + fmtOre(s.approvate) + '</td><td>' + (s.attesa ? fmtOre(s.attesa) : '–') + '</td>' +
+        '<td style="font-weight:800;color:' + (s.residue < 0 ? 'var(--danger)' : 'inherit') + ';">' + fmtOre(s.residue) + '</td>' +
+        '<td>' + (s.oreSpettanti ? fmtOre(s.oreUsate) + ' / ' + fmtOre(s.oreSpettanti) + ' h' : (s.oreUsate ? fmtOre(s.oreUsate) + ' h' : '–')) + '</td></tr>';
+    }).join('');
+    return asNav(String(y), 'asShiftYear') +
+      '<div class="as-card" style="overflow-x:auto;"><table class="as-table"><thead><tr><th>Persona</th><th>Spettanti</th><th>Approvate</th><th>In attesa</th><th>Residue</th><th>Permessi</th></tr></thead>' +
+      '<tbody>' + (rows || '<tr><td colspan="6">Nessun dipendente fisso.</td></tr>') + '</tbody></table>' +
+      '<div class="as-item-sub" style="margin-top:10px;">Giorni di ferie, ' + asRegolaTxt() + '.' + (tit ? ' Tocca una persona per cambiare i giorni spettanti o le ore di permesso.' : '') + '</div></div>';
+  }
+
+  function asRenderImpost(){
+    var tipi = asTipi();
+    var nt = state.asNewTipo || (state.asNewTipo = { nome: '', colore: 'verde', aOre: false, scalaFerie: false, scalaPermessi: false, approvazione: true });
+    var nf = state.asNewFest || (state.asNewFest = { data: '', nome: '' });
+    var rg = state.asRegole || (state.asRegole = { giorni: impost('Giorni ferie base','26'), max: impost('Max assenti stesso giorno','2'), dom: asContaDomeniche() });
+    var tipiHtml = tipi.map(function(t, i){
+      var c = PL_COLORI[t.colore] || PL_COLORI.giallo;
+      var flags = [t.aOre ? 'a ore' : 'a giorni', t.scalaFerie ? 'scala dalle ferie' : '', t.scalaPermessi ? 'scala dai permessi' : '',
+        t.approvazione ? 'serve approvazione' : 'senza approvazione'].filter(Boolean).join(' · ');
+      return '<div class="as-row-x"><div><span class="as-legend" style="margin:0;display:inline;"><i style="background:' + c.bg + ';border-color:' + c.bd + ';"></i></span><b>' + esc(t.nome) + '</b>' +
+        '<div class="as-item-sub" style="margin-top:2px;">' + flags + '</div></div><button class="as-x" onclick="App.asDelTipo(' + i + ')">&times;</button></div>';
+    }).join('');
+    function tog(k, l){ return '<label class="as-toggle"><input type="checkbox"' + (nt[k] ? ' checked' : '') + ' onchange="App.asTipoField(\'' + k + '\', this.checked)"/>' + l + '</label>'; }
+    var colors = PL_COLORI_KEYS.map(function(k){
+      var c = PL_COLORI[k];
+      return '<button class="pl-color' + (nt.colore === k ? ' pl-color-active' : '') + '" style="background:' + c.bg + ';box-shadow:inset 0 0 0 1px ' + c.bd + ';" onclick="App.asTipoColore(\'' + k + '\')"></button>';
+    }).join('');
+    var naz = festiviNazionali(state.asYear);
+    var nazHtml = Object.keys(naz).sort().map(function(ds){ var d = parseDate(ds); return d.getDate() + ' ' + MESI_SHORT[d.getMonth()] + ' ' + naz[ds]; }).join(' · ');
+    var custom = (state.cache.Festivi || []).filter(function(r){ return String(val(r,'data')||'').trim(); })
+      .sort(function(a,b){ return String(val(a,'data')).localeCompare(String(val(b,'data'))); });
+    var customHtml = custom.map(function(r){
+      return '<div class="as-row-x"><span>' + esc(String(val(r,'data')).slice(0,10)) + ' · ' + esc(val(r,'nome') || 'Festivo') + '</span>' +
+        '<button class="as-x" onclick="App.asDelFest(\'' + esc(r[findKey(r,'ID')]) + '\')">&times;</button></div>';
+    }).join('');
+    return '<div class="as-card"><div class="as-title">Regole</div>' +
+      '<div class="field" style="margin-top:12px;"><div class="field-label">Giorni di ferie all\'anno (base, modificabili per persona nei Saldi)</div><input inputmode="decimal" value="' + esc(rg.giorni) + '" oninput="App.asRegolaField(\'giorni\', this.value)"/></div>' +
+      '<div class="field"><div class="field-label">Avvisa quando sono assenti nello stesso giorno almeno</div><input inputmode="numeric" value="' + esc(rg.max) + '" oninput="App.asRegolaField(\'max\', this.value)"/></div>' +
+      '<label class="as-toggle"><input type="checkbox"' + (rg.dom ? ' checked' : '') + ' onchange="App.asRegolaField(\'dom\', this.checked)"/>Conta anche le domeniche come giorni di ferie</label>' +
+      '<button class="btn-submit" onclick="App.asSalvaRegole()">Salva regole</button></div>' +
+      '<div class="as-card"><div class="as-title">Tipi di assenza</div>' + tipiHtml +
+      '<div class="section-label">Nuovo tipo</div>' +
+      '<div class="field"><input value="' + esc(nt.nome) + '" oninput="App.asTipoField(\'nome\', this.value)" placeholder="Es. Lutto, Studio, Matrimonio"/></div>' +
+      '<div class="pl-colors">' + colors + '</div>' +
+      tog('aOre', 'Si chiede a ore (non a giorni)') + tog('scalaFerie', 'Scala dai giorni di ferie') + tog('scalaPermessi', 'Scala dalle ore di permesso') + tog('approvazione', 'Serve l\'approvazione della titolare') +
+      '<button class="btn-submit" onclick="App.asAddTipo()">Aggiungi tipo</button></div>' +
+      '<div class="as-card"><div class="as-title">Festivi ' + state.asYear + '</div>' +
+      '<div class="as-item-sub" style="margin-top:8px;">Nazionali (automatici): ' + nazHtml + '</div>' +
+      '<div class="section-label">Aggiunti da te (es. Santo Patrono, chiusure)</div>' + (customHtml || '<div class="as-item-sub">Nessuno.</div>') +
+      '<div class="field" style="margin-top:12px;"><input type="date" value="' + esc(nf.data) + '" onchange="App.asFestField(\'data\', this.value)"/></div>' +
+      '<div class="field"><input value="' + esc(nf.nome) + '" oninput="App.asFestField(\'nome\', this.value)" placeholder="Es. Santo Patrono"/></div>' +
+      '<button class="btn-submit" onclick="App.asAddFest()">Aggiungi festivo</button></div>';
+  }
+
+  // -- Azioni --
+  function asSetTab(k){ state.asTab = k; render(); }
+  function asShiftYear(d){ state.asYear += d; render(); }
+  function asShiftCalMonth(d){
+    var p = state.asCalMonth.split('-'), dt = new Date(+p[0], +p[1] - 1 + d, 1);
+    state.asCalMonth = dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0');
+    render();
+  }
+  function asApriDettaglio(id){ state.asDett = id; state.activeModal = 'as_dettaglio'; render(); }
+  function asShiftMonth(d){
+    var p = state.asMonth.split('-'), dt = new Date(+p[0], +p[1] - 1 + d, 1);
+    state.asMonth = dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0');
+    render();
+  }
+  function asOpenRichiesta(pi, ds, perAltri){
+    var tipi = asTipi(), d = ds || todayStr();
+    var p = perAltri && pi >= 0 && state.asPeople ? state.asPeople[pi] : null;
+    state.asForm = { nome: p ? p.nome : (perAltri ? '' : state.user.nome), tipo: tipi[0] ? tipi[0].nome : 'Ferie',
+      dal: d, al: d, dalle: 9, alle: 11, nota: '', perAltri: !!perAltri && isTitolare(state.user) };
+    state.activeModal = 'as_richiesta';
+    render();
+  }
+  function asFormField(k, v, rerender){
+    var f = state.asForm;
+    if (!f) return;
+    f[k] = v;
+    if (k === 'dal' && f.al < f.dal) f.al = f.dal;
+    if (rerender) render();
+  }
+  function asFormTipo(i){ var t = asTipi()[i]; if (t && state.asForm) { state.asForm.tipo = t.nome; render(); } }
+  function asFormPerson(i){ var p = state.asFormPeople && state.asFormPeople[i]; if (p && state.asForm) { state.asForm.nome = p.nome; render(); } }
+  function asFormOra(k, h){
+    var f = state.asForm;
+    if (!f) return;
+    f[k] = h;
+    if (f.alle <= f.dalle) { if (k === 'dalle') f.alle = Math.min(HOUR_END, f.dalle + 1); else f.dalle = Math.max(HOUR_START, f.alle - 1); }
+    render();
+  }
+  function asAfter(sheet, msg){
+    return function(res){
+      state.busy = false;
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); render(); return; }
+      if (state.activeModal && state.activeModal.indexOf('as_') === 0) state.activeModal = null;
+      reload(sheet);
+      render();
+      if (msg) setTimeout(function(){ alert(typeof msg === 'function' ? msg(res) : msg); }, 250);
+    };
+  }
+  function asInvia(){
+    var f = state.asForm;
+    if (!f || state.busy) return;
+    if (!f.nome) { alert('Scegli la persona'); return; }
+    var tipo = asTipo(f.tipo), data = { Dipendente: f.nome, Tipo: f.tipo, Nota: (f.nota || '').trim() };
+    if (tipo.aOre) {
+      if (!f.dal) { alert('Scegli il giorno'); return; }
+      data.Dal = f.dal; data.Al = f.dal; data.Dalle = hourLabel(f.dalle); data.Alle = hourLabel(f.alle); data.Ore = String(f.alle - f.dalle);
+    } else {
+      if (!f.dal || !f.al || f.al < f.dal) { alert('Controlla le date: la fine deve essere uguale o dopo l\'inizio.'); return; }
+      var g = asContaGiorni(f.dal, f.al);
+      if (!g && !confirm('Nel periodo scelto ci sono solo domeniche o festivi (0 giorni conteggiati). Inviare comunque?')) return;
+      data.Dal = f.dal; data.Al = f.al; data.Giorni = String(g);
+    }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Assenze', data: data }).then(asAfter('Assenze', function(res){
+      if (f.perAltri) return 'Assenza registrata ✅';
+      return res.stato === 'in attesa' ? 'Richiesta inviata alla titolare ✅' : 'Registrata e comunicata alla titolare ✅';
+    }));
+  }
+  function asDecidi(id, stato){
+    if (state.busy) return;
+    var data = { Stato: stato };
+    if (stato === 'rifiutata') {
+      var motivo = prompt('Motivo del rifiuto (lo vedrà il dipendente):');
+      if (motivo === null) return;
+      if (!motivo.trim()) { alert('Scrivi il motivo del rifiuto.'); return; }
+      data['Motivo rifiuto'] = motivo.trim();
+    }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Assenze', action: 'update', id: id, data: data }).then(asAfter('Assenze'));
+  }
+  function asAnnulla(id){
+    var a = asRows().find(function(x){ return String(x.id) === String(id); });
+    if (!a || state.busy) return;
+    if (!confirm((a.stato === 'in attesa' ? 'Annullare la richiesta' : 'Eliminare l\'assenza') + ' "' + a.tipo + ' · ' + asPeriodo(a) + '"?')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Assenze', action: 'delete', id: id }).then(asAfter('Assenze'));
+  }
+  function asCellClick(pi, ds){
+    var p = state.asPeople && state.asPeople[pi];
+    if (!p) return;
+    var a = asOn(p.nome, ds, true)[0];
+    if (a) { state.asDett = a.id; state.activeModal = 'as_dettaglio'; render(); }
+    else asOpenRichiesta(pi, ds, true);
+  }
+  function asEditSaldo(i){
+    var p = state.asSaldiPeople && state.asSaldiPeople[i];
+    if (!p || state.busy) return;
+    var u = asUtente(p.nome);
+    var g = prompt('Giorni di ferie all\'anno per ' + p.nome + ' (vuoto = valore base ' + impost('Giorni ferie base','26') + '):', u ? String(val(u,'giorni ferie anno')||'') : '');
+    if (g === null) return;
+    var o = prompt('Ore di permesso all\'anno per ' + p.nome + ' (vuoto = non conteggiate):', u ? String(val(u,'ore permesso anno')||'') : '');
+    if (o === null) return;
+    if ((g.trim() && numIt(g) == null) || (o.trim() && numIt(o) == null)) { alert('Scrivi solo numeri.'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: p.nome, data: { 'Giorni ferie anno': g.trim(), 'Ore permesso anno': o.trim() } }).then(asAfter('Utenti'));
+  }
+  function asTipoField(k, v){ if (state.asNewTipo) state.asNewTipo[k] = v; }
+  function asTipoColore(k){ if (state.asNewTipo) { state.asNewTipo.colore = k; render(); } }
+  function asAddTipo(){
+    var t = state.asNewTipo;
+    if (!t || state.busy) return;
+    var nome = String(t.nome || '').trim();
+    if (!nome) { alert('Scrivi il nome del tipo di assenza'); return; }
+    if (asTipi().some(function(x){ return x.nome.toLowerCase() === nome.toLowerCase(); })) { alert('Esiste già un tipo con questo nome.'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Tipi_Assenza', data: { Nome: nome, Colore: t.colore, 'A ore': t.aOre ? 'si' : '', 'Scala ferie': t.scalaFerie ? 'si' : '',
+      'Scala permessi': t.scalaPermessi ? 'si' : '', Approvazione: t.approvazione ? 'si' : '' } })
+      .then(function(res){ if (res && res.ok) state.asNewTipo = null; asAfter('Tipi_Assenza')(res); });
+  }
+  function asDelTipo(i){
+    var t = asTipi()[i];
+    if (!t || !t.id || state.busy) return;
+    if (!confirm('Eliminare il tipo "' + t.nome + '"? Le assenze già registrate restano.')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Tipi_Assenza', action: 'delete', id: t.id }).then(asAfter('Tipi_Assenza'));
+  }
+  function asFestField(k, v){ if (state.asNewFest) state.asNewFest[k] = v; }
+  function asAddFest(){
+    var f = state.asNewFest;
+    if (!f || state.busy) return;
+    if (!f.data) { alert('Scegli la data'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Festivi', data: { Data: f.data, Nome: String(f.nome || '').trim() || 'Festivo' } })
+      .then(function(res){ if (res && res.ok) state.asNewFest = null; asAfter('Festivi')(res); });
+  }
+  function asDelFest(id){
+    if (!id || state.busy || !confirm('Togliere questo festivo?')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Festivi', action: 'delete', id: id }).then(asAfter('Festivi'));
+  }
+  function asRegolaField(k, v){ if (state.asRegole) state.asRegole[k] = v; }
+  function asSalvaRegole(){
+    var r = state.asRegole;
+    if (!r || state.busy) return;
+    if (numIt(r.giorni) == null || !(parseInt(r.max, 10) >= 1)) { alert('Controlla i numeri: giorni di ferie e numero di persone.'); return; }
+    var voci = [['Giorni ferie base', String(numIt(r.giorni))], ['Max assenti stesso giorno', String(parseInt(r.max, 10))], ['Conta domeniche', r.dom ? 'si' : 'no']];
+    var esistenti = (state.cache.Impostazioni || []).map(function(x){ return String(val(x,'chiave')||'').trim().toLowerCase(); });
+    state.busy = true;
+    render();
+    var chain = Promise.resolve({ ok: true });
+    voci.forEach(function(v){
+      chain = chain.then(function(prev){
+        if (prev && prev.error) return prev;
+        return esistenti.indexOf(v[0].toLowerCase()) !== -1
+          ? apiPost({ sheet: 'Impostazioni', action: 'update', matchField: 'Chiave', matchValue: v[0], data: { Valore: v[1] } })
+          : apiPost({ sheet: 'Impostazioni', data: { Chiave: v[0], Valore: v[1] } });
+      });
+    });
+    chain.then(function(res){ if (res && res.ok) state.asRegole = null; asAfter('Impostazioni', res && res.ok ? 'Regole salvate ✅' : null)(res); });
+  }
+  function asEsporta(){
+    var p = state.asMonth.split('-'), from = state.asMonth + '-01', to = fmtDate(new Date(+p[0], +p[1], 0));
+    var rows = asRows().filter(function(a){ return a.stato === 'approvata' && a.dal <= to && a.al >= from; })
+      .sort(function(a,b){ return a.nome.localeCompare(b.nome) || a.dal.localeCompare(b.dal); });
+    if (!rows.length) { alert('Nessuna assenza approvata in questo mese.'); return; }
+    function cell(x){ return '"' + String(x == null ? '' : x).replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"'; }
+    var lines = [['Dipendente','Tipo','Dal','Al','Dalle','Alle','Giorni','Ore','Nota','Approvata da'].map(cell).join(';')];
+    rows.forEach(function(a){
+      lines.push([a.nome, a.tipo, a.dal, a.al, a.dalle, a.alle, a.giorni ? fmtOre(a.giorni) : '', a.ore ? fmtOre(a.ore) : '', a.nota, a.gestito].map(cell).join(';'));
+    });
+    var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'assenze-' + state.asMonth + '.csv';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(function(){ URL.revokeObjectURL(link.href); link.remove(); }, 1000);
+  }
+
+  function renderAssenzeModal(type){
+    if (state.busy) return '<div class="overlay"><div class="sheet"><div class="center-loading">Salvataggio in corso…</div></div></div>';
+    var open = '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">', close = '</div></div>';
+    function header(title){ return '<div class="sheet-header"><div class="sheet-title">' + title + '</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>'; }
+
+    if (type === 'as_dettaglio') {
+      var a = asRows().find(function(x){ return String(x.id) === String(state.asDett); });
+      if (!a) return '';
+      var mia = a.nome.toLowerCase() === state.user.nome.toLowerCase();
+      var ctx = isTitolare(state.user) ? (a.stato === 'in attesa' && !mia ? 'approva' : 'tutte') : 'mie';
+      return open + header('Assenza') + asItemHtml(a, ctx) + close;
+    }
+
+    var f = state.asForm, tipo = asTipo(f.tipo);
+    var personHtml = '';
+    if (f.perAltri) {
+      var ppl = asPeople();
+      state.asFormPeople = ppl;
+      personHtml = '<div class="field-label">Per chi</div><div class="chips-wrap">' + ppl.map(function(p, i){
+        return '<button class="chip-select ' + (f.nome === p.nome ? 'chip-select-active' : '') + '" onclick="App.asFormPerson(' + i + ')">' + esc(p.nome) + '</button>';
+      }).join('') + '</div>';
+    }
+    var tipiHtml = '<div class="chips-wrap">' + asTipi().map(function(t, i){
+      var c = PL_COLORI[t.colore] || PL_COLORI.giallo, act = t.nome === f.tipo;
+      return '<button class="chip-select" style="background:' + c.bg + ';color:' + c.fg + ';box-shadow:inset 0 0 0 ' + (act ? '2px ' + c.fg : '1px ' + c.bd) + ';" onclick="App.asFormTipo(' + i + ')">' +
+        asEmoji(t.nome) + ' ' + esc(t.nome) + '</button>';
+    }).join('') + '</div>';
+    var when, al = f.al;
+    if (tipo.aOre) {
+      al = f.dal;
+      when = '<div class="field"><div class="field-label">Giorno</div><input type="date" value="' + esc(f.dal) + '" onchange="App.asFormField(\'dal\', this.value, true)"/></div>' +
+        '<div class="field-label">Dalle</div>' + plHourChips(f.dalle, HOUR_START, HOUR_END - 1, 'asFormOra', 'dalle') +
+        '<div class="field-label">Alle</div>' + plHourChips(f.alle, HOUR_START + 1, HOUR_END, 'asFormOra', 'alle') +
+        '<div class="as-item-sub" style="margin-bottom:12px;">Totale: <b>' + (f.alle - f.dalle) + ' ore</b></div>';
+    } else {
+      var g = asContaGiorni(f.dal, f.al);
+      when = '<div class="field"><div class="field-label">Dal</div><input type="date" value="' + esc(f.dal) + '" onchange="App.asFormField(\'dal\', this.value, true)"/></div>' +
+        '<div class="field"><div class="field-label">Al</div><input type="date" value="' + esc(f.al) + '" onchange="App.asFormField(\'al\', this.value, true)"/></div>' +
+        '<div class="as-item-sub" style="margin-bottom:12px;">' + (f.al < f.dal ? '⚠️ La data di fine è prima di quella di inizio.' :
+          'Giorni conteggiati: <b>' + g + '</b> (' + asRegolaTxt() + ')') + '</div>';
+      if (tipo.scalaFerie && f.nome && f.dal) {
+        var s = asSaldo(f.nome, parseInt(f.dal.slice(0,4), 10)), disp = s.residue - s.attesa;
+        when += '<div class="as-item-sub" style="margin:-6px 0 12px;">Ferie ancora disponibili nel ' + f.dal.slice(0,4) + ': <b>' + fmtOre(disp) + '</b>' +
+          (g ? ' → dopo questa: <b style="color:' + (disp - g < 0 ? 'var(--danger)' : 'inherit') + ';">' + fmtOre(disp - g) + '</b>' : '') + '</div>';
+      }
+    }
+    var warn = isManager(state.user) && f.nome && f.dal ? asOverlapWarn(f.nome, f.dal, al, null) : '';
+    var note = f.perAltri ? 'Verrà registrata come già approvata e la persona riceverà una notifica.'
+      : isTitolare(state.user) ? 'Sei la titolare: verrà registrata direttamente come approvata.'
+      : tipo.approvazione ? 'La richiesta arriverà alla titolare per l\'approvazione.' : 'Non serve approvazione: verrà comunicata alla titolare.';
+    return open + header(f.perAltri ? 'Registra un\'assenza' : 'Nuova richiesta') + personHtml +
+      '<div class="field-label">Tipo</div>' + tipiHtml + when + (warn ? '<div style="margin-bottom:12px;">' + warn + '</div>' : '') +
+      '<div class="field"><div class="field-label">Nota (facoltativa)</div><textarea oninput="App.asFormField(\'nota\', this.value)">' + esc(f.nota) + '</textarea></div>' +
+      '<div class="as-item-sub">' + note + '</div>' +
+      '<button class="btn-submit" onclick="App.asInvia()">' + (f.perAltri ? 'Registra' : 'Invia richiesta') + '</button>' + close;
+  }
+
+  // ---------- Richieste di turno (dipendente → titolare) ----------
+  var rtMemo = { src: null, rows: [] };
+  function rtRows(){
+    var src = state.cache.Richieste_Turno;
+    if (rtMemo.src === src) return rtMemo.rows;
+    rtMemo.src = src;
+    rtMemo.rows = (src || []).map(function(r){
+      return { id: r[findKey(r,'ID')], nome: String(val(r,'dipendente')||'').trim(), data: String(val(r,'data')||'').slice(0,10),
+        modello: String(val(r,'modello')||'').trim(), dalle: String(val(r,'dalle')||''), alle: String(val(r,'alle')||''),
+        riposo: siNo(val(r,'riposo')), motivo: String(val(r,'motivo')||''), stato: String(val(r,'stato')||'').trim().toLowerCase(),
+        risposta: String(val(r,'risposta')||''), gestito: String(val(r,'gestito da')||'') };
+    }).filter(function(r){ return r.nome && r.data; });
+    return rtMemo.rows;
+  }
+  function rtPending(){ return rtRows().filter(function(r){ return r.stato === 'in attesa'; }); }
+  function rtCosa(r){ return r.riposo ? '😴 Giorno di riposo' : (r.modello ? r.modello + ' ' : 'Orario ') + r.dalle + '–' + r.alle; }
+  function rtGiorno(ds){ var d = parseDate(ds); return GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() + ' ' + MESI_SHORT[d.getMonth()]; }
+  function rtItemHtml(r, ctx){
+    var html = '<div class="as-item" style="border-left-color:var(--accent);"><div class="as-item-head"><div>' +
+      '<div class="as-item-title">' + (ctx === 'mie' ? '' : esc(r.nome) + ' · ') + '📝 ' + rtGiorno(r.data) + '</div>' +
+      '<div class="as-item-sub">' + esc(rtCosa(r)) + '</div></div>' + asStatoHtml(r.stato) + '</div>';
+    if (r.motivo) html += '<div class="as-item-sub">💬 ' + esc(r.motivo) + '</div>';
+    if (r.risposta) html += '<div class="as-item-sub">Risposta: ' + esc(r.risposta) + '</div>';
+    if (ctx === 'approva') {
+      html += '<div class="as-btn-row"><button class="as-ok" onclick="App.rtApprova(\'' + esc(r.id) + '\')">' + (r.riposo ? 'Approva' : 'Approva e inserisci') + '</button>' +
+        '<button class="as-no" onclick="App.rtRifiuta(\'' + esc(r.id) + '\')">Rifiuta</button></div>';
+    } else if (ctx === 'mie' && r.stato === 'in attesa') {
+      html += '<button class="btn-resolve" onclick="App.rtAnnulla(\'' + esc(r.id) + '\')">Annulla richiesta</button>';
+    } else if (ctx === 'tutte' && isTitolare(state.user)) {
+      html += '<button class="btn-resolve" onclick="App.rtAnnulla(\'' + esc(r.id) + '\')">Elimina</button>';
+    }
+    return html + '</div>';
+  }
+  // Avviso nella griglia del pianificatore: "📝 chiede: Colazione 07–12"
+  function rtBadge(nome, ds){
+    if (!state.cache.Richieste_Turno) return '';
+    var k = String(nome).toLowerCase();
+    return rtRows().filter(function(r){ return r.nome.toLowerCase() === k && r.data === ds && (r.stato === 'in attesa' || r.stato === 'approvata'); })
+      .map(function(r){
+        var p = r.stato === 'in attesa';
+        return '<button class="rt-badge' + (p ? '' : ' rt-badge-ok') + '" title="' + esc(rtCosa(r) + (r.motivo ? ' — ' + r.motivo : '')) + '" onclick="App.rtApri(\'' + esc(r.id) + '\')">' +
+          (p ? '📝 chiede: ' : '✅ richiesto: ') + esc(r.riposo ? 'riposo' : (r.modello || r.dalle + '–' + r.alle)) + '</button>';
+      }).join('');
+  }
+
+  // -- Sezione del dipendente nella schermata Turni --
+  function renderMieRichiesteTurno(){
+    if (isTitolare(state.user)) return '';
+    ensureLoaded('Richieste_Turno');
+    ensureLoaded('Turni_Modello');
+    var head = '<div class="oreferie-title" style="margin-top:26px;">Richieste di turno</div>' +
+      '<div class="screen-sub">Hai un impegno? Chiedi alla titolare un turno o un giorno di riposo, meglio la settimana prima.</div>' +
+      '<button class="btn-submit" style="margin-top:12px;" onclick="App.rtOpen()">📝 Chiedi un turno alla titolare</button>';
+    if (!state.cache.Richieste_Turno) return head + '<div class="center-loading">Carico…</div>';
+    var me = state.user.nome.toLowerCase(), limite = fmtDate(addDays(new Date(), -30));
+    var mine = rtRows().filter(function(r){ return r.nome.toLowerCase() === me && r.data >= limite; })
+      .sort(function(a,b){ return b.data.localeCompare(a.data); });
+    return head + (mine.length ? mine.map(function(r){ return rtItemHtml(r, 'mie'); }).join('') : '');
+  }
+
+  // -- Azioni --
+  function rtOpen(){
+    var lun = fmtDate(addDays(mondayOf(new Date()), 7));
+    state.rtForm = { data: lun, scelta: '', modello: '', dalle: 9, alle: 15, riposo: false, motivo: '' };
+    state.activeModal = 'rt_richiesta';
+    render();
+  }
+  function rtField(k, v, rerender){ if (state.rtForm) { state.rtForm[k] = v; if (rerender) render(); } }
+  function rtPick(i){
+    var f = state.rtForm;
+    if (!f) return;
+    if (i === -1) { f.scelta = 'custom'; f.modello = ''; f.riposo = false; }
+    else if (i === -2) { f.scelta = 'riposo'; f.modello = ''; f.riposo = true; }
+    else { var m = plModelli()[i]; if (!m) return; f.scelta = 'm' + i; f.modello = m.nome; f.dalle = m.oi; f.alle = m.of; f.riposo = false; }
+    render();
+  }
+  function rtOra(k, h){
+    var f = state.rtForm;
+    if (!f) return;
+    f[k] = h;
+    if (f.alle <= f.dalle) { if (k === 'dalle') f.alle = Math.min(HOUR_END, f.dalle + 1); else f.dalle = Math.max(HOUR_START, f.alle - 1); }
+    render();
+  }
+  function rtInvia(){
+    var f = state.rtForm;
+    if (!f || state.busy) return;
+    if (!f.data) { alert('Scegli il giorno'); return; }
+    if (f.data < todayStr()) { alert('Il giorno scelto è già passato.'); return; }
+    if (!f.scelta) { alert('Scegli il turno che vorresti (o il giorno di riposo).'); return; }
+    var data = { Dipendente: state.user.nome, Data: f.data, Motivo: (f.motivo || '').trim() };
+    if (f.riposo) data.Riposo = true;
+    else { data.Modello = f.modello; data.Dalle = hourLabel(f.dalle); data.Alle = hourLabel(f.alle); }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Richieste_Turno', data: data }).then(asAfter('Richieste_Turno', 'Richiesta inviata alla titolare ✅'));
+  }
+  function rtOpenLista(){ ensureLoaded('Richieste_Turno'); state.activeModal = 'rt_lista'; render(); }
+  function rtApri(id){ state.rtDett = id; state.activeModal = 'rt_dett'; render(); }
+  function rtFind(id){ return rtRows().find(function(r){ return String(r.id) === String(id); }); }
+  function rtFine(res){
+    state.busy = false;
+    if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); render(); return; }
+    if (state.activeModal === 'rt_dett') state.activeModal = null;
+    reload('Turni');
+    reload('Richieste_Turno');
+    render();
+  }
+  function rtApprova(id){
+    var r = rtFind(id);
+    if (!r || state.busy) return;
+    var upd = { sheet: 'Richieste_Turno', action: 'update', id: r.id, data: { Stato: 'approvata' } };
+    if (r.riposo) { state.busy = true; render(); apiPost(upd).then(rtFine); return; }
+    if (!state.cache.Turni) { ensureLoaded('Turni'); alert('Sto caricando i turni, riprova tra un attimo.'); return; }
+    var oi = parseHourStr(r.dalle), of = parseHourStr(r.alle);
+    var esistenti = plShiftsOf(r.nome, r.data);
+    var gia = esistenti.some(function(s){ return s.oi === oi && s.of === of; });
+    var daTogliere = [];
+    if (esistenti.length && !gia) {
+      if (!confirm(r.nome + ' ' + rtGiorno(r.data) + ' ha già: ' + esistenti.map(function(s){ return hourLabel(s.oi) + '–' + hourLabel(s.of); }).join(', ') +
+        '.\n\nOK = sostituiscilo con ' + rtCosa(r) + '\nAnnulla = non fare niente')) return;
+      daTogliere = esistenti;
+    }
+    state.busy = true;
+    render();
+    var chain = Promise.resolve({ ok: true });
+    function step(fn){ chain = chain.then(function(prev){ return prev && prev.error ? prev : fn(); }); }
+    daTogliere.forEach(function(s){ step(function(){ return apiPost({ sheet: 'Turni', action: 'delete', id: s.id }); }); });
+    if (!gia) step(function(){
+      return apiPost({ sheet: 'Turni', data: { Data: r.data, 'Ora inizio': hourLabel(oi), 'Ora fine': hourLabel(of), Dipendente: r.nome,
+        Modello: r.modello || '', Note: r.motivo ? 'Richiesto: ' + r.motivo : 'Richiesto dal dipendente', 'Creato da': state.user.nome } });
+    });
+    step(function(){ return apiPost(upd); });
+    chain.then(rtFine);
+  }
+  function rtRifiuta(id){
+    var r = rtFind(id);
+    if (!r || state.busy) return;
+    var motivo = prompt('Vuoi scrivere una risposta a ' + r.nome + '? (facoltativo)', '');
+    if (motivo === null) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Richieste_Turno', action: 'update', id: r.id, data: { Stato: 'rifiutata', Risposta: motivo.trim() } }).then(rtFine);
+  }
+  function rtAnnulla(id){
+    var r = rtFind(id);
+    if (!r || state.busy) return;
+    if (!confirm((r.stato === 'in attesa' ? 'Annullare' : 'Eliminare') + ' la richiesta di ' + rtGiorno(r.data) + '?')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Richieste_Turno', action: 'delete', id: r.id }).then(rtFine);
+  }
+
+  function renderRtModal(type){
+    if (state.busy) return '<div class="overlay"><div class="sheet"><div class="center-loading">Salvataggio in corso…</div></div></div>';
+    var open = '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">', close = '</div></div>';
+    function header(title){ return '<div class="sheet-header"><div class="sheet-title">' + title + '</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>'; }
+    var tit = isTitolare(state.user);
+
+    if (type === 'rt_dett') {
+      var r = rtFind(state.rtDett);
+      if (!r) return '';
+      return open + header('Richiesta di turno') + rtItemHtml(r, tit && r.stato === 'in attesa' ? 'approva' : 'tutte') + close;
+    }
+    if (type === 'rt_lista') {
+      if (!state.cache.Richieste_Turno) return open + header('📝 Richieste turno') + '<div class="center-loading">Carico…</div>' + close;
+      var pend = rtPending().sort(function(a,b){ return a.data.localeCompare(b.data); });
+      var fatte = rtRows().filter(function(x){ return x.stato !== 'in attesa'; }).sort(function(a,b){ return b.data.localeCompare(a.data); }).slice(0, 10);
+      return open + header('📝 Richieste turno') +
+        '<div class="pl-sub">' + (tit ? 'Approvando, il turno richiesto viene inserito nel pianificatore.' : 'Le approva la titolare.') + '</div>' +
+        (pend.length ? pend.map(function(x){ return rtItemHtml(x, tit ? 'approva' : 'tutte'); }).join('') : '<div class="empty-hint">Nessuna richiesta in attesa 🎉</div>') +
+        (fatte.length ? '<div class="section-label">Ultime gestite</div>' + fatte.map(function(x){ return rtItemHtml(x, 'tutte'); }).join('') : '') + close;
+    }
+
+    var f = state.rtForm;
+    var opts = plModelli().map(function(m, i){
+      var c = PL_COLORI[m.colore] || PL_COLORI.giallo, act = f.scelta === 'm' + i;
+      return '<button class="pl-model" style="background:' + c.bg + ';border-color:' + (act ? c.fg : c.bd) + ';color:' + c.fg + ';' + (act ? 'box-shadow:inset 0 0 0 1px ' + c.fg + ';' : '') + '" onclick="App.rtPick(' + i + ')">' +
+        '<span><span class="pl-model-name">' + esc(m.nome) + '</span> <span class="pl-model-time">· ' + hourLabel(m.oi) + ' – ' + hourLabel(m.of) + '</span></span>' + (act ? '✓' : '') + '</button>';
+    }).join('');
+    function extra(i, label, key){
+      var act = f.scelta === key;
+      return '<button class="pl-model" style="background:var(--card);border-color:' + (act ? 'var(--text)' : 'rgba(20,15,40,0.12)') + ';color:var(--text);" onclick="App.rtPick(' + i + ')"><span class="pl-model-name">' + label + '</span>' + (act ? '✓' : '') + '</button>';
+    }
+    return open + header('📝 Chiedi un turno') +
+      '<div class="field"><div class="field-label">Giorno</div><input type="date" value="' + esc(f.data) + '" onchange="App.rtField(\'data\', this.value, true)"/></div>' +
+      '<div class="field-label">Cosa vorresti</div><div class="pl-model-list">' + opts + extra(-1, '🕐 Orario personalizzato', 'custom') + extra(-2, '😴 Giorno di riposo', 'riposo') + '</div>' +
+      (f.scelta === 'custom' ? '<div class="field-label">Dalle</div>' + plHourChips(f.dalle, HOUR_START, HOUR_END - 1, 'rtOra', 'dalle') +
+        '<div class="field-label">Fino alle</div>' + plHourChips(f.alle, HOUR_START + 1, HOUR_END, 'rtOra', 'alle') : '') +
+      '<div class="field"><div class="field-label">Motivo (aiuta la titolare a decidere)</div><textarea oninput="App.rtField(\'motivo\', this.value)" placeholder="Es. Alle 16 porto mia figlia a danza">' + esc(f.motivo) + '</textarea></div>' +
+      '<button class="btn-submit" onclick="App.rtInvia()">Invia alla titolare</button>' + close;
+  }
+
   // ---------- Screen dispatch ----------
   function renderScreen(){
     switch (state.screen) {
@@ -1700,6 +2679,7 @@
       case 'documenti': return renderDocumenti();
       case 'cruscotto': return renderCruscotto();
       case 'planner': return canManageTurni(state.user) ? renderPlanner() : renderHome();
+      case 'assenze': return renderAssenze();
       default: return renderHome();
     }
   }
@@ -1979,6 +2959,8 @@
     var type = state.activeModal;
     var f = state.form;
     if (type && type.indexOf('pl_') === 0) return renderPlannerModal(type);
+    if (type && type.indexOf('as_') === 0) return renderAssenzeModal(type);
+    if (type && type.indexOf('rt_') === 0) return renderRtModal(type);
 
     if (type === 'ferieRange') {
       var pf = state.pendingFerie;
@@ -2175,6 +3157,14 @@
     plOpenPersona: plOpenPersona, plPersonaField: plPersonaField, plPersonaChip: plPersonaChip, plSavePersona: plSavePersona, plDeletePersona: plDeletePersona,
     plOpenModelli: plOpenModelli, plModelloField: plModelloField, plModelloSet: plModelloSet, plSaveModello: plSaveModello, plDeleteModello: plDeleteModello,
     plNotifica: plNotifica, plSelectPerson: plSelectPerson,
+    asSetTab: asSetTab, asShiftYear: asShiftYear, asShiftMonth: asShiftMonth, asOpenRichiesta: asOpenRichiesta,
+    asFormField: asFormField, asFormTipo: asFormTipo, asFormPerson: asFormPerson, asFormOra: asFormOra, asInvia: asInvia,
+    asDecidi: asDecidi, asAnnulla: asAnnulla, asCellClick: asCellClick, asEditSaldo: asEditSaldo,
+    asTipoField: asTipoField, asTipoColore: asTipoColore, asAddTipo: asAddTipo, asDelTipo: asDelTipo,
+    asFestField: asFestField, asAddFest: asAddFest, asDelFest: asDelFest, asRegolaField: asRegolaField, asSalvaRegole: asSalvaRegole,
+    asEsporta: asEsporta, asShiftCalMonth: asShiftCalMonth, asApriDettaglio: asApriDettaglio,
+    rtOpen: rtOpen, rtField: rtField, rtPick: rtPick, rtOra: rtOra, rtInvia: rtInvia, rtOpenLista: rtOpenLista,
+    rtApri: rtApri, rtApprova: rtApprova, rtRifiuta: rtRifiuta, rtAnnulla: rtAnnulla,
   };
 
   document.addEventListener('DOMContentLoaded', function(){
