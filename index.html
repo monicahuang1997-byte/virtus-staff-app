@@ -159,6 +159,88 @@
   .summary-dot{width:10px;height:10px;border-radius:50%;flex:none;}
   .summary-shift{font-size:12.5px;color:var(--text-muted);padding:5px 0 0 18px;}
   .center-loading{text-align:center;color:var(--text-muted2);padding:50px 0;font-size:14px;}
+  /* ---------- Pianificatore turni ---------- */
+  #root.root-wide{max-width:1200px;}
+  .app-shell.app-shell-wide{max-width:1200px;}
+  #root.root-wide .sheet{max-width:560px;margin:0 auto;}
+  .pl-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .pl-btn{background:var(--card);border:1px solid rgba(20,15,40,0.08);border-radius:100px;padding:8px 14px;font-weight:700;font-size:12.5px;color:var(--text);}
+  .pl-btn-primary{background:var(--accent);border-color:var(--accent);color:#14121a;}
+  .pl-wrap{margin-top:14px;overflow:auto;max-height:calc(100vh - 250px);border-radius:18px;background:var(--card);-webkit-overflow-scrolling:touch;}
+  .pl-grid{border-collapse:separate;border-spacing:0;width:100%;min-width:880px;}
+  .pl-grid th{position:sticky;top:0;background:var(--card);z-index:2;font-size:12px;font-weight:700;color:var(--text-muted);padding:12px 6px;border-bottom:1px solid rgba(20,15,40,0.08);text-align:center;}
+  .pl-grid th.pl-today{color:var(--accent);}
+  .pl-grid td{border-bottom:1px solid rgba(20,15,40,0.06);vertical-align:top;}
+  .pl-name,.pl-name-h{position:sticky;left:0;background:var(--card);z-index:1;min-width:150px;width:150px;text-align:left !important;padding:10px 12px;border-right:1px solid rgba(20,15,40,0.06);}
+  th.pl-name-h{z-index:3;}
+  .pl-name{cursor:pointer;}
+  .pl-person{font-weight:700;font-size:13.5px;color:var(--text);}
+  .pl-meta{font-size:11px;color:var(--text-muted2);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .pl-tipo{border-radius:100px;padding:1px 7px;font-size:10px;font-weight:700;}
+  .pl-tipo-extra{background:#fde6d4;color:#7a3a0c;}
+  .pl-tipo-chiamata{background:#e8e3fa;color:#3b2c80;}
+  .pl-over{color:var(--danger);font-weight:700;}
+  .pl-under{color:var(--text-muted2);font-weight:700;}
+  .pl-ok{color:oklch(0.5 0.13 150);font-weight:700;}
+  .pl-cell{padding:6px;min-width:104px;}
+  .pl-cell-today{background:rgba(20,15,40,0.025);}
+  .pl-shift{display:block;width:100%;border:1px solid;border-radius:12px;padding:7px 4px;margin-bottom:5px;text-align:center;}
+  .pl-shift-time{font-weight:800;font-size:12.5px;}
+  .pl-shift-name{font-size:10.5px;opacity:0.85;margin-top:2px;}
+  .pl-ferie{display:block;text-align:center;border-radius:12px;padding:7px 4px;margin-bottom:5px;background:rgba(20,15,40,0.05);color:var(--text-muted);font-size:11px;font-weight:700;}
+  .pl-add{width:100%;border:1px dashed rgba(20,15,40,0.15);background:none;border-radius:12px;color:var(--text-muted3);font-size:16px;padding:4px 0;}
+  .pl-foot td{font-size:11px;color:var(--text-muted2);padding:9px 6px;text-align:center;background:rgba(20,15,40,0.025);position:sticky;bottom:0;}
+  .pl-foot td.pl-name{background:#f3f2f8;font-weight:700;}
+  .pl-model-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .pl-model{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid;border-radius:14px;padding:10px 12px;text-align:left;width:100%;}
+  .pl-model-name{font-weight:800;font-size:13.5px;}
+  .pl-model-time{font-size:12px;opacity:0.85;}
+  .pl-colors{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .pl-color{width:30px;height:30px;border-radius:50%;border:2px solid transparent;}
+  .pl-color-active{border-color:var(--text);}
+  .btn-danger-soft{width:100%;background:oklch(0.95 0.03 30);color:oklch(0.45 0.16 30);border:none;border-radius:14px;padding:12px;font-weight:800;font-size:14px;margin-top:10px;}
+  .pl-sub{font-size:13px;color:var(--text-muted);margin:-8px 0 16px;}
+  #root,.app-scroll{min-width:0;}
+  /* Pianificatore su telefono: una persona alla volta, giorni in verticale */
+  .plm-people{display:flex;gap:8px;overflow-x:auto;margin:14px -12px 0;padding:0 12px 4px;-webkit-overflow-scrolling:touch;}
+  .plm-chip{flex:none;background:var(--card);border:1px solid rgba(20,15,40,0.08);border-radius:14px;padding:8px 12px;text-align:left;color:var(--text);}
+  .plm-chip-active{background:var(--accent);border-color:var(--accent);color:#14121a;}
+  .plm-chip-name{font-weight:700;font-size:13px;white-space:nowrap;}
+  .plm-chip-ore{font-size:10.5px;opacity:0.75;margin-top:2px;white-space:nowrap;}
+  .plm-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;}
+  .plm-head-name{font-family:Nunito,sans-serif;font-weight:800;font-size:18px;}
+  .plm-head-ore{font-size:12px;color:var(--text-muted);margin-top:2px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  .plm-list{background:var(--card);border-radius:20px;margin-top:12px;overflow:hidden;}
+  .plm-day{display:flex;gap:12px;padding:12px;border-bottom:1px solid rgba(20,15,40,0.06);}
+  .plm-day:last-child{border-bottom:none;}
+  .plm-day-today{background:rgba(20,15,40,0.025);}
+  .plm-day-label{width:50px;flex:none;font-weight:700;font-size:14.5px;padding-top:14px;color:var(--text);}
+  .plm-day-today .plm-day-label{color:var(--accent);}
+  .plm-day-sub{font-size:10px;color:var(--text-muted3);font-weight:500;margin-top:3px;}
+  .plm-day-body{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .plm-shift{border:1px solid;border-radius:16px;padding:14px 10px;text-align:center;width:100%;}
+  .plm-shift-time{font-family:Nunito,sans-serif;font-weight:800;font-size:20px;letter-spacing:0.01em;}
+  .plm-shift-name{font-size:13px;margin-top:4px;opacity:0.85;}
+  .plm-ferie{border-radius:16px;padding:14px 10px;text-align:center;background:rgba(20,15,40,0.05);color:var(--text-muted);font-weight:700;font-size:14px;}
+  .plm-add{border:1px dashed rgba(20,15,40,0.18);background:none;border-radius:14px;padding:10px;color:var(--text-muted2);font-weight:700;font-size:13px;width:100%;}
+  .plm-add-empty{padding:16px 10px;}
+  .pl-shift-time{white-space:nowrap;}
+  /* Telefono: griglia compatta, scorre di lato con i nomi fermi a sinistra */
+  @media (max-width:700px){
+    .app-shell-wide .app-scroll{padding-left:12px;padding-right:12px;}
+    .pl-wrap{max-height:calc(100vh - 210px);border-radius:14px;}
+    .pl-grid{min-width:0;width:auto;}
+    .pl-name,.pl-name-h{min-width:96px;width:96px;max-width:96px;padding:8px;}
+    .pl-person{font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .pl-meta{font-size:10px;gap:4px;}
+    .pl-cell{min-width:86px;padding:4px;}
+    .pl-shift{padding:5px 2px;border-radius:10px;}
+    .pl-shift-time{font-size:11px;}
+    .pl-shift-name{font-size:9.5px;}
+    .pl-grid th{font-size:11px;padding:10px 4px;}
+    .pl-foot td{font-size:9.5px;}
+    .pl-btn{padding:7px 11px;font-size:12px;}
+  }
 </style>
 </head>
 <body>
@@ -334,16 +416,24 @@
   }
 
   // ---------- API ----------
+  function userToken(){ return (state.user && state.user.token) || ''; }
   function apiGet(sheet){
-    return fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet))
+    var tk = userToken();
+    return fetch(SCRIPT_URL + '?sheet=' + encodeURIComponent(sheet) + (tk ? '&token=' + encodeURIComponent(tk) : ''))
       .then(function(r){ return r.json(); })
       .then(function(data){ return Array.isArray(data) ? data : []; })
       .catch(function(){ return null; });
   }
   function apiPost(body){
+    if (userToken() && !body.token) body.token = userToken();
     return fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(body) })
       .then(function(r){ return r.json(); })
-      .catch(function(){ return { error: 'Connessione non riuscita' }; });
+      .catch(function(){ return { error: 'Connessione non riuscita' }; })
+      .then(function(res){
+        // Chiave di sessione scaduta o mancante: si rientra con il PIN
+        if (res && res.auth) { alert(res.error); logout(); }
+        return res;
+      });
   }
 
   // ---------- State ----------
@@ -368,6 +458,8 @@
   try {
     var saved = localStorage.getItem(STORAGE_KEY);
     if (saved) { state.user = JSON.parse(saved); state.screen = 'home'; }
+    // Titolare/responsabili senza chiave di sessione: devono rientrare con il PIN
+    if (state.user && canManageTurni(state.user) && !state.user.token) { state.user = null; state.screen = 'login'; }
   } catch(e){}
   if (state.user && state.user.nome) identifyOneSignalUser(state.user.nome);
 
@@ -382,8 +474,10 @@
 
   function render(){
     var inner = state.screen === 'login' ? renderLogin() : renderScreen();
-    var showVoice = state.screen !== 'login';
-    var html = '<div class="app-shell"><div class="app-scroll">' + inner + '</div>' +
+    var showVoice = state.screen !== 'login' && state.screen !== 'planner';
+    var wide = state.screen === 'planner';
+    document.getElementById('root').className = wide ? 'root-wide' : '';
+    var html = '<div class="app-shell' + (wide ? ' app-shell-wide' : '') + '"><div class="app-scroll">' + inner + '</div>' +
       (showVoice ? '<button class="fab-voice" onclick="App.openVoice()">🎙️</button>' : '') +
       '</div>' +
       (state.screen !== 'login' && state.activeModal ? renderModal() : '') +
@@ -413,7 +507,8 @@
         apiGet('Utenti').then(function(data){
           state.loading.Utenti = false;
           state.usersLoaded = true;
-          state.users = (data || []).filter(function(u){ return String(val(u,'nome')||'').trim(); });
+          // Extra e a chiamata compaiono solo nel pianificatore, non nell'elenco di accesso
+          state.users = (data || []).filter(function(u){ return String(val(u,'nome')||'').trim() && tipoOf(u) === 'fisso'; });
           render();
         });
       }
@@ -422,17 +517,21 @@
     if (state.pendingLoginUser && state.loginSetupMode) {
       var setupNome = state.pendingLoginUser;
       if (state.busy) return '<div class="login-wrap"><div class="center-loading">Salvataggio…</div></div>';
+      var setupRow = state.users.find(function(u){ return val(u,'nome') === setupNome; });
+      var setupManager = setupRow && (normRole(val(setupRow,'ruolo')) !== 'dipendente' || String(val(setupRow,'gestisce turni')||'').trim());
       return '<div class="login-wrap"><div class="login-title">Ciao, ' + esc(setupNome) + '</div>' +
-        '<div class="login-sub">Vuoi impostare un PIN per proteggere il tuo accesso? (facoltativo)</div>' +
+        '<div class="login-sub">' + (setupManager ? 'Per gestire turni e staff devi impostare un PIN (da 4 a 8 cifre).' : 'Vuoi impostare un PIN per proteggere il tuo accesso? (facoltativo)') + '</div>' +
         '<div class="field" style="margin-top:24px;"><input type="password" inputmode="numeric" maxlength="8" autofocus value="' + esc(state.loginPinInput||'') + '" oninput="App.updateLoginPin(this.value)" placeholder="Nuovo PIN"/></div>' +
         '<div class="field"><input type="password" inputmode="numeric" maxlength="8" value="' + esc(state.loginPinConfirm||'') + '" oninput="App.updateLoginPinConfirm(this.value)" placeholder="Ripeti PIN"/></div>' +
         (state.loginPinError ? '<div class="voice-feedback" style="background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);border-color:oklch(0.7 0.14 30);">' + esc(state.loginPinError) + '</div>' : '') +
         '<button class="btn-submit" onclick="App.submitLoginPinSetup()">Imposta ed entra</button>' +
-        '<button class="logout-link" onclick="App.skipLoginPinSetup()">Salta per ora, entra senza PIN</button>' +
+        (setupManager ? '<button class="logout-link" onclick="App.cancelLoginPin()">Torna indietro</button>' :
+          '<button class="logout-link" onclick="App.skipLoginPinSetup()">Salta per ora, entra senza PIN</button>') +
         '</div>';
     }
     if (state.pendingLoginUser) {
       var pendingNome = state.pendingLoginUser;
+      if (state.busy) return '<div class="login-wrap"><div class="center-loading">Controllo il PIN…</div></div>';
       return '<div class="login-wrap"><div class="login-title">Ciao, ' + esc(pendingNome) + '</div>' +
         '<div class="login-sub">Inserisci il tuo PIN</div>' +
         '<div class="field" style="margin-top:24px;"><input type="password" inputmode="numeric" maxlength="8" autofocus value="' + esc(state.loginPinInput||'') + '" oninput="App.updateLoginPin(this.value)" onkeydown="if(event.key===\'Enter\') App.submitLoginPin()" placeholder="PIN"/></div>' +
@@ -453,11 +552,12 @@
       '<div class="login-list">' + (items || '<div class="empty-hint">Nessun nominativo trovato nel foglio Utenti.</div>') + '</div></div>';
   }
 
-  function login(nome){
+  function login(nome, token){
     var row = state.users.find(function(u){ return val(u,'nome') === nome; });
     var ruolo = row ? normRole(val(row,'ruolo')) : 'dipendente';
     var gestisceTurni = row ? !!String(val(row,'gestisce turni')||'').trim() : false;
-    state.user = { nome: nome, ruolo: ruolo, gestisceTurni: gestisceTurni };
+    state.user = { nome: nome, ruolo: ruolo, gestisceTurni: gestisceTurni, token: token || '' };
+    state.cache = {}; // ricarica i dati con i permessi giusti
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user)); } catch(e){}
     identifyOneSignalUser(nome);
     state.pendingLoginUser = null;
@@ -545,7 +645,7 @@
   }
   function selectLoginUser(nome){
     var row = state.users.find(function(u){ return val(u,'nome') === nome; });
-    var pin = row ? String(val(row,'pin')||'').trim() : '';
+    var pin = row ? String(val(row,'hapin')||'').trim() : '';
     state.pendingLoginUser = nome;
     state.loginPinInput = '';
     state.loginPinConfirm = '';
@@ -578,30 +678,30 @@
       render();
       return;
     }
+    if (!/^\d{4,8}$/.test(pin)) { state.loginPinError = 'Il PIN deve avere da 4 a 8 cifre.'; render(); return; }
     state.busy = true;
     render();
-    apiPost({ sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: nome, data: { Pin: pin } })
+    apiPost({ action: 'set_pin', nome: nome, pin: pin })
       .then(function(res){
         state.busy = false;
-        if (res && res.error) { alert(res.error); render(); return; }
-        var row = state.users.find(function(u){ return val(u,'nome') === nome; });
-        if (row) { row[findKey(row,'pin')] = pin; }
-        login(nome);
+        if (!res || res.error) { state.loginPinError = (res && res.error) || 'Errore'; render(); return; }
+        login(nome, res.token);
       });
   }
   function submitLoginPin(){
     var nome = state.pendingLoginUser;
-    if (!nome) return;
-    var row = state.users.find(function(u){ return val(u,'nome') === nome; });
-    var correctPin = row ? String(val(row,'pin')||'').trim() : '';
+    if (!nome || state.busy) return;
     var entered = String(state.loginPinInput||'').trim();
-    if (entered && entered === correctPin) {
-      login(nome);
-    } else {
-      state.loginPinError = 'PIN errato, riprova.';
+    if (!entered) { state.loginPinError = 'Scrivi il PIN.'; render(); return; }
+    state.busy = true;
+    render();
+    apiPost({ action: 'login', nome: nome, pin: entered }).then(function(res){
+      state.busy = false;
+      if (res && res.ok) { login(nome, res.token); return; }
+      state.loginPinError = (res && res.error) || 'PIN errato, riprova.';
       state.loginPinInput = '';
       render();
-    }
+    });
   }
 
   // ---------- Home ----------
@@ -622,6 +722,10 @@
       return '<button class="home-tile" onclick="App.goto(\'' + m.key + '\')">' + dot +
         '<div class="home-tile-icon">' + m.icon + '</div><div class="home-tile-label">' + m.label + '</div></button>';
     }).join('');
+    if (canManageTurni(state.user)) {
+      tiles = '<button class="home-tile" style="grid-column:1 / -1;background:var(--accent);" onclick="App.goto(\'planner\')">' +
+        '<div class="home-tile-icon">🧩</div><div class="home-tile-label">Pianificatore turni<br><span style="font-weight:500;font-size:12px;">Crea i turni di tutto lo staff</span></div></button>' + tiles;
+    }
     if (isManager(state.user)) {
       tiles += '<button class="home-tile" onclick="App.goto(\'cruscotto\')">' +
         '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
@@ -1138,6 +1242,452 @@
       '</div>';
   }
 
+  // ---------- Pianificatore turni (solo titolare/responsabili) ----------
+  var PL_COLORI = {
+    giallo:  { bg:'#fdf3c4', bd:'#efd36a', fg:'#5c4a00' },
+    verde:   { bg:'#e3f5d7', bd:'#a9d98b', fg:'#2f5a14' },
+    azzurro: { bg:'#dcecfb', bd:'#94c2ee', fg:'#14456e' },
+    lilla:   { bg:'#e8e3fa', bd:'#b8aaf0', fg:'#3b2c80' },
+    rosa:    { bg:'#fbe1ea', bd:'#eea6be', fg:'#7a2343' },
+    arancio: { bg:'#fde6d4', bd:'#f3b183', fg:'#7a3a0c' },
+  };
+  var PL_COLORI_KEYS = Object.keys(PL_COLORI);
+  var TIPI = [ { k:'fisso', l:'Fisso' }, { k:'extra', l:'Extra' }, { k:'chiamata', l:'A chiamata' } ];
+
+  function tipoOf(u){
+    var t = String(val(u,'tipo')||'').toLowerCase();
+    if (t.indexOf('chiamata') !== -1) return 'chiamata';
+    if (t.indexOf('extra') !== -1) return 'extra';
+    return 'fisso';
+  }
+  function tipoLabel(k){ var t = TIPI.find(function(x){ return x.k === k; }); return t ? t.l : 'Fisso'; }
+  function fmtOre(h){ return String(Math.round(h*10)/10).replace('.', ','); }
+  function plDays(){
+    var ws = parseDate(state.turniWeekStart), a = [];
+    for (var i=0;i<7;i++) a.push(addDays(ws, i));
+    return a;
+  }
+  function plModelli(){
+    return (state.cache.Turni_Modello || [])
+      .filter(function(m){ return String(val(m,'nome')||'').trim(); })
+      .map(function(m){
+        return { id: m[findKey(m,'ID')], nome: String(val(m,'nome')).trim(), oi: parseHourStr(val(m,'ora inizio')),
+          of: parseHourStr(val(m,'ora fine')), colore: String(val(m,'colore')||'').trim().toLowerCase() };
+      })
+      .filter(function(m){ return m.oi != null && m.of != null; })
+      .sort(function(a,b){ return a.oi - b.oi || a.nome.localeCompare(b.nome); });
+  }
+  function plColor(modello, oi){
+    var m = modello ? plModelli().find(function(x){ return x.nome.toLowerCase() === String(modello).toLowerCase(); }) : null;
+    if (m && PL_COLORI[m.colore]) return PL_COLORI[m.colore];
+    if (oi < 12) return PL_COLORI.giallo;
+    if (oi < 17) return PL_COLORI.azzurro;
+    return PL_COLORI.lilla;
+  }
+  function plShiftsOf(nome, dateStr){
+    var key = String(nome).trim().toLowerCase();
+    return (state.cache.Turni || []).filter(function(r){
+      return String(val(r,'data')).slice(0,10) === dateStr && String(val(r,'dipendente')||'').trim().toLowerCase() === key;
+    }).map(function(r){
+      return { id: r[findKey(r,'ID')], oi: parseHourStr(val(r,'ora inizio')), of: parseHourStr(val(r,'ora fine')),
+        modello: String(val(r,'modello')||'').trim() };
+    }).filter(function(s){ return s.oi != null && s.of != null; })
+      .sort(function(a,b){ return a.oi - b.oi; });
+  }
+  function plHasFerie(nome, dateStr){
+    var key = String(nome).trim().toLowerCase();
+    return (state.cache.Ferie || []).some(function(r){
+      return String(val(r,'data')).slice(0,10) === dateStr && String(val(r,'dipendente')||'').trim().toLowerCase() === key;
+    });
+  }
+  function plPeople(dates){
+    var ORD = { fisso:0, extra:1, chiamata:2 };
+    var people = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim(); }).map(function(u){
+      return { nome: String(val(u,'nome')).trim(), tipo: tipoOf(u), ruolo: normRole(val(u,'ruolo')),
+        ore: parseFloat(String(val(u,'ore contratto')||'').replace(',','.')) || 0,
+        tel: String(val(u,'telefono')||''), inFoglio: true };
+    });
+    // Chi ha turni in settimana ma non è nel foglio Utenti (es. extra scritti a mano)
+    var known = people.map(function(p){ return p.nome.toLowerCase(); });
+    (state.cache.Turni || []).forEach(function(r){
+      var n = String(val(r,'dipendente')||'').trim();
+      if (n && dates.indexOf(String(val(r,'data')).slice(0,10)) !== -1 && known.indexOf(n.toLowerCase()) === -1) {
+        known.push(n.toLowerCase());
+        people.push({ nome: n, tipo: 'extra', ruolo: 'dipendente', ore: 0, tel: '', inFoglio: false });
+      }
+    });
+    return people.sort(function(a,b){ return (ORD[a.tipo] - ORD[b.tipo]) || a.nome.localeCompare(b.nome); });
+  }
+
+  function renderPlanner(){
+    ['Turni','Utenti','Ferie','Turni_Modello'].forEach(function(s){ ensureLoaded(s); });
+    var days = plDays();
+    var dates = days.map(fmtDate);
+    var t = todayStr();
+    var weekNav = '<div class="week-nav" style="max-width:420px;"><button class="week-nav-btn" onclick="App.shiftWeek(-1)">‹</button>' +
+      '<div class="week-nav-label">' + esc(fmtDayLabel(days[0])) + ' – ' + esc(fmtDayLabel(days[6])) + '</div>' +
+      '<button class="week-nav-btn" onclick="App.shiftWeek(1)">›</button></div>';
+    var actions = '<div class="pl-actions">' +
+      '<button class="pl-btn" onclick="App.plOpenPersona(-1)">+ Persona</button>' +
+      '<button class="pl-btn" onclick="App.plOpenModelli()">🎨 Turni modello</button>' +
+      '<button class="pl-btn pl-btn-primary" onclick="App.plNotifica()">📣 Avvisa lo staff</button></div>';
+
+    var c = state.cache;
+    var body;
+    if (!c.Turni || !c.Utenti || !c.Ferie || !c.Turni_Modello) body = '<div class="center-loading">Carico il pianificatore…</div>';
+    else {
+      var people = plPeople(dates);
+      state.plPeople = people;
+      if (plIsPhone()) return '<div>' + renderTopBar('Pianificatore turni') + weekNav + actions + renderPlannerPhone(people, dates, t) + '</div>';
+      var dayTot = dates.map(function(){ return { persone: 0, ore: 0 }; });
+      var head = '<tr><th class="pl-name-h">Persone</th>' + days.map(function(d){
+        var ds = fmtDate(d);
+        return '<th class="' + (ds === t ? 'pl-today' : '') + '">' + GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() + '</th>';
+      }).join('') + '</tr>';
+
+      var rowsHtml = people.map(function(p, pi){
+        var oreSett = 0;
+        var cells = dates.map(function(ds, di){
+          var shifts = plShiftsOf(p.nome, ds);
+          if (shifts.length) dayTot[di].persone++;
+          var html = plHasFerie(p.nome, ds) ? '<span class="pl-ferie">🌴 Ferie</span>' : '';
+          html += shifts.map(function(s){
+            var ore = s.of - s.oi;
+            oreSett += ore; dayTot[di].ore += ore;
+            var col = plColor(s.modello, s.oi);
+            return '<button class="pl-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
+              '<div class="pl-shift-time">' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</div>' +
+              (s.modello ? '<div class="pl-shift-name">' + esc(s.modello) + '</div>' : '') + '</button>';
+          }).join('');
+          html += '<button class="pl-add" title="Aggiungi turno" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'\')">+</button>';
+          return '<td class="pl-cell' + (ds === t ? ' pl-cell-today' : '') + '">' + html + '</td>';
+        }).join('');
+
+        var oreHtml;
+        if (p.ore) {
+          var diff = oreSett - p.ore;
+          var cls = diff > 0 ? 'pl-over' : diff < 0 ? 'pl-under' : 'pl-ok';
+          oreHtml = '<span>' + fmtOre(oreSett) + ' / ' + fmtOre(p.ore) + ' h</span><span class="' + cls + '">' + (diff > 0 ? '+' : '') + fmtOre(diff) + '</span>';
+        } else {
+          oreHtml = '<span>' + fmtOre(oreSett) + ' h</span>';
+        }
+        var tipoBadge = p.tipo !== 'fisso' ? '<span class="pl-tipo pl-tipo-' + p.tipo + '">' + tipoLabel(p.tipo) + '</span>' : '';
+        return '<tr><td class="pl-name" onclick="App.plOpenPersona(' + pi + ')"><div class="pl-person">' + esc(p.nome) + '</div>' +
+          '<div class="pl-meta">' + tipoBadge + oreHtml + '</div></td>' + cells + '</tr>';
+      }).join('');
+
+      var foot = '<tr class="pl-foot"><td class="pl-name">In turno</td>' + dayTot.map(function(x){
+        return '<td>' + x.persone + ' pers · ' + fmtOre(x.ore) + ' h</td>';
+      }).join('') + '</tr>';
+
+      body = people.length
+        ? '<div class="pl-wrap"><table class="pl-grid"><thead>' + head + '</thead><tbody>' + rowsHtml + foot + '</tbody></table></div>' +
+          '<div class="turni-hint">Tocca + per aggiungere un turno · tocca un turno per modificarlo · tocca un nome per i dati della persona</div>'
+        : '<div class="empty-state">Nessuna persona ancora. Aggiungila con "+ Persona".</div>';
+    }
+    return '<div>' + renderTopBar('Pianificatore turni') + weekNav + actions + body + '</div>';
+  }
+
+  // -- Vista telefono: una persona alla volta, giorni in verticale --
+  function plIsPhone(){ return window.matchMedia && window.matchMedia('(max-width:700px)').matches; }
+  function plOreSett(nome, dates){
+    return dates.reduce(function(sum, ds){
+      return sum + plShiftsOf(nome, ds).reduce(function(s2, s){ return s2 + (s.of - s.oi); }, 0);
+    }, 0);
+  }
+  function plOreHtml(p, ore){
+    if (!p.ore) return '<span>' + fmtOre(ore) + ' h in settimana</span>';
+    var diff = ore - p.ore;
+    var cls = diff > 0 ? 'pl-over' : diff < 0 ? 'pl-under' : 'pl-ok';
+    return '<span>' + fmtOre(ore) + ' / ' + fmtOre(p.ore) + ' h</span><span class="' + cls + '">' + (diff > 0 ? '+' : '') + fmtOre(diff) + '</span>';
+  }
+  function plSelectPerson(pi){
+    var p = state.plPeople && state.plPeople[pi];
+    if (p) { state.plSel = p.nome; render(); }
+  }
+  function renderPlannerPhone(people, dates, t){
+    if (!people.length) return '<div class="empty-state">Nessuna persona ancora. Aggiungila con "+ Persona".</div>';
+    var selIdx = people.findIndex(function(p){ return p.nome === state.plSel; });
+    if (selIdx < 0) { selIdx = 0; state.plSel = people[0].nome; }
+    var chips = people.map(function(p, pi){
+      var ore = plOreSett(p.nome, dates);
+      return '<button class="plm-chip' + (pi === selIdx ? ' plm-chip-active' : '') + '" onclick="App.plSelectPerson(' + pi + ')">' +
+        '<div class="plm-chip-name">' + esc(p.nome) + '</div>' +
+        '<div class="plm-chip-ore">' + fmtOre(ore) + (p.ore ? ' / ' + fmtOre(p.ore) : '') + ' h' + (p.tipo !== 'fisso' ? ' · ' + tipoLabel(p.tipo) : '') + '</div></button>';
+    }).join('');
+    var p = people[selIdx];
+    var head = '<div class="plm-head"><div><div class="plm-head-name">' + esc(p.nome) + '</div>' +
+      '<div class="plm-head-ore">' + (p.tipo !== 'fisso' ? '<span class="pl-tipo pl-tipo-' + p.tipo + '">' + tipoLabel(p.tipo) + '</span>' : '') +
+      plOreHtml(p, plOreSett(p.nome, dates)) + '</div></div>' +
+      '<button class="pl-btn" onclick="App.plOpenPersona(' + selIdx + ')">Dati</button></div>';
+    var list = dates.map(function(ds){
+      var d = parseDate(ds);
+      var shifts = plShiftsOf(p.nome, ds);
+      var inTurno = people.filter(function(x){ return plShiftsOf(x.nome, ds).length; }).length;
+      var html = plHasFerie(p.nome, ds) ? '<div class="plm-ferie">🌴 Ferie</div>' : '';
+      html += shifts.map(function(s){
+        var col = plColor(s.modello, s.oi);
+        return '<button class="plm-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
+          '<div class="plm-shift-time">' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</div>' +
+          '<div class="plm-shift-name">' + esc(s.modello || 'Orario personalizzato') + '</div></button>';
+      }).join('');
+      var empty = !shifts.length && !plHasFerie(p.nome, ds);
+      html += '<button class="plm-add' + (empty ? ' plm-add-empty' : '') + '" onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'\')">' + (empty ? 'Riposo · + Aggiungi turno' : '+ Aggiungi turno') + '</button>';
+      return '<div class="plm-day' + (ds === t ? ' plm-day-today' : '') + '">' +
+        '<div class="plm-day-label">' + GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() +
+        '<div class="plm-day-sub">' + inTurno + ' in turno</div></div>' +
+        '<div class="plm-day-body">' + html + '</div></div>';
+    }).join('');
+    return '<div class="plm-people">' + chips + '</div>' + head + '<div class="plm-list">' + list + '</div>';
+  }
+  // Se la finestra passa da "computer" a "telefono" (o viceversa) ridisegna il pianificatore
+  var plWasPhone = null;
+  window.addEventListener('resize', function(){
+    var now = plIsPhone();
+    if (state.screen === 'planner' && now !== plWasPhone && !state.activeModal) render();
+    plWasPhone = now;
+  });
+
+  // -- Turno: nuovo / modifica --
+  function plOpenTurno(pi, ds, id){
+    var p = state.plPeople && state.plPeople[pi];
+    if (!p) return;
+    var s = id ? plShiftsOf(p.nome, ds).find(function(x){ return String(x.id) === String(id); }) : null;
+    state.plEdit = { id: id || '', nome: p.nome, data: ds, oi: s ? s.oi : 9, of: s ? s.of : 15, modello: s ? s.modello : '' };
+    state.activeModal = 'pl_turno';
+    render();
+  }
+  function plPickModello(idx){
+    var m = plModelli()[idx], e = state.plEdit;
+    if (!m || !e) return;
+    e.oi = m.oi; e.of = m.of; e.modello = m.nome;
+    if (!e.id) { plSaveTurno(); return; } // nuovo turno: un tocco e si salva
+    render();
+  }
+  function plSetOra(which, h){
+    var e = state.plEdit;
+    if (!e) return;
+    e[which] = h;
+    e.modello = ''; // orario personalizzato
+    if (e.of <= e.oi) {
+      if (which === 'oi') e.of = Math.min(HOUR_END, e.oi + 1); else e.oi = Math.max(HOUR_START, e.of - 1);
+    }
+    render();
+  }
+  function plAfterSave(sheet){
+    return function(res){
+      state.busy = false;
+      if (res && res.error) { if (!res.auth) alert(res.error); render(); return; }
+      closeModal();
+      reload(sheet);
+    };
+  }
+  function plSaveTurno(){
+    var e = state.plEdit;
+    if (!e || state.busy) return;
+    if (e.of <= e.oi) { alert("L'ora di fine deve essere dopo l'ora di inizio"); return; }
+    var overlap = plShiftsOf(e.nome, e.data).some(function(s){ return String(s.id) !== String(e.id) && s.oi < e.of && e.oi < s.of; });
+    if (overlap && !confirm(e.nome + ' ha già un turno che si sovrappone in questo giorno. Salvare comunque?')) return;
+    if (!e.id && plHasFerie(e.nome, e.data) && !confirm(e.nome + ' è in ferie questo giorno. Salvare comunque?')) return;
+    var data = { 'Ora inizio': hourLabel(e.oi), 'Ora fine': hourLabel(e.of), Modello: e.modello || '' };
+    var req;
+    if (e.id) req = { sheet: 'Turni', action: 'update', id: e.id, data: data };
+    else {
+      data.Data = e.data; data.Dipendente = e.nome; data.Note = ''; data['Creato da'] = state.user.nome;
+      req = { sheet: 'Turni', data: data };
+    }
+    state.busy = true;
+    render();
+    apiPost(req).then(plAfterSave('Turni'));
+  }
+  function plDeleteTurno(){
+    var e = state.plEdit;
+    if (!e || !e.id || state.busy) return;
+    if (!confirm('Eliminare il turno di ' + e.nome + ' (' + hourLabel(e.oi) + '–' + hourLabel(e.of) + ')?')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Turni', action: 'delete', id: e.id }).then(plAfterSave('Turni'));
+  }
+
+  // -- Persona: fisso / extra / a chiamata --
+  function plOpenPersona(pi){
+    var p = pi >= 0 && state.plPeople ? state.plPeople[pi] : null;
+    state.plPersona = p
+      ? { orig: p.inFoglio ? p.nome : '', nome: p.nome, tipo: p.tipo, ruolo: p.ruolo, ore: p.ore ? String(p.ore) : '', tel: p.tel }
+      : { orig: '', nome: '', tipo: 'extra', ruolo: 'dipendente', ore: '', tel: '' };
+    state.activeModal = 'pl_persona';
+    render();
+  }
+  function plPersonaField(k, v){ if (state.plPersona) state.plPersona[k] = v; }
+  function plPersonaChip(k, v){ if (state.plPersona) { state.plPersona[k] = v; render(); } }
+  function plSavePersona(){
+    var p = state.plPersona;
+    if (!p || state.busy) return;
+    var nome = String(p.nome || '').trim();
+    if (!nome) { alert('Scrivi il nome'); return; }
+    var data = { Tipo: p.tipo, Ruolo: p.tipo === 'fisso' ? p.ruolo : 'dipendente',
+      'Ore contratto': String(p.ore || '').trim(), Telefono: String(p.tel || '').trim() };
+    var req;
+    if (p.orig) req = { sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: p.orig, data: data };
+    else {
+      var exists = (state.cache.Utenti || []).some(function(u){ return String(val(u,'nome')||'').trim().toLowerCase() === nome.toLowerCase(); });
+      if (exists) { alert('Esiste già una persona con questo nome.'); return; }
+      data.Nome = nome;
+      req = { sheet: 'Utenti', data: data };
+    }
+    state.busy = true;
+    render();
+    apiPost(req).then(plAfterSave('Utenti'));
+  }
+  function plDeletePersona(){
+    var p = state.plPersona;
+    if (!p || !p.orig || state.busy) return;
+    if (p.orig.toLowerCase() === state.user.nome.toLowerCase()) { alert('Non puoi rimuovere il tuo stesso profilo.'); return; }
+    if (!confirm('Rimuovere ' + p.orig + ' dallo staff? I turni già inseriti restano.')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Utenti', action: 'delete', matchField: 'Nome', matchValue: p.orig }).then(plAfterSave('Utenti'));
+  }
+
+  // -- Turni modello --
+  function plOpenModelli(){
+    state.plModello = { nome: '', oi: 9, of: 15, colore: 'giallo' };
+    state.activeModal = 'pl_modelli';
+    render();
+  }
+  function plModelloField(k, v){ if (state.plModello) state.plModello[k] = v; }
+  function plModelloSet(k, v){
+    var m = state.plModello;
+    if (!m) return;
+    m[k] = v;
+    if (k === 'oi' && m.of <= m.oi) m.of = Math.min(HOUR_END, m.oi + 1);
+    if (k === 'of' && m.of <= m.oi) m.oi = Math.max(HOUR_START, m.of - 1);
+    render();
+  }
+  function plSaveModello(){
+    var m = state.plModello;
+    if (!m || state.busy) return;
+    var nome = String(m.nome || '').trim();
+    if (!nome) { alert('Dai un nome al turno modello (es. "Cena weekend")'); return; }
+    if (plModelli().some(function(x){ return x.nome.toLowerCase() === nome.toLowerCase(); })) { alert('Esiste già un turno modello con questo nome.'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Turni_Modello', data: { Nome: nome, 'Ora inizio': hourLabel(m.oi), 'Ora fine': hourLabel(m.of), Colore: m.colore } })
+      .then(function(res){
+        state.busy = false;
+        if (res && res.error) { if (!res.auth) alert(res.error); render(); return; }
+        state.plModello = { nome: '', oi: m.oi, of: m.of, colore: m.colore };
+        reload('Turni_Modello');
+      });
+  }
+  function plDeleteModello(idx){
+    var m = plModelli()[idx];
+    if (!m || !m.id || state.busy) return;
+    if (!confirm('Eliminare il turno modello "' + m.nome + '"? I turni già inseriti restano.')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Turni_Modello', action: 'delete', id: m.id }).then(function(res){
+      state.busy = false;
+      if (res && res.error) { if (!res.auth) alert(res.error); render(); return; }
+      reload('Turni_Modello');
+    });
+  }
+
+  // -- Notifica "turni pronti" --
+  function plNotifica(){
+    var d = plDays();
+    if (!confirm('Mandare una notifica a chi ha turni dal ' + fmtDayLabel(d[0]) + ' al ' + fmtDayLabel(d[6]) + '?')) return;
+    apiPost({ action: 'notifica_turni', dal: fmtDate(d[0]), al: fmtDate(d[6]) }).then(function(res){
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); return; }
+      if (!res.inviati) alert('Nessuno ha turni in questa settimana.');
+      else if (!res.notificheAttive) alert('Le notifiche non sono ancora attive (manca la chiave OneSignal). Persone con turni: ' + res.inviati + '.');
+      else alert('Notifica inviata a ' + res.inviati + ' persone.');
+    });
+  }
+
+  function plHourChips(sel, from, to, fn, which){
+    var h = '';
+    for (var x = from; x <= to; x++) {
+      h += '<button class="chip-select ' + (sel === x ? 'chip-select-active' : '') + '" onclick="App.' + fn + '(\'' + which + '\',' + x + ')">' + hourLabel(x) + '</button>';
+    }
+    return '<div class="chips-wrap">' + h + '</div>';
+  }
+
+  function renderPlannerModal(type){
+    if (state.busy) return '<div class="overlay"><div class="sheet"><div class="center-loading">Salvataggio in corso…</div></div></div>';
+    var open = '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">';
+    var close = '</div></div>';
+    function header(title){
+      return '<div class="sheet-header"><div class="sheet-title">' + title + '</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>';
+    }
+    function modelBtn(m, i, active, onclick, extra){
+      var c = PL_COLORI[m.colore] || PL_COLORI.giallo;
+      return '<' + (onclick ? 'button' : 'div') + ' class="pl-model" style="background:' + c.bg + ';border-color:' + (active ? c.fg : c.bd) + ';color:' + c.fg + ';' +
+        (active ? 'box-shadow:inset 0 0 0 1px ' + c.fg + ';' : '') + '"' + (onclick ? ' onclick="' + onclick + '"' : '') + '>' +
+        '<span><span class="pl-model-name">' + esc(m.nome) + '</span> <span class="pl-model-time">· ' + hourLabel(m.oi) + ' – ' + hourLabel(m.of) + '</span></span>' +
+        (extra || '') + '</' + (onclick ? 'button' : 'div') + '>';
+    }
+
+    if (type === 'pl_turno') {
+      var e = state.plEdit, d = parseDate(e.data);
+      var modelli = plModelli();
+      var mHtml = modelli.length ? '<div class="pl-model-list">' + modelli.map(function(m, i){
+        var active = !!e.modello && e.modello.toLowerCase() === m.nome.toLowerCase();
+        return modelBtn(m, i, active, 'App.plPickModello(' + i + ')');
+      }).join('') + '</div>' : '<div class="empty-hint" style="padding:10px 0;">Nessun turno modello: creali con "🎨 Turni modello".</div>';
+      return open + header(e.id ? 'Modifica turno' : 'Nuovo turno') +
+        '<div class="pl-sub">' + esc(e.nome) + ' · ' + GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() + ' ' + MESI_SHORT[d.getMonth()] + '</div>' +
+        '<div class="field-label">' + (e.id ? 'Turno modello' : 'Tocca un turno modello per inserirlo subito') + '</div>' + mHtml +
+        '<div class="field-label">Oppure orario personalizzato · dalle</div>' + plHourChips(e.oi, HOUR_START, HOUR_END - 1, 'plSetOra', 'oi') +
+        '<div class="field-label">fino alle</div>' + plHourChips(e.of, HOUR_START + 1, HOUR_END, 'plSetOra', 'of') +
+        '<button class="btn-submit" onclick="App.plSaveTurno()">' + (e.id ? 'Salva modifiche' : 'Salva ' + hourLabel(e.oi) + ' – ' + hourLabel(e.of)) + '</button>' +
+        (e.id ? '<button class="btn-danger-soft" onclick="App.plDeleteTurno()">Elimina turno</button>' : '') + close;
+    }
+
+    if (type === 'pl_persona') {
+      var p = state.plPersona, isNew = !p.orig;
+      var tipoChips = TIPI.map(function(x){
+        return '<button class="chip-select ' + (p.tipo === x.k ? 'chip-select-active' : '') + '" onclick="App.plPersonaChip(\'tipo\',\'' + x.k + '\')">' + x.l + '</button>';
+      }).join('');
+      var ruoloHtml = '';
+      if (p.tipo === 'fisso' && isTitolare(state.user)) {
+        ruoloHtml = '<div class="field-label">Ruolo nell\'app</div><div class="chips-wrap">' + ['dipendente','responsabile','titolare'].map(function(r){
+          return '<button class="chip-select ' + (p.ruolo === r ? 'chip-select-active' : '') + '" onclick="App.plPersonaChip(\'ruolo\',\'' + r + '\')">' + r + '</button>';
+        }).join('') + '</div>';
+      }
+      return open + header(isNew ? 'Nuova persona' : esc(p.nome)) +
+        (isNew ? '<div class="field"><div class="field-label">Nome</div><input value="' + esc(p.nome) + '" oninput="App.plPersonaField(\'nome\', this.value)" placeholder="Es. Giulia R."/></div>' : '') +
+        '<div class="field-label">Tipo</div><div class="chips-wrap">' + tipoChips + '</div>' +
+        '<div class="pl-sub" style="margin-top:-8px;">' + (p.tipo === 'fisso' ? 'Entra nell\'app e vede i suoi turni.' : 'Compare solo nel pianificatore, non entra nell\'app.') + '</div>' +
+        ruoloHtml +
+        '<div class="field"><div class="field-label">Ore settimanali da contratto (facoltativo)</div><input inputmode="decimal" value="' + esc(p.ore) + '" oninput="App.plPersonaField(\'ore\', this.value)" placeholder="Es. 40"/></div>' +
+        '<div class="field"><div class="field-label">Telefono (facoltativo)</div><input type="tel" value="' + esc(p.tel) + '" oninput="App.plPersonaField(\'tel\', this.value)"/></div>' +
+        (p.tel && !isNew ? '<a href="tel:' + esc(p.tel) + '" class="pl-btn" style="display:inline-block;text-decoration:none;margin-bottom:12px;">📞 Chiama</a>' : '') +
+        '<button class="btn-submit" onclick="App.plSavePersona()">Salva</button>' +
+        (!isNew ? '<button class="btn-danger-soft" onclick="App.plDeletePersona()">Rimuovi dallo staff</button>' : '') + close;
+    }
+
+    if (type === 'pl_modelli') {
+      var mm = state.plModello, list = plModelli();
+      var listHtml = list.length ? '<div class="pl-model-list">' + list.map(function(m, i){
+        return modelBtn(m, i, false, null, '<button class="btn-close" style="background:rgba(255,255,255,0.7);color:inherit;" onclick="App.plDeleteModello(' + i + ')">&times;</button>');
+      }).join('') + '</div>' : '<div class="empty-hint" style="padding:10px 0;">Nessun turno modello.</div>';
+      var colors = PL_COLORI_KEYS.map(function(k){
+        var c = PL_COLORI[k];
+        return '<button class="pl-color' + (mm.colore === k ? ' pl-color-active' : '') + '" style="background:' + c.bg + ';box-shadow:inset 0 0 0 1px ' + c.bd + ';" title="' + k + '" onclick="App.plModelloSet(\'colore\',\'' + k + '\')"></button>';
+      }).join('');
+      return open + header('🎨 Turni modello') +
+        '<div class="pl-sub">I turni che usi più spesso: nel pianificatore li inserisci con un tocco.</div>' + listHtml +
+        '<div class="section-label">Nuovo turno modello</div>' +
+        '<div class="field"><div class="field-label">Nome</div><input value="' + esc(mm.nome) + '" oninput="App.plModelloField(\'nome\', this.value)" placeholder="Es. Cena weekend"/></div>' +
+        '<div class="field-label">Dalle</div>' + plHourChips(mm.oi, HOUR_START, HOUR_END - 1, 'plModelloSet', 'oi') +
+        '<div class="field-label">Fino alle</div>' + plHourChips(mm.of, HOUR_START + 1, HOUR_END, 'plModelloSet', 'of') +
+        '<div class="field-label">Colore</div><div class="pl-colors">' + colors + '</div>' +
+        '<button class="btn-submit" onclick="App.plSaveModello()">Aggiungi turno modello</button>' + close;
+    }
+    return '';
+  }
+
   // ---------- Screen dispatch ----------
   function renderScreen(){
     switch (state.screen) {
@@ -1149,6 +1699,7 @@
       case 'manutenzione': return renderManutenzione();
       case 'documenti': return renderDocumenti();
       case 'cruscotto': return renderCruscotto();
+      case 'planner': return canManageTurni(state.user) ? renderPlanner() : renderHome();
       default: return renderHome();
     }
   }
@@ -1427,6 +1978,7 @@
   function renderModal(){
     var type = state.activeModal;
     var f = state.form;
+    if (type && type.indexOf('pl_') === 0) return renderPlannerModal(type);
 
     if (type === 'ferieRange') {
       var pf = state.pendingFerie;
@@ -1547,7 +2099,7 @@
       body = '<div class="field"><div class="field-label">Scrivi la tua nota o preferenza (es. "Preferisco i turni di mattina", "Non posso il sabato sera")</div>' +
         '<textarea oninput="App.updateForm(\'nota\', this.value)">' + esc(f.nota) + '</textarea></div>';
     } else if (type === 'set_pin') {
-      body = '<div class="field-label" style="margin-bottom:14px;">Il PIN serve solo a evitare che qualcuno tocchi per sbaglio il tuo nome su un telefono condiviso — non è una sicurezza vera.</div>' +
+      body = '<div class="field-label" style="margin-bottom:14px;">Il PIN (da 4 a 8 cifre) protegge il tuo accesso. Se lo dimentichi, la titolare può cancellarlo dal foglio Utenti e lo reimposti al prossimo accesso.</div>' +
         '<div class="field"><div class="field-label">Nuovo PIN (solo numeri)</div><input type="password" inputmode="numeric" value="' + esc(f.pin) + '" oninput="App.updateForm(\'pin\', this.value)"/></div>' +
         '<div class="field"><div class="field-label">Ripeti il PIN</div><input type="password" inputmode="numeric" value="' + esc(f.pinConfirm) + '" oninput="App.updateForm(\'pinConfirm\', this.value)"/></div>';
     }
@@ -1585,11 +2137,14 @@
     } else if (type === 'set_pin') {
       if (!f.pin || !f.pin.trim()) { alert('Scrivi un PIN'); return; }
       if (f.pin.trim() !== f.pinConfirm.trim()) { alert('I due PIN non coincidono'); return; }
+      if (!/^\d{4,8}$/.test(f.pin.trim())) { alert('Il PIN deve avere da 4 a 8 cifre.'); return; }
       state.busy = true;
-      apiPost({ sheet: 'Utenti', action: 'update', matchField: 'Nome', matchValue: state.user.nome, data: { Pin: f.pin.trim() } })
+      apiPost({ action: 'set_pin', nome: state.user.nome, pin: f.pin.trim() })
         .then(function(res){
           state.busy = false;
-          if (res && res.error) { alert(res.error); return; }
+          if (!res || res.error) { alert((res && res.error) || 'Errore'); return; }
+          state.user.token = res.token;
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user)); } catch(e){}
           closeModal();
           alert('PIN impostato.');
         });
@@ -1616,6 +2171,10 @@
     openModal: openModal, closeModal: closeModal, updateForm: updateForm, selectFormChip: selectFormChip, submitModal: submitModal,
     openVoice: openVoice, closeVoice: closeVoice, toggleListening: toggleListening,
     updateVoiceInputText: updateVoiceInputText, runVoiceInputText: runVoiceInputText,
+    plOpenTurno: plOpenTurno, plPickModello: plPickModello, plSetOra: plSetOra, plSaveTurno: plSaveTurno, plDeleteTurno: plDeleteTurno,
+    plOpenPersona: plOpenPersona, plPersonaField: plPersonaField, plPersonaChip: plPersonaChip, plSavePersona: plSavePersona, plDeletePersona: plDeletePersona,
+    plOpenModelli: plOpenModelli, plModelloField: plModelloField, plModelloSet: plModelloSet, plSaveModello: plSaveModello, plDeleteModello: plDeleteModello,
+    plNotifica: plNotifica, plSelectPerson: plSelectPerson,
   };
 
   document.addEventListener('DOMContentLoaded', function(){
