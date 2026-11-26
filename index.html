@@ -200,6 +200,10 @@
   .pl-color-active{border-color:var(--text);}
   .btn-danger-soft{width:100%;background:oklch(0.95 0.03 30);color:oklch(0.45 0.16 30);border:none;border-radius:14px;padding:12px;font-weight:800;font-size:14px;margin-top:10px;}
   .pl-sub{font-size:13px;color:var(--text-muted);margin:-8px 0 16px;}
+  .pl-shift[draggable="true"]{cursor:grab;}
+  .pl-shift[draggable="true"]:active{cursor:grabbing;}
+  .pl-drop-over{background:oklch(0.95 0.04 235) !important;outline:2px dashed var(--accent);outline-offset:-3px;}
+  .pl-dup-box{border-top:1px solid rgba(20,15,40,0.08);margin-top:18px;padding-top:14px;}
   #root,.app-scroll{min-width:0;}
   /* ---------- Ferie e permessi ---------- */
   .as-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0;}
@@ -1477,12 +1481,12 @@
             var ore = s.of - s.oi;
             oreSett += ore; dayTot[di].ore += ore;
             var col = plColor(s.modello, s.oi);
-            return '<button class="pl-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
+            return '<button class="pl-shift" draggable="true" ondragstart="App.plDragStart(event,' + pi + ',\'' + ds + '\',\'' + esc(s.id) + '\')" ondragend="App.plDragEnd()" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
               '<div class="pl-shift-time">' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</div>' +
               (s.modello ? '<div class="pl-shift-name">' + esc(s.modello) + '</div>' : '') + '</button>';
           }).join('');
           html += '<button class="pl-add" title="Aggiungi turno" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'\')">+</button>';
-          return '<td class="pl-cell' + (ds === t ? ' pl-cell-today' : '') + '">' + html + '</td>';
+          return '<td class="pl-cell' + (ds === t ? ' pl-cell-today' : '') + '" ondragover="App.plDragOver(event)" ondragleave="App.plDragLeave(event)" ondrop="App.plDrop(event,' + pi + ',\'' + ds + '\')">' + html + '</td>';
         }).join('');
 
         var oreHtml;
@@ -1504,7 +1508,7 @@
 
       body = people.length
         ? '<div class="pl-wrap"><table class="pl-grid"><thead>' + head + '</thead><tbody>' + rowsHtml + foot + '</tbody></table></div>' +
-          '<div class="turni-hint">Tocca + per aggiungere un turno · tocca un turno per modificarlo · tocca un nome per i dati della persona</div>'
+          '<div class="turni-hint">Tocca + per aggiungere un turno · tocca un turno per modificarlo · <b>trascina un turno</b> su un\'altra casella per spostarlo o duplicarlo · tocca un nome per i dati della persona</div>'
         : '<div class="empty-state">Nessuna persona ancora. Aggiungila con "+ Persona".</div>';
     }
     return '<div>' + renderTopBar('Pianificatore turni') + weekNav + actions + body + '</div>';
@@ -1575,7 +1579,7 @@
     var p = state.plPeople && state.plPeople[pi];
     if (!p) return;
     var s = id ? plShiftsOf(p.nome, ds).find(function(x){ return String(x.id) === String(id); }) : null;
-    state.plEdit = { id: id || '', nome: p.nome, data: ds, oi: s ? s.oi : 9, of: s ? s.of : 15, modello: s ? s.modello : '' };
+    state.plEdit = { id: id || '', nome: p.nome, data: ds, oi: s ? s.oi : 9, of: s ? s.of : 15, modello: s ? s.modello : '', dup: [] };
     state.activeModal = 'pl_turno';
     render();
   }
@@ -1623,6 +1627,111 @@
     render();
     apiPost(req).then(plAfterSave('Turni'));
   }
+  // -- Conflitti: sovrapposizioni e assenze --
+  function plConflitto(nome, data, oi, of, exceptId){
+    var msgs = [];
+    if (plShiftsOf(nome, data).some(function(s){ return String(s.id) !== String(exceptId) && s.oi < of && oi < s.of; })) {
+      msgs.push(nome + ' ' + rtGiorno(data) + ' ha già un turno che si sovrappone.');
+    }
+    var a = plAssenzaDi(nome, data);
+    if (a) msgs.push(nome + ' ' + rtGiorno(data) + ' è assente (' + a.tipo + ').');
+    return msgs.join('\n');
+  }
+  function plTurnoSalvato(e){
+    return plShiftsOf(e.nome, e.data).find(function(s){ return String(s.id) === String(e.id); });
+  }
+
+  // -- Trascina e rilascia (computer) --
+  function plDragStart(ev, pi, ds, id){
+    state.plDrag = { pi: pi, ds: ds, id: id };
+    try { ev.dataTransfer.effectAllowed = 'copyMove'; ev.dataTransfer.setData('text/plain', String(id)); } catch(e){}
+  }
+  function plDragOver(ev){
+    if (!state.plDrag) return;
+    ev.preventDefault();
+    ev.currentTarget.classList.add('pl-drop-over');
+  }
+  function plDragLeave(ev){ ev.currentTarget.classList.remove('pl-drop-over'); }
+  function plDragEnd(){
+    state.plDrag = null;
+    Array.prototype.forEach.call(document.querySelectorAll('.pl-drop-over'), function(el){ el.classList.remove('pl-drop-over'); });
+  }
+  function plDrop(ev, pi, ds){
+    ev.preventDefault();
+    ev.currentTarget.classList.remove('pl-drop-over');
+    var d = state.plDrag;
+    state.plDrag = null;
+    if (!d || (d.pi === pi && d.ds === ds)) return;
+    var src = state.plPeople[d.pi], dst = state.plPeople[pi];
+    if (!src || !dst) return;
+    var s = plShiftsOf(src.nome, d.ds).find(function(x){ return String(x.id) === String(d.id); });
+    if (!s) return;
+    state.plDrop = { id: s.id, oi: s.oi, of: s.of, modello: s.modello, daNome: src.nome, daData: d.ds, aNome: dst.nome, aData: ds };
+    state.activeModal = 'pl_drop';
+    render();
+  }
+  function plDropAzione(tipo){
+    var x = state.plDrop;
+    if (!x || state.busy) return;
+    var c = plConflitto(x.aNome, x.aData, x.oi, x.of, tipo === 'move' ? x.id : null);
+    if (c && !confirm(c + '\n\nProcedere comunque?')) return;
+    var req = tipo === 'move'
+      ? { sheet: 'Turni', action: 'update', id: x.id, data: { Data: x.aData, Dipendente: x.aNome } }
+      : { sheet: 'Turni', data: { Data: x.aData, 'Ora inizio': hourLabel(x.oi), 'Ora fine': hourLabel(x.of), Dipendente: x.aNome,
+          Modello: x.modello || '', Note: '', 'Creato da': state.user.nome } };
+    state.busy = true;
+    render();
+    apiPost(req).then(plAfterSave('Turni'));
+  }
+
+  // -- Duplica su altri giorni / Sposta (computer e telefono) --
+  function plToggleDup(ds){
+    var e = state.plEdit;
+    if (!e) return;
+    var i = e.dup.indexOf(ds);
+    if (i === -1) e.dup.push(ds); else e.dup.splice(i, 1);
+    render();
+  }
+  function plDuplica(){
+    var e = state.plEdit;
+    if (!e || !e.id || !e.dup.length || state.busy) return;
+    var s = plTurnoSalvato(e);
+    if (!s) return;
+    var targets = [], saltati = [];
+    e.dup.slice().sort().forEach(function(ds){
+      var a = plAssenzaDi(e.nome, ds);
+      if (plShiftsOf(e.nome, ds).some(function(x){ return x.oi === s.oi && x.of === s.of; })) saltati.push(rtGiorno(ds) + ' (c\'era già)');
+      else if (a) saltati.push(rtGiorno(ds) + ' (' + a.tipo + ')');
+      else targets.push(ds);
+    });
+    if (!targets.length) { alert('Nessun giorno da aggiungere:\n' + saltati.join('\n')); return; }
+    state.busy = true;
+    render();
+    var chain = Promise.resolve({ ok: true });
+    targets.forEach(function(ds){
+      chain = chain.then(function(prev){
+        if (prev && prev.error) return prev;
+        return apiPost({ sheet: 'Turni', data: { Data: ds, 'Ora inizio': hourLabel(s.oi), 'Ora fine': hourLabel(s.of), Dipendente: e.nome,
+          Modello: s.modello || '', Note: '', 'Creato da': state.user.nome } });
+      });
+    });
+    chain.then(function(res){
+      plAfterSave('Turni')(res);
+      if (res && res.ok && saltati.length) setTimeout(function(){ alert('Turno duplicato su ' + targets.length + ' giorn' + (targets.length === 1 ? 'o' : 'i') + '.\nSaltati:\n' + saltati.join('\n')); }, 250);
+    });
+  }
+  function plSpostaA(ds){
+    var e = state.plEdit;
+    if (!e || !e.id || state.busy || ds === e.data) return;
+    var s = plTurnoSalvato(e);
+    if (!s) return;
+    var c = plConflitto(e.nome, ds, s.oi, s.of, s.id);
+    if (c && !confirm(c + '\n\nSpostare comunque?')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Turni', action: 'update', id: s.id, data: { Data: ds } }).then(plAfterSave('Turni'));
+  }
+
   function plDeleteTurno(){
     var e = state.plEdit;
     if (!e || !e.id || state.busy) return;
@@ -1737,6 +1846,19 @@
     return '<div class="chips-wrap">' + h + '</div>';
   }
 
+  function plDupHtml(e){
+    var days = plDays().map(fmtDate).filter(function(ds){ return ds !== e.data; });
+    var dupChips = days.map(function(ds){
+      return '<button class="chip-select ' + (e.dup.indexOf(ds) !== -1 ? 'chip-select-active' : '') + '" onclick="App.plToggleDup(\'' + ds + '\')">' + rtGiorno(ds) + '</button>';
+    }).join('');
+    var moveChips = days.map(function(ds){
+      return '<button class="chip-select" onclick="App.plSpostaA(\'' + ds + '\')">' + rtGiorno(ds) + '</button>';
+    }).join('');
+    return '<div class="pl-dup-box"><div class="field-label">📋 Duplica questo turno su altri giorni (tocca i giorni)</div><div class="chips-wrap">' + dupChips + '</div>' +
+      (e.dup.length ? '<button class="btn-submit" style="margin:0 0 12px;" onclick="App.plDuplica()">📋 Duplica su ' + e.dup.length + ' giorn' + (e.dup.length === 1 ? 'o' : 'i') + '</button>' : '') +
+      '<div class="field-label">↔️ Oppure sposta il turno a</div><div class="chips-wrap">' + moveChips + '</div></div>';
+  }
+
   function renderPlannerModal(type){
     if (state.busy) return '<div class="overlay"><div class="sheet"><div class="center-loading">Salvataggio in corso…</div></div></div>';
     var open = '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">';
@@ -1765,7 +1887,18 @@
         '<div class="field-label">Oppure orario personalizzato · dalle</div>' + plHourChips(e.oi, HOUR_START, HOUR_END - 1, 'plSetOra', 'oi') +
         '<div class="field-label">fino alle</div>' + plHourChips(e.of, HOUR_START + 1, HOUR_END, 'plSetOra', 'of') +
         '<button class="btn-submit" onclick="App.plSaveTurno()">' + (e.id ? 'Salva modifiche' : 'Salva ' + hourLabel(e.oi) + ' – ' + hourLabel(e.of)) + '</button>' +
-        (e.id ? '<button class="btn-danger-soft" onclick="App.plDeleteTurno()">Elimina turno</button>' : '') + close;
+        (e.id ? plDupHtml(e) + '<button class="btn-danger-soft" onclick="App.plDeleteTurno()">Elimina turno</button>' : '') + close;
+    }
+
+    if (type === 'pl_drop') {
+      var x = state.plDrop, dc = plColor(x.modello, x.oi);
+      return open + header('Cosa vuoi fare?') +
+        '<div class="pl-shift" style="background:' + dc.bg + ';border-color:' + dc.bd + ';color:' + dc.fg + ';margin-bottom:12px;">' +
+        '<div class="pl-shift-time">' + hourLabel(x.oi) + ' – ' + hourLabel(x.of) + '</div>' + (x.modello ? '<div class="pl-shift-name">' + esc(x.modello) + '</div>' : '') + '</div>' +
+        '<div class="pl-sub" style="margin:0 0 16px;">Da <b>' + esc(x.daNome) + '</b> · ' + rtGiorno(x.daData) + ' &nbsp;→&nbsp; a <b>' + esc(x.aNome) + '</b> · ' + rtGiorno(x.aData) + '</div>' +
+        '<div class="as-btn-row"><button class="as-ok" onclick="App.plDropAzione(\'dup\')">📋 Duplica</button>' +
+        '<button class="as-ok" style="background:var(--accent);" onclick="App.plDropAzione(\'move\')">↔️ Sposta</button></div>' +
+        '<button class="logout-link" style="margin-top:10px;" onclick="App.closeModal()">Annulla</button>' + close;
     }
 
     if (type === 'pl_persona') {
@@ -3157,6 +3290,8 @@
     plOpenPersona: plOpenPersona, plPersonaField: plPersonaField, plPersonaChip: plPersonaChip, plSavePersona: plSavePersona, plDeletePersona: plDeletePersona,
     plOpenModelli: plOpenModelli, plModelloField: plModelloField, plModelloSet: plModelloSet, plSaveModello: plSaveModello, plDeleteModello: plDeleteModello,
     plNotifica: plNotifica, plSelectPerson: plSelectPerson,
+    plDragStart: plDragStart, plDragOver: plDragOver, plDragLeave: plDragLeave, plDragEnd: plDragEnd, plDrop: plDrop, plDropAzione: plDropAzione,
+    plToggleDup: plToggleDup, plDuplica: plDuplica, plSpostaA: plSpostaA,
     asSetTab: asSetTab, asShiftYear: asShiftYear, asShiftMonth: asShiftMonth, asOpenRichiesta: asOpenRichiesta,
     asFormField: asFormField, asFormTipo: asFormTipo, asFormPerson: asFormPerson, asFormOra: asFormOra, asInvia: asInvia,
     asDecidi: asDecidi, asAnnulla: asAnnulla, asCellClick: asCellClick, asEditSaldo: asEditSaldo,
