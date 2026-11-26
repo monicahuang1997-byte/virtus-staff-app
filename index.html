@@ -207,6 +207,50 @@
   #root,.app-scroll{min-width:0;}
   /* ---------- Ferie e permessi ---------- */
   .as-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0;}
+  /* ---------- Barra laterale (titolare/responsabili su computer e tablet) ---------- */
+  #root.root-side{max-width:1440px;}
+  .app-shell.app-shell-side{max-width:1440px;flex-direction:row;}
+  .side{width:232px;flex:none;background:var(--card);border-right:1px solid rgba(20,15,40,0.06);display:flex;flex-direction:column;padding:26px 12px 16px;overflow-y:auto;}
+  .side-brand{font-family:Nunito,sans-serif;font-weight:800;font-size:19px;padding:0 10px 2px;}
+  .side-user{font-size:12px;color:var(--text-muted);padding:0 10px 18px;}
+  .side-item{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;border-radius:12px;padding:9px 10px;font-size:13.5px;font-weight:600;color:var(--text);text-align:left;margin-bottom:2px;}
+  .side-item:hover{background:rgba(20,15,40,0.045);}
+  .side-item-active,.side-item-active:hover{background:var(--accent);color:#14121a;}
+  .side-ico{width:22px;text-align:center;font-size:16px;flex:none;}
+  .side-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);margin-left:auto;flex:none;}
+  .side-sep{height:1px;background:rgba(20,15,40,0.07);margin:10px 8px;}
+  .side-foot{margin-top:auto;padding-top:10px;}
+  .side-small{font-size:12.5px;color:var(--text-muted2);font-weight:500;}
+  .app-shell-side .app-scroll{flex:1;min-width:0;padding-left:28px;padding-right:28px;}
+  .app-shell-side .back-btn{display:none;}
+  .app-shell-side .home-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));}
+  /* ---------- Report ore ---------- */
+  .rp-layout{display:grid;grid-template-columns:270px 1fr;gap:16px;margin-top:14px;align-items:start;}
+  .rp-side .as-card:first-child{margin-top:0;}
+  .rp-profile{text-align:center;}
+  .rp-avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;font-weight:800;font-size:22px;}
+  .rp-name{font-family:Nunito,sans-serif;font-weight:800;font-size:17px;}
+  .rp-role{font-size:12px;color:var(--text-muted);margin-top:3px;}
+  .rp-list{margin-top:10px;font-size:13px;}
+  .rp-list div{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid rgba(20,15,40,0.05);gap:8px;}
+  .rp-list i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;border:1px solid;vertical-align:-1px;}
+  .rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .rp-kpi{background:var(--card);border-radius:16px;padding:14px;}
+  .rp-kpi b{display:block;font-family:Nunito,sans-serif;font-size:24px;font-weight:800;}
+  .rp-kpi span{font-size:11.5px;color:var(--text-muted);}
+  .rp-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .rp-table th{font-size:11px;color:var(--text-muted);text-align:left;padding:10px 8px;font-weight:700;border-bottom:1px solid rgba(20,15,40,0.08);}
+  .rp-table td{padding:9px 8px;border-bottom:1px solid rgba(20,15,40,0.05);vertical-align:middle;}
+  .rp-table td.num,.rp-table th.num{text-align:right;white-space:nowrap;}
+  .rp-off td{background:rgba(20,15,40,0.025);color:var(--text-muted2);}
+  .rp-week td{background:#f3f2f8;font-weight:800;font-size:12.5px;}
+  .rp-pill{display:inline-block;border-radius:8px;padding:2px 8px;font-size:11.5px;font-weight:700;border:1px solid;margin:1px 4px 1px 0;white-space:nowrap;}
+  .rp-saldo{display:inline-block;border-radius:100px;padding:2px 9px;font-size:11.5px;font-weight:800;}
+  .rp-pos{background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);}
+  .rp-neg{background:rgba(20,15,40,0.06);color:var(--text-muted);}
+  .rp-zero{background:oklch(0.92 0.06 150);color:oklch(0.38 0.13 150);}
+  @media (max-width:900px){ .rp-layout{grid-template-columns:1fr;} .rp-side{order:2;} }
+  @media (max-width:700px){ .rp-kpis{grid-template-columns:repeat(2,1fr);} .rp-table{font-size:12px;} .rp-table td,.rp-table th{padding:8px 5px;} .rp-hide-phone{display:none;} }
   .rt-badge{display:block;width:100%;border:1px dashed #e0b84a;background:#fff8e1;color:#7a5a00;border-radius:10px;padding:5px 4px;font-size:10.5px;font-weight:700;margin-bottom:5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .rt-badge-ok{border-style:solid;border-color:#a9d98b;background:#eef9e6;color:#2f5a14;}
   .plm-day-body .rt-badge{font-size:12.5px;padding:8px;border-radius:12px;margin:0;}
@@ -562,12 +606,15 @@
 
   function render(){
     var inner = state.screen === 'login' ? renderLogin() : renderScreen();
-    var wide = state.screen === 'planner' || (state.screen === 'assenze' && state.asTab === 'team');
+    // Titolare e responsabili su computer/tablet: menù a barra laterale
+    var side = usaBarraLaterale();
+    var wide = !side && (state.screen === 'planner' || state.screen === 'report' || (state.screen === 'assenze' && state.asTab === 'team'));
     // Su computer chi gestisce vede tutte le schermate più larghe
-    var mid = !wide && state.screen !== 'login' && state.user && isManager(state.user) && window.innerWidth >= 900;
-    var showVoice = state.screen !== 'login' && !wide;
-    document.getElementById('root').className = wide ? 'root-wide' : mid ? 'root-mid' : '';
-    var html = '<div class="app-shell' + (wide ? ' app-shell-wide' : mid ? ' app-shell-mid' : '') + '"><div class="app-scroll">' + inner + '</div>' +
+    var mid = !side && !wide && state.screen !== 'login' && state.user && isManager(state.user) && window.innerWidth >= 900;
+    var showVoice = state.screen !== 'login' && !wide && !side;
+    document.getElementById('root').className = side ? 'root-side' : wide ? 'root-wide' : mid ? 'root-mid' : '';
+    var html = '<div class="app-shell' + (side ? ' app-shell-side' : wide ? ' app-shell-wide' : mid ? ' app-shell-mid' : '') + '">' +
+      (side ? renderSidebar() : '') + '<div class="app-scroll">' + inner + '</div>' +
       (showVoice ? '<button class="fab-voice" onclick="App.openVoice()">🎙️</button>' : '') +
       '</div>' +
       (state.screen !== 'login' && state.activeModal ? renderModal() : '') +
@@ -835,6 +882,8 @@
         '<div class="home-tile-icon">🧩</div><div class="home-tile-label">Pianificatore turni<br><span style="font-weight:500;font-size:12px;">Crea i turni di tutto lo staff</span></div></button>' + tiles;
     }
     if (isManager(state.user)) {
+      tiles += '<button class="home-tile" onclick="App.goto(\'report\')">' +
+        '<div class="home-tile-icon">⏱️</div><div class="home-tile-label">Report ore</div></button>';
       tiles += '<button class="home-tile" onclick="App.goto(\'cruscotto\')">' +
         '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
     }
@@ -1569,7 +1618,7 @@
   // Se la finestra passa da "computer" a "telefono" (o viceversa) ridisegna il pianificatore
   var plWasPhone = null;
   window.addEventListener('resize', function(){
-    var now = plIsPhone() + '|' + (window.innerWidth >= 900);
+    var now = plIsPhone() + '|' + (window.innerWidth >= 900) + '|' + (window.innerWidth >= 768);
     if (plWasPhone !== null && now !== plWasPhone && state.screen !== 'login' && !state.activeModal) render();
     plWasPhone = now;
   });
@@ -2800,6 +2849,216 @@
       '<button class="btn-submit" onclick="App.rtInvia()">Invia alla titolare</button>' + close;
   }
 
+  // ---------- Barra laterale (titolare/responsabili su computer e tablet) ----------
+  function usaBarraLaterale(){
+    return state.screen !== 'login' && !!state.user && (isManager(state.user) || canManageTurni(state.user)) && window.innerWidth >= 768;
+  }
+  // Pallino rosso: c'è qualcosa di nuovo in quella sezione?
+  function moduleUnseen(key){
+    if (key === 'assenze') {
+      if (!isTitolare(state.user)) return false;
+      ensureLoaded('Assenze');
+      return !!state.cache.Assenze && asRows().some(function(a){ return a.stato === 'in attesa'; });
+    }
+    if (key === 'planner') {
+      if (!isTitolare(state.user)) return false;
+      ensureLoaded('Richieste_Turno');
+      return !!state.cache.Richieste_Turno && rtPending().length > 0;
+    }
+    if (key === 'bacheca') {
+      ensureLoaded('Bacheca');
+      var b = state.cache.Bacheca;
+      return !!b && rowsLatestTs(bachecaVisibleRows(b), true) > getSeen('Bacheca');
+    }
+    var dc = DOT_SHEETS[key];
+    if (dc) { ensureLoaded(dc.sheet); return hasUnseen(dc.sheet, dc.urgentOnly); }
+    return false;
+  }
+  function renderSidebar(){
+    var items = [{ k:'home', i:'🏠', l:'Home' }];
+    if (canManageTurni(state.user)) items.push({ k:'planner', i:'🧩', l:'Pianificatore turni' });
+    MODULES.forEach(function(m){
+      items.push({ k: m.key, i: m.icon, l: m.label });
+      if (m.key === 'assenze' && isManager(state.user)) items.push({ k:'report', i:'⏱️', l:'Report ore' });
+    });
+    if (isManager(state.user)) items.push({ k:'cruscotto', i:'📊', l:'Cruscotto' });
+    var role = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
+    return '<nav class="side"><div class="side-brand">🎾 Virtus Staff</div><div class="side-user">' + esc(state.user.nome) + ' · ' + role + '</div>' +
+      items.map(function(it){
+        return '<button class="side-item' + (state.screen === it.k ? ' side-item-active' : '') + '" onclick="App.goto(\'' + it.k + '\')">' +
+          '<span class="side-ico">' + it.i + '</span>' + esc(it.l) + (moduleUnseen(it.k) ? '<span class="side-dot"></span>' : '') + '</button>';
+      }).join('') +
+      '<div class="side-foot"><div class="side-sep"></div>' +
+      '<button class="side-item side-small" onclick="App.enableNotifiche()"><span class="side-ico">🔔</span>Attiva notifiche</button>' +
+      '<button class="side-item side-small" onclick="App.openModal(\'set_pin\')"><span class="side-ico">🔑</span>Imposta il tuo PIN</button>' +
+      '<button class="side-item side-small" onclick="App.logout()"><span class="side-ico">↩️</span>Cambia utente</button></div></nav>';
+  }
+
+  // ---------- Report ore per persona (ore previste dai turni + assenze) ----------
+  function rpGiorniMese(ym){
+    var p = ym.split('-'), y = +p[0], m = +p[1] - 1, n = new Date(y, m + 1, 0).getDate(), out = [];
+    for (var d = 1; d <= n; d++) out.push(fmtDate(new Date(y, m, d)));
+    return out;
+  }
+  function rpDatiPersona(p, ym){
+    var days = rpGiorniMese(ym), righe = [], settimane = [], perTipo = {}, perModello = {};
+    var tot = { ore: 0, giorniLav: 0, giorniAss: 0, oreContratto: 0 };
+    var sett = null;
+    days.forEach(function(ds){
+      var dt = parseDate(ds), lun = fmtDate(mondayOf(dt));
+      if (!sett || sett.lun !== lun) { sett = { lun: lun, ore: 0, giorni: 0, prima: ds, ultima: ds }; settimane.push(sett); }
+      sett.giorni++; sett.ultima = ds;
+      var shifts = plShiftsOf(p.nome, ds), ore = 0;
+      shifts.forEach(function(s){
+        var h = s.of - s.oi; ore += h;
+        var k = s.modello || 'Orario personalizzato';
+        perModello[k] = (perModello[k] || 0) + h;
+      });
+      var a = asOn(p.nome, ds, false)[0] || null;
+      if (a) {
+        var t = asTipo(a.tipo), conta = !t.aOre && !(dt.getDay() === 0 && !asContaDomeniche()) && !festivoNome(ds);
+        if (!perTipo[a.tipo]) perTipo[a.tipo] = { giorni: 0, ore: 0, colore: t.colore };
+        if (t.aOre || a.dalle) { if (a.dal === ds) perTipo[a.tipo].ore += a.ore; }
+        else if (conta) { perTipo[a.tipo].giorni++; tot.giorniAss++; }
+      }
+      if (shifts.length) tot.giorniLav++;
+      tot.ore += ore; sett.ore += ore;
+      righe.push({ ds: ds, dt: dt, shifts: shifts, ore: ore, assenza: a, festivo: festivoNome(ds), settimana: sett });
+    });
+    // Contratto proporzionato ai giorni della settimana che cadono nel mese
+    settimane.forEach(function(s){ s.contratto = p.ore ? p.ore * s.giorni / 7 : 0; tot.oreContratto += s.contratto; });
+    return { righe: righe, settimane: settimane, tot: tot, perTipo: perTipo, perModello: perModello };
+  }
+  function rpSaldoHtml(diff){
+    var r = Math.round(diff * 10) / 10;
+    return '<span class="rp-saldo ' + (r > 0 ? 'rp-pos' : r < 0 ? 'rp-neg' : 'rp-zero') + '">' + (r > 0 ? '+' : '') + fmtOre(r) + ' h</span>';
+  }
+  function renderReport(){
+    ['Turni','Utenti','Assenze','Tipi_Assenza','Turni_Modello','Festivi','Impostazioni'].forEach(function(s){ ensureLoaded(s); });
+    if (!state.rpMonth) state.rpMonth = todayStr().slice(0,7);
+    var c = state.cache;
+    var top = renderTopBar('Report ore');
+    if (!c.Turni || !c.Utenti || !c.Assenze || !c.Tipi_Assenza || !c.Turni_Modello || !c.Festivi || !c.Impostazioni) return '<div>' + top + '<div class="center-loading">Preparo il report…</div></div>';
+    var ppl = plPeople(rpGiorniMese(state.rpMonth));
+    state.rpPeople = ppl;
+    if (!ppl.length) return '<div>' + top + '<div class="empty-state">Nessuna persona nello staff.</div></div>';
+    var idx = ppl.findIndex(function(p){ return p.nome === state.rpNome; });
+    if (idx < 0) { idx = 0; state.rpNome = ppl[0].nome; }
+    var p = ppl[idx], r = rpDatiPersona(p, state.rpMonth), mp = state.rpMonth.split('-');
+    var chips = '<div class="plm-people" style="margin-left:0;margin-right:0;padding:0 0 4px;">' + ppl.map(function(x, i){
+      return '<button class="plm-chip' + (i === idx ? ' plm-chip-active' : '') + '" onclick="App.rpPersona(' + i + ')"><div class="plm-chip-name">' + esc(x.nome) + '</div>' +
+        '<div class="plm-chip-ore">' + (x.tipo !== 'fisso' ? tipoLabel(x.tipo) : (x.ore ? fmtOre(x.ore) + ' h/sett.' : 'Fisso')) + '</div></button>';
+    }).join('') + '</div>';
+    var nav = asNav(MESI_LUNGHI[+mp[1] - 1] + ' ' + mp[0], 'rpShiftMonth');
+    var actions = '<div class="pl-actions"><button class="pl-btn" onclick="App.rpEsporta(false)">⬇️ Esporta ' + esc(p.nome) + '</button>' +
+      '<button class="pl-btn" onclick="App.rpEsporta(true)">⬇️ Esporta riepilogo di tutti</button></div>';
+
+    // Colonna sinistra: scheda persona + assenze per tipo + ore per tipo di turno
+    var pc = personColor(p.nome);
+    var tipiHtml = Object.keys(r.perTipo).map(function(k){
+      var t = r.perTipo[k], col = PL_COLORI[t.colore] || PL_COLORI.giallo;
+      return '<div><span><i style="background:' + col.bg + ';border-color:' + col.bd + ';"></i>' + esc(k) + '</span><b>' +
+        [t.giorni ? t.giorni + ' gg' : '', t.ore ? fmtOre(t.ore) + ' h' : ''].filter(Boolean).join(' · ') + '</b></div>';
+    }).join('');
+    var modelli = plModelli();
+    var modHtml = Object.keys(r.perModello).sort(function(a,b){ return r.perModello[b] - r.perModello[a]; }).map(function(k){
+      var m = modelli.find(function(x){ return x.nome === k; }), col = PL_COLORI[m ? m.colore : ''] || { bg:'#eee', bd:'#ccc' };
+      return '<div><span><i style="background:' + col.bg + ';border-color:' + col.bd + ';"></i>' + esc(k) + '</span><b>' + fmtOre(r.perModello[k]) + ' h</b></div>';
+    }).join('');
+    var u = asUtente(p.nome);
+    var ruolo = u ? normRole(val(u,'ruolo')) : 'dipendente';
+    var sideCol = '<div class="rp-side">' +
+      '<div class="as-card rp-profile"><div class="rp-avatar" style="background:' + pc.bg + ';color:' + pc.fg + ';">' + esc(initials(p.nome)) + '</div>' +
+      '<div class="rp-name">' + esc(p.nome) + '</div><div class="rp-role">' + tipoLabel(p.tipo) + (p.tipo === 'fisso' ? ' · ' + ruolo : '') +
+      (p.ore ? ' · ' + fmtOre(p.ore) + ' h/sett.' : '') + '</div></div>' +
+      '<div class="as-card"><div class="as-title" style="font-size:14px;">Assenze del mese</div><div class="rp-list">' + (tipiHtml || '<div><span class="as-item-sub" style="margin:0;">Nessuna assenza</span></div>') + '</div></div>' +
+      '<div class="as-card"><div class="as-title" style="font-size:14px;">Ore per tipo di turno</div><div class="rp-list">' + (modHtml || '<div><span class="as-item-sub" style="margin:0;">Nessun turno</span></div>') + '</div></div></div>';
+
+    // Numeri chiave
+    var diff = r.tot.ore - r.tot.oreContratto;
+    var kpis = '<div class="rp-kpis">' +
+      '<div class="rp-kpi"><b>' + fmtOre(r.tot.ore) + ' h</b><span>ore previste nel mese</span></div>' +
+      '<div class="rp-kpi"><b>' + (p.ore ? rpSaldoHtml(diff) : '–') + '</b><span>' + (p.ore ? 'rispetto al contratto (' + fmtOre(Math.round(r.tot.oreContratto)) + ' h)' : 'nessun contratto orario') + '</span></div>' +
+      '<div class="rp-kpi"><b>' + r.tot.giorniLav + '</b><span>giorni con turno</span></div>' +
+      '<div class="rp-kpi"><b>' + r.tot.giorniAss + '</b><span>giorni di assenza</span></div></div>';
+
+    // Tabella giorno per giorno con totale di ogni settimana
+    var rows = '';
+    r.righe.forEach(function(x, i){
+      var off = x.dt.getDay() === 0 || x.festivo;
+      var turni = x.shifts.map(function(s){
+        var col = plColor(s.modello, s.oi);
+        return '<span class="rp-pill" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';">' + hourLabel(s.oi) + '–' + hourLabel(s.of) + (s.modello ? ' · ' + esc(s.modello) : '') + '</span>';
+      }).join('');
+      var ass = '';
+      if (x.assenza) {
+        var ac = asColore(x.assenza.tipo);
+        ass = '<span class="rp-pill" style="background:' + ac.bg + ';border-color:' + ac.bd + ';color:' + ac.fg + ';">' + asEmoji(x.assenza.tipo) + ' ' + esc(x.assenza.tipo) + (x.assenza.dalle ? ' ' + x.assenza.dalle + '–' + x.assenza.alle : '') + '</span>';
+      }
+      rows += '<tr' + (off ? ' class="rp-off"' : '') + '><td style="white-space:nowrap;"><b>' + GIORNI_LABELS[(x.dt.getDay()+6)%7] + ' ' + x.dt.getDate() + '</b>' +
+        (x.festivo ? '<div style="font-size:10.5px;color:var(--danger);">' + esc(x.festivo) + '</div>' : '') + '</td>' +
+        '<td>' + (turni || (x.assenza ? '' : '<span style="color:var(--text-muted3);">Riposo</span>')) + ass + '</td>' +
+        '<td class="num">' + (x.ore ? fmtOre(x.ore) + ' h' : '–') + '</td></tr>';
+      var next = r.righe[i + 1];
+      if (!next || next.settimana !== x.settimana) {
+        var s = x.settimana, d1 = parseDate(s.prima), d2 = parseDate(s.ultima);
+        rows += '<tr class="rp-week"><td colspan="2">Settimana ' + d1.getDate() + '–' + d2.getDate() + ' ' + MESI_SHORT[d2.getMonth()] +
+          (p.ore ? ' <span style="font-weight:500;color:var(--text-muted);">· contratto ' + fmtOre(Math.round(s.contratto * 10) / 10) + ' h</span>' : '') + '</td>' +
+          '<td class="num">' + fmtOre(s.ore) + ' h ' + (p.ore ? rpSaldoHtml(s.ore - s.contratto) : '') + '</td></tr>';
+      }
+    });
+    var table = '<div class="as-card" style="padding:6px 8px;overflow-x:auto;"><table class="rp-table"><thead><tr><th>Giorno</th><th>Turni e assenze</th><th class="num">Ore</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+    return '<div>' + top + nav + chips + actions +
+      '<div class="rp-layout">' + sideCol + '<div>' + kpis + table +
+      '<div class="turni-hint">Ore previste in base ai turni assegnati. Nei mesi a cavallo, il contratto settimanale è calcolato in proporzione ai giorni del mese.</div></div></div></div>';
+  }
+  function rpPersona(i){ var p = state.rpPeople && state.rpPeople[i]; if (p) { state.rpNome = p.nome; render(); } }
+  function rpShiftMonth(d){
+    var p = state.rpMonth.split('-'), dt = new Date(+p[0], +p[1] - 1 + d, 1);
+    state.rpMonth = dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0');
+    render();
+  }
+  function rpScarica(nomeFile, righe){
+    function cell(x){ return '"' + String(x == null ? '' : x).replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"'; }
+    var blob = new Blob(['﻿' + righe.map(function(r){ return r.map(cell).join(';'); }).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = nomeFile;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(function(){ URL.revokeObjectURL(link.href); link.remove(); }, 1000);
+  }
+  function rpEsporta(tutti){
+    var ym = state.rpMonth, ppl = state.rpPeople || [];
+    if (tutti) {
+      var tipi = asTipi().map(function(t){ return t.nome; });
+      var righe = [['Persona','Tipo','Ore contratto/sett.','Ore previste','Ore da contratto (mese)','Differenza','Giorni con turno'].concat(tipi.map(function(t){ return t + ' (gg/h)'; }))];
+      ppl.forEach(function(p){
+        var r = rpDatiPersona(p, ym);
+        righe.push([p.nome, tipoLabel(p.tipo), p.ore ? fmtOre(p.ore) : '', fmtOre(r.tot.ore), p.ore ? fmtOre(Math.round(r.tot.oreContratto * 10) / 10) : '',
+          p.ore ? fmtOre(Math.round((r.tot.ore - r.tot.oreContratto) * 10) / 10) : '', r.tot.giorniLav].concat(tipi.map(function(t){
+            var x = r.perTipo[t];
+            return x ? [x.giorni ? x.giorni + ' gg' : '', x.ore ? fmtOre(x.ore) + ' h' : ''].filter(Boolean).join(' ') : '';
+          })));
+      });
+      rpScarica('report-ore-tutti-' + ym + '.csv', righe);
+      return;
+    }
+    var p = ppl.find(function(x){ return x.nome === state.rpNome; });
+    if (!p) return;
+    var d = rpDatiPersona(p, ym);
+    var out = [['Giorno','Turni','Ore','Assenza']];
+    d.righe.forEach(function(x){
+      out.push([x.ds, x.shifts.map(function(s){ return hourLabel(s.oi) + '-' + hourLabel(s.of) + (s.modello ? ' ' + s.modello : ''); }).join(' + '),
+        x.ore ? fmtOre(x.ore) : '', x.assenza ? x.assenza.tipo + (x.assenza.dalle ? ' ' + x.assenza.dalle + '-' + x.assenza.alle : '') : (x.festivo || '')]);
+    });
+    out.push([]);
+    out.push(['Totale ore previste', '', fmtOre(d.tot.ore), '']);
+    if (p.ore) out.push(['Ore da contratto (mese)', '', fmtOre(Math.round(d.tot.oreContratto * 10) / 10), 'Differenza: ' + fmtOre(Math.round((d.tot.ore - d.tot.oreContratto) * 10) / 10)]);
+    rpScarica('report-ore-' + p.nome.replace(/[^\w]+/g, '_') + '-' + ym + '.csv', out);
+  }
+
   // ---------- Screen dispatch ----------
   function renderScreen(){
     switch (state.screen) {
@@ -2813,6 +3072,7 @@
       case 'cruscotto': return renderCruscotto();
       case 'planner': return canManageTurni(state.user) ? renderPlanner() : renderHome();
       case 'assenze': return renderAssenze();
+      case 'report': return isManager(state.user) ? renderReport() : renderHome();
       default: return renderHome();
     }
   }
@@ -3292,6 +3552,7 @@
     plNotifica: plNotifica, plSelectPerson: plSelectPerson,
     plDragStart: plDragStart, plDragOver: plDragOver, plDragLeave: plDragLeave, plDragEnd: plDragEnd, plDrop: plDrop, plDropAzione: plDropAzione,
     plToggleDup: plToggleDup, plDuplica: plDuplica, plSpostaA: plSpostaA,
+    rpPersona: rpPersona, rpShiftMonth: rpShiftMonth, rpEsporta: rpEsporta,
     asSetTab: asSetTab, asShiftYear: asShiftYear, asShiftMonth: asShiftMonth, asOpenRichiesta: asOpenRichiesta,
     asFormField: asFormField, asFormTipo: asFormTipo, asFormPerson: asFormPerson, asFormOra: asFormOra, asInvia: asInvia,
     asDecidi: asDecidi, asAnnulla: asAnnulla, asCellClick: asCellClick, asEditSaldo: asEditSaldo,
