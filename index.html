@@ -281,6 +281,20 @@
   .app-shell-side .home-extra{display:none;}
   /* ---------- Eventi come post ---------- */
   .ev-feed{max-width:680px;}
+  .news-urg{box-shadow:inset 4px 0 0 var(--danger);}
+  .news-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--text-muted2);}
+  .news-per{display:inline-block;background:rgba(20,15,40,0.06);color:var(--accent2);border-radius:100px;padding:1px 8px;font-size:10.5px;font-weight:700;}
+  .td-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+  .td-item{display:flex;align-items:flex-start;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;}
+  .dash-card .td-item{background:rgba(20,15,40,0.035);border-radius:12px;padding:10px 12px;margin-bottom:6px;}
+  .td-urg{box-shadow:inset 3px 0 0 var(--danger);}
+  .td-check{width:24px;height:24px;flex:none;border-radius:50%;border:2px solid var(--accent);background:none;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px;padding:0;}
+  .td-done .td-check{background:var(--good);border-color:var(--good);}
+  .td-body{flex:1;min-width:0;}
+  .td-text{font-size:14px;font-weight:600;line-height:1.4;}
+  .td-done .td-text{text-decoration:line-through;color:var(--text-muted3);}
+  .td-meta{font-size:11.5px;color:var(--text-muted2);margin-top:3px;}
+  .td-badge{display:inline-block;background:oklch(0.93 0.06 30);color:oklch(0.42 0.16 30);border-radius:100px;padding:1px 8px;font-size:10.5px;font-weight:800;margin-right:6px;vertical-align:1px;}
   .ev-post{background:var(--card);border-radius:20px;padding:16px;margin-top:14px;}
   .ev-post-flat{background:none;padding:0;margin:0 0 12px;}
   .ev-post-t{font-family:Nunito,sans-serif;font-weight:800;font-size:17px;line-height:1.3;}
@@ -298,7 +312,7 @@
   .ev-upload .ico{width:20px;height:20px;}
   /* ---------- Barra in basso (telefono) ---------- */
   .tabbar{display:flex;flex:none;background:var(--tabbar);border-top:1px solid rgba(20,15,40,0.08);padding:6px 4px calc(6px + env(safe-area-inset-bottom));}
-  .tab{flex:1;position:relative;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;color:var(--text-muted2);font-size:10.5px;font-weight:700;}
+  .tab{flex:1;min-width:0;white-space:nowrap;position:relative;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;color:var(--text-muted2);font-size:10.5px;font-weight:700;}
   .tab > .tab-dot{top:3px;right:auto;left:calc(50% + 9px);}
   .tab-ico{display:flex;align-items:center;justify-content:center;height:26px;}
   .ico{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
@@ -483,8 +497,8 @@
   var MODULES = [
     { key: 'turni', icon: '🗓️', label: 'Turni' },
     { key: 'assenze', icon: '🌴', label: 'Ferie e permessi' },
-    { key: 'checklist', icon: '✅', label: 'Checklist apertura/chiusura' },
-    { key: 'bacheca', icon: '📣', label: 'Bacheca' },
+    { key: 'todo', icon: '✅', label: 'Cose da fare' },
+    { key: 'news', icon: '📣', label: 'Cosa succede' },
     { key: 'vendita', icon: '🍷', label: 'Vendita e prodotto' },
     { key: 'scorte', icon: '📦', label: 'Scorte' },
     { key: 'manutenzione', icon: '🛠️', label: 'Manutenzione' },
@@ -961,7 +975,7 @@
           ensureLoaded('Assenze');
           unseen = !!state.cache.Assenze && asRows().some(function(a){ return a.stato === 'in attesa'; });
         }
-      } else if (m.key === 'bacheca') {
+      } else if (m.key === 'news') {
         var bRows = state.cache.Bacheca;
         unseen = !!bRows && rowsLatestTs(bachecaVisibleRows(bRows), true) > getSeen('Bacheca');
       } else {
@@ -3015,15 +3029,15 @@
 
   function renderDashboard(){
     var man = isManager(state.user) || canManageTurni(state.user), tit = isTitolare(state.user);
-    ['Turni','Utenti','Assenze','Tipi_Assenza','Impostazioni','Festivi','Bacheca','Checklist','Checklist_Log','Eventi','Turni_Modello']
+    ['Turni','Utenti','Assenze','Tipi_Assenza','Impostazioni','Festivi','Bacheca','Da_Fare','Eventi','Turni_Modello']
       .forEach(function(s){ ensureLoaded(s); });
     if (man) ['Scorte','Manutenzione','Richieste_Turno'].forEach(function(s){ ensureLoaded(s); });
     var col1 = dashCard(icona('calendario') + 'I miei prossimi turni', dashLink('Vedi tutti →', 'App.goto(\'' + (canManageTurni(state.user) ? 'planner' : 'turni') + '\')'), dashMieiTurni()) +
       dashCard(icona('persone') + 'Oggi al Virtus', '', dashOggi());
     var col2 = dashCard(icona('checklist') + 'Da fare', '', dashDaFare()) +
-      dashCard(icona('megafono') + 'Bacheca', dashLink('Vedi tutto →', 'App.goto(\'bacheca\')'), dashBacheca());
+      dashCard(icona('megafono') + 'Bacheca', dashLink('Vedi tutto →', 'App.newsVai(\'avvisi\')'), dashBacheca());
     var col3 = dashCard(icona('ombrellone') + 'Le mie ferie', dashLink('Apri →', 'App.goto(\'assenze\')'), dashFerie()) +
-      dashCard(icona('stella') + 'Prossimi eventi', '<span>' + (tit ? dashLink('+ Aggiungi', 'App.evOpen(\'\')') : '') + dashLink('Tutti →', 'App.goto(\'eventi\')') + '</span>', dashEventi());
+      dashCard(icona('stella') + 'Prossimi eventi', '<span>' + (tit ? dashLink('+ Aggiungi', 'App.evOpen(\'\')') : '') + dashLink('Tutti →', 'App.newsVai(\'eventi\')') + '</span>', dashEventi());
     var tre = usaBarraLaterale() || (man && window.innerWidth >= 900);
     return '<div class="dash' + (tre ? ' dash-3' : '') + '"><div class="dash-col">' + col1 + '</div><div class="dash-col">' + col2 + '</div><div class="dash-col">' + col3 + '</div></div>';
   }
@@ -3107,28 +3121,142 @@
       if (c.Scorte) { var ns = c.Scorte.filter(function(r){ return String(val(r,'stato')||'').toLowerCase().indexOf('risolt') !== 0; }).length; if (ns) html += todo('scatola', 'Prodotti da ordinare', ns, 'App.goto(\'scorte\')'); }
       if (c.Manutenzione) { var nm = c.Manutenzione.filter(function(r){ return String(val(r,'stato')||'').toLowerCase().indexOf('risolt') !== 0; }).length; if (nm) html += todo('chiave_inglese', 'Guasti aperti', nm, 'App.goto(\'manutenzione\')'); }
     }
-    // Checklist di oggi: avanzamento per locale e fase
-    if (c.Checklist && c.Checklist_Log) {
-      var t = todayStr(), righe = '';
-      LOCALI.forEach(function(l, li){
-        FASI.forEach(function(f, fi){
-          var voci = c.Checklist.filter(function(it){ return String(val(it,'locale')).trim().toLowerCase() === l.toLowerCase() && String(val(it,'fase')).trim().toLowerCase() === f; });
-          if (!voci.length) return;
-          var fatte = voci.filter(function(it){
-            var att = String(val(it,'attività') || val(it,'attivita'));
-            return c.Checklist_Log.some(function(lg){
-              return String(val(lg,'data')) === t && String(val(lg,'locale')).trim().toLowerCase() === l.toLowerCase() &&
-                String(val(lg,'fase')).trim().toLowerCase() === f && String(val(lg,'attività') || val(lg,'attivita')) === att;
-            });
-          }).length;
-          var pct = Math.round(fatte / voci.length * 100);
-          righe += '<button class="dash-todo" onclick="App.dashChecklist(' + li + ',' + fi + ')">' + icona('checklist') + esc(l) + ' · ' + f +
-            '<span class="dash-prog"><i style="width:' + pct + '%;"></i></span><b style="margin-left:6px;">' + fatte + '/' + voci.length + '</b></button>';
-        });
-      });
-      if (righe) html += '<div class="dash-group" style="margin-top:' + (html ? '10px' : '0') + ';">Checklist di oggi</div>' + righe;
+    // Cose da fare condivise: le prime aperte (urgenti, scadute e mie per prime)
+    if (c.Da_Fare) {
+      var aperte = tdOrdina(tdRows().filter(function(x){ return !x.fatto && tdVisibile(x); }));
+      html += '<div class="dash-group" style="margin-top:' + (html ? '10px' : '0') + ';">Cose da fare' + (aperte.length ? ' (' + aperte.length + ')' : '') + '</div>' +
+        (aperte.length ? aperte.slice(0, 5).map(function(x){ return tdItemHtml(x, true); }).join('') : '<div class="dash-empty">Niente in sospeso ✨</div>') +
+        '<button class="dash-link" style="padding:8px 0 0;" onclick="App.tdOpen()">+ Aggiungi</button>' +
+        (aperte.length > 5 ? ' <button class="dash-link" style="padding:8px 0 0;" onclick="App.goto(\'todo\')">Vedi tutte →</button>' : '');
     }
     return html || '<div class="dash-empty">Tutto in ordine ✨</div>';
+  }
+
+  // ---------- Cose da fare (lista condivisa: tutti aggiungono, tutti spuntano) ----------
+  var tdMemo = { src: null, rows: [] };
+  function tdRows(){
+    var src = state.cache.Da_Fare;
+    if (tdMemo.src === src) return tdMemo.rows;
+    tdMemo.src = src;
+    tdMemo.rows = (src || []).map(function(r){
+      return { id: r[findKey(r,'ID')], testo: String(val(r,'testo')||'').trim(), per: String(val(r,'per')||'').trim(),
+        entro: String(val(r,'entro')||'').slice(0,10), urgente: siNo(val(r,'urgente')), autore: String(val(r,'creato da')||'').trim(),
+        creato: String(val(r,'creato il')||''), fatto: siNo(val(r,'fatto')), fattoDa: String(val(r,'fatto da')||''), fattoIl: String(val(r,'fatto il')||'') };
+    }).filter(function(x){ return x.testo; });
+    return tdMemo.rows;
+  }
+  function tdMia(x){ return x.per && x.per.toLowerCase() === state.user.nome.toLowerCase(); }
+  function tdVisibile(x){ return !x.per || tdMia(x) || x.autore.toLowerCase() === state.user.nome.toLowerCase() || isManager(state.user); }
+  function tdScaduta(x){ return !x.fatto && x.entro && x.entro < todayStr(); }
+  function tdOrdina(list){
+    return list.slice().sort(function(a,b){
+      function peso(x){ return (x.urgente ? 0 : 4) + (tdScaduta(x) ? 0 : 2) + (tdMia(x) ? 0 : 1); }
+      return peso(a) - peso(b) || (a.entro || '9999').localeCompare(b.entro || '9999') || String(b.id).localeCompare(String(a.id));
+    });
+  }
+  function tdDataBreve(ds){ var d = parseDate(ds); return d.getDate() + ' ' + MESI_SHORT[d.getMonth()]; }
+  function tdItemHtml(x, compatto){
+    var meta = [];
+    if (x.per) meta.push('per ' + (tdMia(x) ? '<b>te</b>' : esc(x.per)));
+    else meta.push('per tutti');
+    if (x.entro) meta.push('<span style="' + (tdScaduta(x) ? 'color:var(--danger);font-weight:700;' : '') + '">entro ' + (x.entro === todayStr() ? 'oggi' : tdDataBreve(x.entro)) + (tdScaduta(x) ? ' · in ritardo' : '') + '</span>');
+    if (!compatto && x.autore) meta.push('da ' + esc(x.autore));
+    if (x.fatto) meta = ['fatto da ' + esc(x.fattoDa || '—') + (x.fattoIl ? ' · ' + tdDataBreve(x.fattoIl.slice(0,10)) : '')];
+    var puoTogliere = !compatto && (isManager(state.user) || x.autore.toLowerCase() === state.user.nome.toLowerCase());
+    return '<div class="td-item' + (x.fatto ? ' td-done' : '') + (x.urgente && !x.fatto ? ' td-urg' : '') + '">' +
+      '<button class="td-check" title="' + (x.fatto ? 'Riapri' : 'Segna come fatto') + '" onclick="App.tdSpunta(\'' + esc(x.id) + '\')">' + (x.fatto ? '✓' : '') + '</button>' +
+      '<div class="td-body"><div class="td-text">' + (x.urgente && !x.fatto ? '<span class="td-badge">Urgente</span>' : '') + esc(x.testo) + '</div>' +
+      '<div class="td-meta">' + meta.join(' · ') + '</div></div>' +
+      (puoTogliere ? '<button class="as-x" title="Elimina" onclick="App.tdElimina(\'' + esc(x.id) + '\')">&times;</button>' : '') + '</div>';
+  }
+  function renderTodo(){
+    ensureLoaded('Da_Fare');
+    ensureLoaded('Utenti');
+    if (!state.tdFiltro) state.tdFiltro = 'aperte';
+    var top = renderTopBarWithAction('Cose da fare', '<button class="btn-round" onclick="App.tdOpen()">+</button>');
+    if (!state.cache.Da_Fare) return '<div>' + top + '<div class="center-loading">Carico…</div></div>';
+    setSeen('Da_Fare', rowsLatestTs(state.cache.Da_Fare, false));
+    var tutte = tdRows().filter(tdVisibile);
+    var filtri = [{ k:'aperte', l:'Da fare' }, { k:'mie', l:'Per me' }, { k:'fatte', l:'Fatte' }];
+    var chips = '<div class="chip-row">' + filtri.map(function(f){
+      return '<button class="chip ' + (state.tdFiltro === f.k ? 'chip-active' : '') + '" onclick="App.tdFiltro(\'' + f.k + '\')">' + f.l + '</button>';
+    }).join('') + '</div>';
+    var list;
+    if (state.tdFiltro === 'fatte') list = tutte.filter(function(x){ return x.fatto; }).sort(function(a,b){ return b.fattoIl.localeCompare(a.fattoIl); }).slice(0, 40);
+    else list = tdOrdina(tutte.filter(function(x){ return !x.fatto && (state.tdFiltro !== 'mie' || tdMia(x)); }));
+    var body = list.length ? '<div class="td-list">' + list.map(function(x){ return tdItemHtml(x, false); }).join('') + '</div>'
+      : '<div class="empty-state">' + (state.tdFiltro === 'fatte' ? 'Ancora niente di completato.' : 'Niente da fare 🎉<br>Tocca + per aggiungere qualcosa.') + '</div>';
+    return '<div class="ev-feed">' + top + chips + body + '</div>';
+  }
+  function tdFiltro(k){ state.tdFiltro = k; render(); }
+  function tdOpen(){
+    ensureLoaded('Utenti');
+    state.tdForm = { testo: '', per: '', entro: '', urgente: false };
+    state.activeModal = 'td_form';
+    render();
+  }
+  function tdField(k, v){ if (state.tdForm) state.tdForm[k] = v; }
+  function tdPer(i){
+    var f = state.tdForm;
+    if (!f) return;
+    var ppl = state.tdPeople || [];
+    f.per = i < 0 ? '' : (ppl[i] || '');
+    render();
+  }
+  function tdUrgente(v){ if (state.tdForm) { state.tdForm.urgente = !!v; render(); } }
+  function tdSalva(){
+    var f = state.tdForm;
+    if (!f || state.busy) return;
+    var testo = String(f.testo || '').trim();
+    if (!testo) { alert('Scrivi cosa c\'è da fare'); return; }
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Da_Fare', data: { Testo: testo, Per: f.per || '', Entro: f.entro || '', Urgente: f.urgente ? 'si' : '',
+      'Creato da': state.user.nome, 'Creato il': todayStr() + ' ' + nowTime(), Fatto: '' } }).then(function(res){
+      state.busy = false;
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); render(); return; }
+      state.activeModal = null;
+      reload('Da_Fare');
+      render();
+    });
+  }
+  function tdSpunta(id){
+    var x = tdRows().find(function(r){ return String(r.id) === String(id); });
+    if (!x) return;
+    var data = x.fatto ? { Fatto: '', 'Fatto da': '', 'Fatto il': '' } : { Fatto: 'si', 'Fatto da': state.user.nome, 'Fatto il': todayStr() + ' ' + nowTime() };
+    // Aggiorno subito lo schermo, poi salvo
+    var row = (state.cache.Da_Fare || []).find(function(r){ return String(r[findKey(r,'ID')]) === String(id); });
+    if (row) Object.keys(data).forEach(function(k){ row[findKey(row, k.toLowerCase())] = data[k]; });
+    state.cache.Da_Fare = (state.cache.Da_Fare || []).slice();
+    render();
+    apiPost({ sheet: 'Da_Fare', action: 'update', id: id, data: data }).then(function(res){
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); reload('Da_Fare'); }
+    });
+  }
+  function tdElimina(id){
+    var x = tdRows().find(function(r){ return String(r.id) === String(id); });
+    if (!x || !confirm('Eliminare "' + x.testo + '"?')) return;
+    apiPost({ sheet: 'Da_Fare', action: 'delete', id: id }).then(function(res){
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); return; }
+      reload('Da_Fare');
+    });
+  }
+  function renderTdModal(){
+    if (state.busy) return '<div class="overlay"><div class="sheet"><div class="center-loading">Salvataggio in corso…</div></div></div>';
+    var f = state.tdForm;
+    var ppl = (state.cache.Utenti || []).filter(function(u){ return String(val(u,'nome')||'').trim() && tipoOf(u) === 'fisso'; })
+      .map(function(u){ return String(val(u,'nome')).trim(); });
+    state.tdPeople = ppl;
+    var perChips = '<button class="chip-select ' + (!f.per ? 'chip-select-active' : '') + '" onclick="App.tdPer(-1)">Tutti</button>' +
+      ppl.map(function(n, i){ return '<button class="chip-select ' + (f.per === n ? 'chip-select-active' : '') + '" onclick="App.tdPer(' + i + ')">' + esc(n) + '</button>'; }).join('');
+    return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
+      '<div class="sheet-header"><div class="sheet-title">Nuova cosa da fare</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+      '<div class="field"><div class="field-label">Cosa c\'è da fare</div><textarea oninput="App.tdField(\'testo\', this.value)" placeholder="Es. Ordinare i limoni per il bar piscina">' + esc(f.testo) + '</textarea></div>' +
+      '<div class="field-label">Per chi</div><div class="chips-wrap">' + perChips + '</div>' +
+      '<div class="field"><div class="field-label">Entro quando (facoltativo)</div><input type="date" value="' + esc(f.entro) + '" onchange="App.tdField(\'entro\', this.value)"/></div>' +
+      '<label class="as-toggle"><input type="checkbox"' + (f.urgente ? ' checked' : '') + ' onchange="App.tdUrgente(this.checked)"/>🔴 Urgente</label>' +
+      '<div class="as-item-sub" style="margin:6px 0 4px;">' + (f.per ? f.per + ' riceverà una notifica.' : (f.urgente ? 'Tutto lo staff riceverà una notifica.' : 'Comparirà nella lista di tutti.')) + '</div>' +
+      '<button class="btn-submit" onclick="App.tdSalva()">Aggiungi</button></div></div>';
   }
 
   function dashBacheca(){
@@ -3138,7 +3266,7 @@
     if (!vis.length) return '<div class="dash-empty">Nessun avviso.</div>';
     return vis.map(function(r){
       var urg = String(val(r,'priorità') || val(r,'priorita') || '').toLowerCase() === 'urgente';
-      return '<div class="dash-msg" onclick="App.goto(\'bacheca\')"><div class="dash-msg-t' + (urg ? ' dash-urg' : '') + '">' + (urg ? '<span class="dash-red"></span>' : '') + esc(val(r,'messaggio')) + '</div>' +
+      return '<div class="dash-msg" onclick="App.newsVai(\'avvisi\')"><div class="dash-msg-t' + (urg ? ' dash-urg' : '') + '">' + (urg ? '<span class="dash-red"></span>' : '') + esc(val(r,'messaggio')) + '</div>' +
         '<div class="dash-msg-m">' + esc(val(r,'autore')) + ' · ' + esc(val(r,'data')) + '</div></div>';
     }).join('');
   }
@@ -3240,6 +3368,65 @@
         '<div class="empty-state">Nessun evento in programma.' + (isTitolare(state.user) ? '<br>Tocca + per pubblicare un torneo, una festa o una chiusura.' : '') + '</div>') +
       (passati.length ? '<div class="section-label" style="margin-top:22px;">Eventi passati</div>' + passati.map(function(e){ return evPostHtml(e); }).join('') : '') +
       '</div>';
+  }
+
+  // ---------- "Cosa succede": avvisi della bacheca + eventi in un'unica pagina ----------
+  function dataLeggibile(s){
+    var t = String(s || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(t)) return String(s || '');
+    var d = parseDate(t);
+    return d.getDate() + ' ' + MESI_SHORT[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function newsVai(filtro){ state.newsFiltro = filtro || 'tutto'; goto('news'); }
+  function newsFiltro(k){ state.newsFiltro = k; render(); }
+  function tsDaTesto(s){
+    var m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/);
+    return m ? new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0)).getTime() : 0;
+  }
+  function avvisoPostHtml(r){
+    var id = r[findKey(r,'ID')], autore = String(val(r,'autore')||''), dest = String(val(r,'destinatario')||'').trim();
+    var urg = String(val(r,'priorità') || val(r,'priorita') || '').toLowerCase() === 'urgente';
+    var pc = personColor(autore || 'Virtus');
+    var puo = id && (autore === state.user.nome || isManager(state.user));
+    return '<div class="ev-post' + (urg ? ' news-urg' : '') + '">' +
+      '<div class="row-between"><div class="ev-post-a" style="margin:0;"><span class="dash-av" style="background:' + pc.bg + ';color:' + pc.fg + ';">' + esc(initials(autore || '?')) + '</span>' +
+      esc(autore) + ' · ' + esc(dataLeggibile(val(r,'data'))) + '</div><span class="news-tag">' + iconaS('megafono') + 'Avviso</span></div>' +
+      (urg || dest ? '<div style="margin-top:8px;">' + (urg ? '<span class="td-badge">Urgente</span>' : '') +
+        (dest ? '<span class="news-per">Per: ' + esc(dest) + '</span>' : '') + '</div>' : '') +
+      '<div class="ev-post-d" style="font-size:15px;font-weight:600;">' + esc(val(r,'messaggio')) + '</div>' +
+      (puo ? '<button class="dash-link" style="padding:10px 0 0;" onclick="App.removeBacheca(\'' + esc(id) + '\')">Elimina</button>' : '') + '</div>';
+  }
+  function renderNews(){
+    ensureLoaded('Bacheca'); ensureLoaded('Eventi'); ensureLoaded('Reazioni_Eventi'); ensureLoaded('Utenti');
+    if (!state.newsFiltro) state.newsFiltro = 'tutto';
+    var f = state.newsFiltro;
+    var top = '<div class="top-bar"><button class="back-btn" onclick="App.goHome()">‹</button><div class="top-title">Cosa succede</div></div>' +
+      '<div class="pl-actions"><button class="pl-btn pl-btn-primary" onclick="App.openModal(\'bacheca\')">+ Avviso</button>' +
+      (isTitolare(state.user) ? '<button class="pl-btn" onclick="App.evOpen(\'\')">+ Evento</button>' : '') + '</div>' +
+      '<div class="chip-row">' + [['tutto','Tutto'],['avvisi','Avvisi'],['eventi','Eventi']].map(function(x){
+        return '<button class="chip ' + (f === x[0] ? 'chip-active' : '') + '" onclick="App.newsFiltro(\'' + x[0] + '\')">' + x[1] + '</button>';
+      }).join('') + '</div>';
+    var c = state.cache;
+    if (!c.Bacheca || !c.Eventi || !c.Reazioni_Eventi) return '<div class="ev-feed">' + top + '<div class="center-loading">Carico…</div></div>';
+    setSeen('Bacheca', rowsLatestTs(bachecaVisibleRows(c.Bacheca), true));
+    var items = [];
+    if (f !== 'eventi') bachecaVisibleRows(c.Bacheca).forEach(function(r){
+      var id = String(r[findKey(r,'ID')] || ''), urg = String(val(r,'priorità') || val(r,'priorita') || '').toLowerCase() === 'urgente';
+      items.push({ ts: parseInt(id.split('-')[0], 10) || tsDaTesto(val(r,'data')), urg: urg, html: avvisoPostHtml(r) });
+    });
+    var t = todayStr();
+    if (f !== 'avvisi') evRows().forEach(function(e){
+      if (f === 'tutto' && e.al < t) return; // nel feed misto solo eventi non ancora passati
+      items.push({ ts: tsDaTesto(e.pubblicato), urg: false, html: evPostHtml(e) }); // senza data di pubblicazione va in fondo
+    });
+    // Urgenti in cima (solo quelli degli ultimi 3 giorni), poi il resto dal più recente
+    var limite = Date.now() - 3 * 86400000;
+    var urgenti = items.filter(function(x){ return x.urg && x.ts >= limite; }).sort(function(a,b){ return b.ts - a.ts; });
+    var resto = items.filter(function(x){ return urgenti.indexOf(x) === -1; }).sort(function(a,b){ return b.ts - a.ts; });
+    var body = (urgenti.length ? '<div class="section-label" style="margin-top:16px;">In evidenza</div>' + urgenti.map(function(x){ return x.html; }).join('') : '') +
+      (resto.length ? (urgenti.length ? '<div class="section-label" style="margin-top:20px;">Ultimi post</div>' : '') + resto.map(function(x){ return x.html; }).join('') : '') +
+      (!items.length ? '<div class="empty-state">Ancora niente qui.<br>Pubblica il primo avviso con "+ Avviso".</div>' : '');
+    return '<div class="ev-feed">' + top + body + '</div>';
   }
 
   function dashEventi(){
@@ -3380,6 +3567,7 @@
     stella: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
     pin: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
     matita: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+    notizie: '<rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M7.5 9h9M7.5 12.5h9M7.5 16h5"/>',
     griglia: '<rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 3.5v17"/>',
     attrezzi: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/>'
   };
@@ -3390,14 +3578,14 @@
   function tabKeyFor(screen){
     if (screen === 'home') return 'home';
     if (screen === 'planner' || screen === 'turni') return 'turni';
-    if (screen === 'assenze') return 'assenze';
-    if (screen === 'bacheca') return 'bacheca';
+    if (screen === 'bacheca' || screen === 'eventi' || screen === 'news') return 'news';
+    if (screen === 'todo') return 'todo';
     return 'altro';
   }
   function altroVoci(){
     var man = isManager(state.user), gest = canManageTurni(state.user);
     var v = [];
-    v.push({ k:'eventi', i:'stella', l:'Eventi' }, { k:'checklist', i:'checklist', l:'Checklist' }, { k:'vendita', i:'calice', l:'Vendita e prodotto' }, { k:'scorte', i:'scatola', l:'Scorte' },
+    v.push({ k:'assenze', i:'ombrellone', l:'Ferie e permessi' }, { k:'vendita', i:'calice', l:'Vendita e prodotto' }, { k:'scorte', i:'scatola', l:'Scorte' },
       { k:'manutenzione', i:'chiave_inglese', l:'Manutenzione' }, { k:'documenti', i:'documento', l:'Documenti' });
     if (man) v.push({ k:'report', i:'orologio', l:'Report ore' }, { k:'cruscotto', i:'grafico', l:'Cruscotto' });
     return v;
@@ -3408,8 +3596,8 @@
     var tabs = [
       { k:'home', i:'home', l:'Home', go:'home' },
       { k:'turni', i:'calendario', l:'Turni', go: turniDest, dot: moduleUnseen(turniDest) },
-      { k:'assenze', i:'ombrellone', l:'Ferie', go:'assenze', dot: moduleUnseen('assenze') },
-      { k:'bacheca', i:'megafono', l:'Bacheca', go:'bacheca', dot: moduleUnseen('bacheca') },
+      { k:'todo', i:'checklist', l:'Da fare', go:'todo', dot: moduleUnseen('todo') },
+      { k:'news', i:'notizie', l:'Cosa succede', go:'news', dot: moduleUnseen('news') },
       { k:'altro', i:'menu', l:'Altro', go: null, dot: altroVoci().some(function(x){ return moduleUnseen(x.k); }) }
     ];
     var act = state.activeModal === 'menu_altro' ? 'altro' : tabKeyFor(state.screen);
@@ -3449,17 +3637,26 @@
       ensureLoaded('Richieste_Turno');
       return !!state.cache.Richieste_Turno && rtPending().length > 0;
     }
-    if (key === 'bacheca') {
+    if (key === 'bacheca' || key === 'news') {
       ensureLoaded('Bacheca');
       var b = state.cache.Bacheca;
       return !!b && rowsLatestTs(bachecaVisibleRows(b), true) > getSeen('Bacheca');
+    }
+    if (key === 'todo') {
+      ensureLoaded('Da_Fare');
+      if (!state.cache.Da_Fare) return false;
+      return state.cache.Da_Fare.some(function(r){
+        var per = String(val(r,'per')||'').trim().toLowerCase();
+        var id = String(r[findKey(r,'ID')]||''), ts = parseInt(id.split('-')[0], 10) || 0;
+        return !siNo(val(r,'fatto')) && (!per || per === state.user.nome.toLowerCase()) && ts > getSeen('Da_Fare');
+      });
     }
     var dc = DOT_SHEETS[key];
     if (dc) { ensureLoaded(dc.sheet); return hasUnseen(dc.sheet, dc.urgentOnly); }
     return false;
   }
-  var ICONA_SEZIONE = { home:'home', planner:'griglia', turni:'calendario', assenze:'ombrellone', report:'orologio', checklist:'checklist',
-    bacheca:'megafono', eventi:'stella', vendita:'calice', scorte:'scatola', manutenzione:'chiave_inglese', documenti:'documento', cruscotto:'grafico' };
+  var ICONA_SEZIONE = { home:'home', planner:'griglia', turni:'calendario', assenze:'ombrellone', report:'orologio', todo:'checklist', checklist:'checklist',
+    bacheca:'megafono', news:'notizie', eventi:'stella', vendita:'calice', scorte:'scatola', manutenzione:'chiave_inglese', documenti:'documento', cruscotto:'grafico' };
   function renderSidebar(){
     var items = [{ k:'home', l:'Home' }];
     if (canManageTurni(state.user)) items.push({ k:'planner', l:'Pianificatore turni' });
@@ -3467,7 +3664,6 @@
       if (m.key === 'turni' && canManageTurni(state.user)) return; // per chi gestisce c'è il Pianificatore
       items.push({ k: m.key, l: m.label });
       if (m.key === 'assenze' && isManager(state.user)) items.push({ k:'report', l:'Report ore' });
-      if (m.key === 'bacheca') items.push({ k:'eventi', l:'Eventi' });
     });
     if (isManager(state.user)) items.push({ k:'cruscotto', l:'Cruscotto' });
     items.forEach(function(it){ it.i = icona(ICONA_SEZIONE[it.k] || 'documento'); });
@@ -3654,6 +3850,7 @@
       case 'turni': return canManageTurni(state.user) ? renderPlanner(false) : renderPlanner(true);
       case 'checklist': return renderChecklist();
       case 'bacheca': return renderBacheca();
+      case 'news': return renderNews();
       case 'vendita': return renderVendita();
       case 'scorte': return renderScorte();
       case 'manutenzione': return renderManutenzione();
@@ -3663,6 +3860,7 @@
       case 'assenze': return renderAssenze();
       case 'report': return isManager(state.user) ? renderReport() : renderHome();
       case 'eventi': return renderEventi();
+      case 'todo': return renderTodo();
       default: return renderHome();
     }
   }
@@ -3866,7 +4064,7 @@
     var feedback = 'Non ho capito il comando, riprova.';
 
     if (text.indexOf('vai a') !== -1 || text.indexOf('apri') !== -1) {
-      var screenMap = { turni: 'turni', checklist: 'checklist', bacheca: 'bacheca', vendita: 'vendita', scort: 'scorte', manutenzione: 'manutenzione', document: 'documenti' };
+      var screenMap = { turni: 'turni', checklist: 'todo', bacheca: 'news', succede: 'news', eventi: 'news', vendita: 'vendita', scort: 'scorte', manutenzione: 'manutenzione', document: 'documenti' };
       var foundKey = Object.keys(screenMap).find(function(k){ return text.indexOf(k) !== -1; });
       if (foundKey) { state.screen = screenMap[foundKey]; state.activeModal = null; feedback = 'Ok, apro ' + screenMap[foundKey] + '.'; }
     } else if (text.indexOf('scort') !== -1) {
@@ -3946,6 +4144,7 @@
     if (type && type.indexOf('rt_') === 0) return renderRtModal(type);
     if (type && type.indexOf('ev_') === 0) return renderEvModal(type);
     if (type === 'menu_altro') return renderAltroModal();
+    if (type === 'td_form') return renderTdModal();
 
     if (type === 'ferieRange') {
       var pf = state.pendingFerie;
@@ -4145,7 +4344,7 @@
     plDragStart: plDragStart, plDragOver: plDragOver, plDragLeave: plDragLeave, plDragEnd: plDragEnd, plDrop: plDrop, plDropAzione: plDropAzione,
     plToggleDup: plToggleDup, plDuplica: plDuplica, plSpostaA: plSpostaA,
     rpPersona: rpPersona, rpShiftMonth: rpShiftMonth, rpEsporta: rpEsporta,
-    openAltro: openAltro, dashChecklist: dashChecklist, evOpen: evOpen, evReagisci: evReagisci, evFoto: evFoto, evTogliFoto: evTogliFoto, evField: evField, evLuogo: evLuogo, evSalva: evSalva, evElimina: evElimina,
+    openAltro: openAltro, newsVai: newsVai, newsFiltro: newsFiltro, tdOpen: tdOpen, tdField: tdField, tdPer: tdPer, tdUrgente: tdUrgente, tdSalva: tdSalva, tdSpunta: tdSpunta, tdElimina: tdElimina, tdFiltro: tdFiltro, dashChecklist: dashChecklist, evOpen: evOpen, evReagisci: evReagisci, evFoto: evFoto, evTogliFoto: evTogliFoto, evField: evField, evLuogo: evLuogo, evSalva: evSalva, evElimina: evElimina,
     asSetTab: asSetTab, asShiftYear: asShiftYear, asShiftMonth: asShiftMonth, asOpenRichiesta: asOpenRichiesta,
     asFormField: asFormField, asFormTipo: asFormTipo, asFormPerson: asFormPerson, asFormOra: asFormOra, asInvia: asInvia,
     asDecidi: asDecidi, asAnnulla: asAnnulla, asCellClick: asCellClick, asEditSaldo: asEditSaldo,

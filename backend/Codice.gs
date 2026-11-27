@@ -32,6 +32,7 @@ var SCHEMA = {
   Festivi:            ['ID', 'Data', 'Nome'],
   Eventi:             ['ID', 'Titolo', 'Dal', 'Al', 'Ora', 'Luogo', 'Descrizione', 'Foto', 'Note', 'Creato da', 'Pubblicato il'],
   Reazioni_Eventi:    ['ID', 'Evento', 'Persona', 'Emoji'],
+  Da_Fare:            ['ID', 'Testo', 'Per', 'Entro', 'Urgente', 'Creato da', 'Creato il', 'Fatto', 'Fatto da', 'Fatto il'],
   Impostazioni:       ['Chiave', 'Valore'],
   Turni:              ['ID', 'Data', 'Ora inizio', 'Ora fine', 'Dipendente', 'Modello', 'Note', 'Creato da'],
   Turni_Modello:      ['ID', 'Nome', 'Ora inizio', 'Ora fine', 'Colore'],
@@ -523,6 +524,13 @@ function notifyAfterAdd_(nome, data) {
       var titolo = (urgente ? '🔴 Urgente · ' : '📣 ') + 'Bacheca · ' + (data.Autore || '');
       var dest = String(data.Destinatario || '').trim();
       sendPush_(titolo, data.Messaggio || '', dest ? [dest] : null);
+    } else if (nome === 'Da_Fare') {
+      // Per una persona: avviso solo a lei. Per tutti: avviso solo se urgente
+      var per = String(data.Per || '').trim(), urg = String(data.Urgente || '') === 'si';
+      var tit = (urg ? '🔴 Da fare urgente' : '✅ Nuova cosa da fare') + (data['Creato da'] ? ' · da ' + data['Creato da'] : '');
+      var txt = String(data.Testo || '') + (data.Entro ? ' (entro il ' + fmtIt_(String(data.Entro).slice(0, 10)) + ')' : '');
+      if (per) sendPush_(tit, txt, [per]);
+      else if (urg) sendPush_(tit, txt, null);
     } else if (nome === 'Eventi') {
       var quando = fmtIt_(String(data.Dal || '').slice(0, 10)) + (data.Al && data.Al !== data.Dal ? '–' + fmtIt_(String(data.Al).slice(0, 10)) : '');
       sendPush_('📅 Nuovo evento: ' + (data.Titolo || ''), quando + (data.Ora ? ' · ' + data.Ora : '') + (data.Luogo ? ' · ' + data.Luogo : ''), null);
