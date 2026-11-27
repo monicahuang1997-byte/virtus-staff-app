@@ -548,8 +548,10 @@ function fmtIt_(s) { var p = String(s).split('-'); return p.length === 3 ? p[2] 
 
 // persone = elenco di nomi (come nel foglio Utenti) oppure null = tutti
 function sendPush_(titolo, testo, persone) {
-  var key = PropertiesService.getScriptProperties().getProperty('ONESIGNAL_API_KEY');
+  var key = String(PropertiesService.getScriptProperties().getProperty('ONESIGNAL_API_KEY') || '').replace(/\s+/g, '');
   if (!key) return; // notifiche non ancora configurate
+  // Chiavi nuove (os_v2_…) usano "Key", quelle vecchie (Legacy REST API Key) usano "Basic"
+  var auth = /^os_v2_/.test(key) ? 'Key ' + key : 'Basic ' + key;
   var payload = {
     app_id: ONESIGNAL_APP_ID,
     target_channel: 'push',
@@ -562,7 +564,7 @@ function sendPush_(titolo, testo, persone) {
   var res = UrlFetchApp.fetch('https://api.onesignal.com/notifications', {
     method: 'post',
     contentType: 'application/json',
-    headers: { Authorization: 'Key ' + key },
+    headers: { Authorization: auth },
     payload: JSON.stringify(payload),
     muteHttpExceptions: true
   });
