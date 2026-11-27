@@ -200,6 +200,10 @@
   .pl-color-active{border-color:var(--text);}
   .btn-danger-soft{width:100%;background:oklch(0.95 0.03 30);color:oklch(0.45 0.16 30);border:none;border-radius:14px;padding:12px;font-weight:800;font-size:14px;margin-top:10px;}
   .pl-sub{font-size:13px;color:var(--text-muted);margin:-8px 0 16px;}
+  .pl-rest{text-align:center;font-size:11px;color:var(--text-muted3);padding:10px 0;}
+  .pl-tu{display:inline-block;background:var(--accent);color:#14121a;border-radius:100px;padding:0 7px;font-size:10px;font-weight:800;vertical-align:1px;}
+  .pl-me td{background:oklch(0.97 0.02 235);}
+  .pl-me td.pl-name{background:oklch(0.97 0.02 235);}
   .pl-shift[draggable="true"]{cursor:grab;}
   .pl-shift[draggable="true"]:active{cursor:grabbing;}
   .pl-drop-over{background:oklch(0.95 0.04 235) !important;outline:2px dashed var(--accent);outline-offset:-3px;}
@@ -216,7 +220,10 @@
   .side-item{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;border-radius:12px;padding:9px 10px;font-size:13.5px;font-weight:600;color:var(--text);text-align:left;margin-bottom:2px;}
   .side-item:hover{background:rgba(20,15,40,0.045);}
   .side-item-active,.side-item-active:hover{background:var(--accent);color:#14121a;}
-  .side-ico{width:22px;text-align:center;font-size:16px;flex:none;}
+  .side-ico{width:22px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+  .side-ico .ico{width:20px;height:20px;}
+  .side-item-active .side-ico{color:#14121a;}
+  .side-item-active .ico{stroke-width:2.1;}
   .side-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);margin-left:auto;flex:none;}
   .side-sep{height:1px;background:rgba(20,15,40,0.07);margin:10px 8px;}
   .side-foot{margin-top:auto;padding-top:10px;}
@@ -224,6 +231,85 @@
   .app-shell-side .app-scroll{flex:1;min-width:0;padding-left:28px;padding-right:28px;}
   .app-shell-side .back-btn{display:none;}
   .app-shell-side .home-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));}
+  /* ---------- Home a colpo d'occhio ---------- */
+  .dash{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px;}
+  .dash-3{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;}
+  .dash-col{display:flex;flex-direction:column;gap:14px;min-width:0;}
+  .dash-card{background:var(--card);border-radius:20px;padding:16px;}
+  .dash-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
+  .dash-title{font-family:Nunito,sans-serif;font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px;}
+  .dash-title .ico{width:20px;height:20px;color:var(--accent2);}
+  .ico-s{width:13px;height:13px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .dash-red{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--danger);margin-right:6px;vertical-align:1px;}
+  .dash-link{background:none;border:none;color:var(--accent2);font-weight:700;font-size:12px;padding:4px;white-space:nowrap;}
+  .dash-empty{font-size:13px;color:var(--text-muted3);padding:6px 0;}
+  .dash-day{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid rgba(20,15,40,0.05);}
+  .dash-day:first-child{border-top:none;}
+  .dash-day-label{width:62px;flex:none;font-weight:700;font-size:12.5px;padding-top:8px;}
+  .dash-today .dash-day-label{color:var(--accent);}
+  .dash-day-body{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0;}
+  .dash-shift{border:1px solid;border-radius:12px;padding:7px 10px;display:flex;justify-content:space-between;gap:8px;font-size:13px;}
+  .dash-shift span{font-size:11.5px;opacity:0.85;}
+  .dash-rest{border:1px dashed rgba(20,15,40,0.14);border-radius:12px;padding:7px 10px;font-size:12.5px;color:var(--text-muted3);}
+  .dash-group{font-size:11px;font-weight:800;color:var(--text-muted2);text-transform:uppercase;letter-spacing:0.03em;margin:10px 0 4px;}
+  .dash-group:first-child{margin-top:0;}
+  .dash-person{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13px;}
+  .dash-av{width:30px;height:30px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+  .dash-person small{margin-left:auto;color:var(--text-muted);font-size:12px;white-space:nowrap;}
+  .dash-live{width:8px;height:8px;border-radius:50%;background:var(--good);display:inline-block;margin-right:4px;}
+  .dash-todo{display:flex;align-items:center;gap:10px;width:100%;background:rgba(20,15,40,0.035);border:none;border-radius:12px;padding:10px 12px;margin-bottom:6px;text-align:left;font-size:13px;color:var(--text);}
+  .dash-todo b{margin-left:auto;font-size:13px;}
+  .dash-prog{flex:1;height:7px;border-radius:4px;background:rgba(20,15,40,0.08);overflow:hidden;min-width:40px;max-width:110px;margin-left:auto;}
+  .dash-prog i{display:block;height:100%;background:var(--good);border-radius:4px;}
+  .dash-msg{padding:9px 0;border-top:1px solid rgba(20,15,40,0.05);cursor:pointer;}
+  .dash-msg:first-child{border-top:none;padding-top:0;}
+  .dash-msg-t{font-size:13.5px;font-weight:700;line-height:1.4;}
+  .dash-msg-m{font-size:11px;color:var(--text-muted3);margin-top:3px;}
+  .dash-urg{color:var(--danger);}
+  .dash-big{font-family:Nunito,sans-serif;font-size:34px;font-weight:800;line-height:1;}
+  .dash-ev{display:flex;gap:12px;align-items:center;width:100%;background:none;border:none;border-top:1px solid rgba(20,15,40,0.05);padding:10px 0;text-align:left;color:var(--text);}
+  .dash-ev:first-child{border-top:none;padding-top:0;}
+  .dash-ev-date{width:46px;flex:none;border-radius:12px;background:var(--accent);color:#14121a;text-align:center;padding:5px 0;line-height:1.1;}
+  .dash-ev-date small{display:block;font-size:10px;font-weight:700;text-transform:uppercase;}
+  .dash-ev-date b{font-size:18px;font-family:Nunito,sans-serif;}
+  .dash-ev-t{font-weight:800;font-size:14px;}
+  .dash-ev-s{font-size:12px;color:var(--text-muted);margin-top:2px;}
+  .app-shell-side .home-extra{display:none;}
+  /* ---------- Eventi come post ---------- */
+  .ev-feed{max-width:680px;}
+  .ev-post{background:var(--card);border-radius:20px;padding:16px;margin-top:14px;}
+  .ev-post-flat{background:none;padding:0;margin:0 0 12px;}
+  .ev-post-t{font-family:Nunito,sans-serif;font-weight:800;font-size:17px;line-height:1.3;}
+  .ev-post-a{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted);margin-top:8px;}
+  .ev-post-a .dash-av{width:26px;height:26px;font-size:10px;}
+  .ev-post-d{font-size:14px;line-height:1.55;margin-top:10px;white-space:pre-line;}
+  .ev-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .ev-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(20,15,40,0.12);border-radius:10px;padding:5px 9px;font-size:12px;color:var(--text-muted);}
+  .ev-img{display:block;width:100%;max-height:340px;object-fit:cover;border-radius:14px;margin-top:12px;background:rgba(20,15,40,0.05);}
+  .ev-rx{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
+  .ev-rx button{border:1px solid rgba(20,15,40,0.12);background:var(--card);border-radius:100px;padding:5px 11px;font-size:14px;}
+  .ev-rx button b{font-size:12px;margin-left:2px;}
+  .ev-rx button.on{background:oklch(0.95 0.04 235);border-color:var(--accent);}
+  .ev-upload{display:flex;align-items:center;gap:10px;border:1.5px dashed rgba(20,15,40,0.2);border-radius:14px;padding:14px;font-size:13px;color:var(--text-muted);cursor:pointer;margin-bottom:14px;}
+  .ev-upload .ico{width:20px;height:20px;}
+  /* ---------- Barra in basso (telefono) ---------- */
+  .tabbar{display:flex;flex:none;background:var(--tabbar);border-top:1px solid rgba(20,15,40,0.08);padding:6px 4px calc(6px + env(safe-area-inset-bottom));}
+  .tab{flex:1;position:relative;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;color:var(--text-muted2);font-size:10.5px;font-weight:700;}
+  .tab > .tab-dot{top:3px;right:auto;left:calc(50% + 9px);}
+  .tab-ico{display:flex;align-items:center;justify-content:center;height:26px;}
+  .ico{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .tab-active{color:var(--accent);}
+  .tab-active .ico{stroke-width:2.1;}
+  .tab-dot{position:absolute;top:-1px;right:-7px;width:8px;height:8px;border-radius:50%;background:var(--danger);}
+  .app-shell-tabs .home-extra{display:none;}
+  .app-shell-tabs .fab-voice{bottom:calc(80px + env(safe-area-inset-bottom));}
+  .altro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+  .altro-item{position:relative;background:var(--bg);border:none;border-radius:16px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text);text-align:center;line-height:1.25;}
+  .altro-item .ico{width:26px;height:26px;color:var(--accent2);}
+  .dash-todo .ico{width:19px;height:19px;color:var(--text-muted);flex:none;}
+  .altro-item .tab-dot{top:8px;right:10px;}
+  .pl-ev{font-size:10px;font-weight:700;color:oklch(0.45 0.12 70);background:oklch(0.96 0.05 85);border-radius:6px;padding:2px 4px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;margin-left:auto;margin-right:auto;}
+  @media (max-width:900px){ .dash-3{grid-template-columns:1fr;} }
   /* ---------- Report ore ---------- */
   .rp-layout{display:grid;grid-template-columns:270px 1fr;gap:16px;margin-top:14px;align-items:start;}
   .rp-side .as-card:first-child{margin-top:0;}
@@ -608,13 +694,16 @@
     var inner = state.screen === 'login' ? renderLogin() : renderScreen();
     // Titolare e responsabili su computer/tablet: menù a barra laterale
     var side = usaBarraLaterale();
-    var wide = !side && (state.screen === 'planner' || state.screen === 'report' || (state.screen === 'assenze' && state.asTab === 'team'));
+    var wide = !side && (state.screen === 'planner' || state.screen === 'turni' || state.screen === 'report' || (state.screen === 'assenze' && state.asTab === 'team'));
     // Su computer chi gestisce vede tutte le schermate più larghe
     var mid = !side && !wide && state.screen !== 'login' && state.user && isManager(state.user) && window.innerWidth >= 900;
     var showVoice = state.screen !== 'login' && !wide && !side;
     document.getElementById('root').className = side ? 'root-side' : wide ? 'root-wide' : mid ? 'root-mid' : '';
-    var html = '<div class="app-shell' + (side ? ' app-shell-side' : wide ? ' app-shell-wide' : mid ? ' app-shell-mid' : '') + '">' +
-      (side ? renderSidebar() : '') + '<div class="app-scroll">' + inner + '</div>' +
+    // Telefono (e chi non ha la barra laterale): menù a icone in basso
+    var tabs = !side && state.screen !== 'login' && !!state.user;
+    if (tabs) showVoice = state.screen !== 'planner';
+    var html = '<div class="app-shell' + (side ? ' app-shell-side' : wide ? ' app-shell-wide' : mid ? ' app-shell-mid' : '') + (tabs ? ' app-shell-tabs' : '') + '">' +
+      (side ? renderSidebar() : '') + '<div class="app-scroll">' + inner + '</div>' + (tabs ? renderTabbar() : '') +
       (showVoice ? '<button class="fab-voice" onclick="App.openVoice()">🎙️</button>' : '') +
       '</div>' +
       (state.screen !== 'login' && state.activeModal ? renderModal() : '') +
@@ -853,7 +942,7 @@
   var DOT_SHEETS = { bacheca: { sheet: 'Bacheca', urgentOnly: true }, turni: { sheet: 'Turni', urgentOnly: false }, scorte: { sheet: 'Scorte', urgentOnly: false }, manutenzione: { sheet: 'Manutenzione', urgentOnly: false } };
   function renderHome(){
     Object.keys(DOT_SHEETS).forEach(function(k){ ensureLoaded(DOT_SHEETS[k].sheet); });
-    var mods = MODULES.slice();
+    var mods = MODULES.filter(function(m){ return !(m.key === 'turni' && canManageTurni(state.user)); });
     var tiles = mods.map(function(m){
       var unseen = false;
       if (m.key === 'assenze') {
@@ -888,14 +977,18 @@
         '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
     }
     var roleLabel = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
+    var oggi = new Date();
     return '<div>' +
-      '<div class="greeting">Ciao, ' + esc(state.user.nome) + '</div>' +
+      '<div class="greeting">Ciao, ' + esc(state.user.nome) + ' 👋</div>' +
+      '<div class="date-label">' + GIORNI_LUNGHI[oggi.getDay()] + ' ' + oggi.getDate() + ' ' + MESI_LUNGHI[oggi.getMonth()].toLowerCase() + '</div>' +
       '<div class="role-badge">' + roleLabel + '</div>' +
-      '<div class="home-grid">' + tiles + '</div>' +
+      renderDashboard() +
+      '<div class="home-extra"><div class="section-label" style="margin-top:26px;">Sezioni</div>' +
+      '<div class="home-grid" style="margin-top:8px;">' + tiles + '</div>' +
       '<button class="logout-link" onclick="App.enableNotifiche()">🔔 Attiva notifiche</button>' +
       '<button class="logout-link" onclick="App.diagnosticaNotifiche()">🔧 Diagnostica notifiche</button>' +
       '<button class="logout-link" onclick="App.openModal(\'set_pin\')">Imposta il tuo PIN</button>' +
-      '<button class="logout-link" onclick="App.logout()">Cambia utente</button>' +
+      '<button class="logout-link" onclick="App.logout()">Cambia utente</button></div>' +
     '</div>';
   }
 
@@ -1492,16 +1585,23 @@
     return people.sort(function(a,b){ return (ORD[a.tipo] - ORD[b.tipo]) || a.nome.localeCompare(b.nome); });
   }
 
-  function renderPlanner(){
-    ['Turni','Utenti','Ferie','Turni_Modello','Assenze','Tipi_Assenza','Richieste_Turno'].forEach(function(s){ ensureLoaded(s); });
+  // ro = sola lettura (dipendenti): vedono i turni di tutti ma non possono modificarli
+  var PL_RO = false;
+  function renderPlanner(ro){
+    PL_RO = !!ro;
+    var me = state.user.nome;
+    ['Turni','Utenti','Ferie','Turni_Modello','Assenze','Tipi_Assenza','Richieste_Turno','Eventi'].forEach(function(s){ ensureLoaded(s); });
+    if (ro) { ensureLoaded('Note_Turni'); if (state.cache.Turni) setSeen('Turni', rowsLatestTs(state.cache.Turni, false)); }
     var rtN = state.cache.Richieste_Turno ? rtPending().length : 0;
     var days = plDays();
     var dates = days.map(fmtDate);
     var t = todayStr();
+    var titolo = ro ? 'Turni' : 'Pianificatore turni';
+    var extra = ro ? renderMieRichiesteTurno() + renderNotePreferenze() : '';
     var weekNav = '<div class="week-nav nav-center"><button class="week-nav-btn" onclick="App.shiftWeek(-1)">‹</button>' +
       '<div class="week-nav-label">' + esc(fmtDayLabel(days[0])) + ' – ' + esc(fmtDayLabel(days[6])) + '</div>' +
       '<button class="week-nav-btn" onclick="App.shiftWeek(1)">›</button></div>';
-    var actions = '<div class="pl-actions">' +
+    var actions = ro ? '<div class="pl-actions"><button class="pl-btn pl-btn-primary" onclick="App.rtOpen()">📝 Chiedi un turno alla titolare</button></div>' : '<div class="pl-actions">' +
       '<button class="pl-btn" onclick="App.plOpenPersona(-1)">+ Persona</button>' +
       '<button class="pl-btn" onclick="App.plOpenModelli()">🎨 Turni modello</button>' +
       '<button class="pl-btn" onclick="App.rtOpenLista()">📝 Richieste turno' + (rtN ? '<span class="as-count">' + rtN + '</span>' : '') + '</button>' +
@@ -1512,12 +1612,20 @@
     if (!c.Turni || !c.Utenti || !c.Ferie || !c.Turni_Modello || !c.Assenze || !c.Tipi_Assenza) body = '<div class="center-loading">Carico il pianificatore…</div>';
     else {
       var people = plPeople(dates);
+      if (ro) {
+        // La propria riga in cima
+        var mi = people.findIndex(function(p){ return p.nome.toLowerCase() === me.toLowerCase(); });
+        if (mi > 0) people.unshift(people.splice(mi, 1)[0]);
+      }
       state.plPeople = people;
-      if (plIsPhone()) return '<div>' + renderTopBar('Pianificatore turni') + weekNav + actions + renderPlannerPhone(people, dates, t) + '</div>';
+      if (ro) actions += plMiaSettimana(people, dates);
+      if (plIsPhone()) return '<div>' + renderTopBar(titolo) + weekNav + actions + renderPlannerPhone(people, dates, t) + extra + '</div>';
       var dayTot = dates.map(function(){ return { persone: 0, ore: 0 }; });
       var head = '<tr><th class="pl-name-h">Persone</th>' + days.map(function(d){
         var ds = fmtDate(d);
-        return '<th class="' + (ds === t ? 'pl-today' : '') + '">' + GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() + '</th>';
+        var ev = evDi(ds);
+        return '<th class="' + (ds === t ? 'pl-today' : '') + '">' + GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() +
+          (ev.length ? '<div class="pl-ev" title="' + esc(ev.map(function(e){ return e.titolo; }).join(', ')) + '">📅 ' + esc(ev[0].titolo) + (ev.length > 1 ? ' +' + (ev.length - 1) : '') + '</div>' : '') + '</th>';
       }).join('') + '</tr>';
 
       var rowsHtml = people.map(function(p, pi){
@@ -1530,10 +1638,14 @@
             var ore = s.of - s.oi;
             oreSett += ore; dayTot[di].ore += ore;
             var col = plColor(s.modello, s.oi);
+            if (ro) return '<div class="pl-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';">' +
+              '<div class="pl-shift-time">' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</div>' +
+              (s.modello ? '<div class="pl-shift-name">' + esc(s.modello) + '</div>' : '') + '</div>';
             return '<button class="pl-shift" draggable="true" ondragstart="App.plDragStart(event,' + pi + ',\'' + ds + '\',\'' + esc(s.id) + '\')" ondragend="App.plDragEnd()" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
               '<div class="pl-shift-time">' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</div>' +
               (s.modello ? '<div class="pl-shift-name">' + esc(s.modello) + '</div>' : '') + '</button>';
           }).join('');
+          if (ro) return '<td class="pl-cell' + (ds === t ? ' pl-cell-today' : '') + '">' + (html || '<div class="pl-rest">Riposo</div>') + '</td>';
           html += '<button class="pl-add" title="Aggiungi turno" onclick="App.plOpenTurno(' + pi + ',\'' + ds + '\',\'\')">+</button>';
           return '<td class="pl-cell' + (ds === t ? ' pl-cell-today' : '') + '" ondragover="App.plDragOver(event)" ondragleave="App.plDragLeave(event)" ondrop="App.plDrop(event,' + pi + ',\'' + ds + '\')">' + html + '</td>';
         }).join('');
@@ -1547,6 +1659,11 @@
           oreHtml = '<span>' + fmtOre(oreSett) + ' h</span>';
         }
         var tipoBadge = p.tipo !== 'fisso' ? '<span class="pl-tipo pl-tipo-' + p.tipo + '">' + tipoLabel(p.tipo) + '</span>' : '';
+        if (ro) {
+          var sonoIo = p.nome.toLowerCase() === me.toLowerCase();
+          return '<tr' + (sonoIo ? ' class="pl-me"' : '') + '><td class="pl-name" style="cursor:default;"><div class="pl-person">' + esc(p.nome) + (sonoIo ? ' <span class="pl-tu">tu</span>' : '') + '</div>' +
+            '<div class="pl-meta">' + tipoBadge + (sonoIo ? '<span>' + fmtOre(oreSett) + ' h</span>' : '') + '</div></td>' + cells + '</tr>';
+        }
         return '<tr><td class="pl-name" onclick="App.plOpenPersona(' + pi + ')"><div class="pl-person">' + esc(p.nome) + '</div>' +
           '<div class="pl-meta">' + tipoBadge + oreHtml + '</div></td>' + cells + '</tr>';
       }).join('');
@@ -1557,10 +1674,28 @@
 
       body = people.length
         ? '<div class="pl-wrap"><table class="pl-grid"><thead>' + head + '</thead><tbody>' + rowsHtml + foot + '</tbody></table></div>' +
-          '<div class="turni-hint">Tocca + per aggiungere un turno · tocca un turno per modificarlo · <b>trascina un turno</b> su un\'altra casella per spostarlo o duplicarlo · tocca un nome per i dati della persona</div>'
-        : '<div class="empty-state">Nessuna persona ancora. Aggiungila con "+ Persona".</div>';
+          '<div class="turni-hint">' + (ro ? 'Qui vedi i turni di tutto lo staff. Hai un impegno? Usa "Chiedi un turno alla titolare".' :
+            'Tocca + per aggiungere un turno · tocca un turno per modificarlo · <b>trascina un turno</b> su un\'altra casella per spostarlo o duplicarlo · tocca un nome per i dati della persona') + '</div>'
+        : '<div class="empty-state">' + (ro ? 'Nessun turno ancora.' : 'Nessuna persona ancora. Aggiungila con "+ Persona".') + '</div>';
     }
-    return '<div>' + renderTopBar('Pianificatore turni') + weekNav + actions + body + '</div>';
+    return '<div>' + renderTopBar(titolo) + weekNav + actions + body + extra + '</div>';
+  }
+
+  // -- Riquadro "La tua settimana" (dipendente): ore previste, giorni, contratto, differenza --
+  function plMiaSettimana(people, dates){
+    var me = state.user.nome.toLowerCase();
+    var p = people.find(function(x){ return x.nome.toLowerCase() === me; }) || { nome: state.user.nome, ore: 0 };
+    var ore = plOreSett(p.nome, dates);
+    var giorni = dates.filter(function(ds){ return plShiftsOf(p.nome, ds).length; }).length;
+    // Mese di riferimento: quello in cui cade il giovedì della settimana mostrata
+    var ym = dates[3].slice(0, 7), mese = MESI_LUNGHI[+ym.slice(5, 7) - 1].toLowerCase();
+    var oreMese = plOreSett(p.nome, rpGiorniMese(ym));
+    var box = 'background:rgba(20,15,40,0.035);';
+    return '<div class="as-card" style="margin-top:14px;"><div class="as-title" style="font-size:15px;">Le tue ore</div>' +
+      '<div class="rp-kpis" style="margin-top:10px;grid-template-columns:repeat(3,1fr);">' +
+      '<div class="rp-kpi" style="' + box + '"><b>' + fmtOre(ore) + ' h</b><span>previste questa settimana</span></div>' +
+      '<div class="rp-kpi" style="' + box + '"><b>' + giorni + '</b><span>giorni di lavoro</span></div>' +
+      '<div class="rp-kpi" style="' + box + '"><b>' + fmtOre(oreMese) + ' h</b><span>totale di ' + mese + '</span></div></div></div>';
   }
 
   // -- Vista telefono: una persona alla volta, giorni in verticale --
@@ -1582,19 +1717,25 @@
   }
   function renderPlannerPhone(people, dates, t){
     if (!people.length) return '<div class="empty-state">Nessuna persona ancora. Aggiungila con "+ Persona".</div>';
+    var me = state.user.nome.toLowerCase();
     var selIdx = people.findIndex(function(p){ return p.nome === state.plSel; });
-    if (selIdx < 0) { selIdx = 0; state.plSel = people[0].nome; }
+    if (selIdx < 0) {
+      selIdx = PL_RO ? Math.max(0, people.findIndex(function(p){ return p.nome.toLowerCase() === me; })) : 0;
+      state.plSel = people[selIdx].nome;
+    }
     var chips = people.map(function(p, pi){
-      var ore = plOreSett(p.nome, dates);
+      var ore = plOreSett(p.nome, dates), io = p.nome.toLowerCase() === me;
+      var sotto = PL_RO ? (io ? fmtOre(ore) + ' h' : (p.tipo !== 'fisso' ? tipoLabel(p.tipo) : 'Collega')) :
+        fmtOre(ore) + (p.ore ? ' / ' + fmtOre(p.ore) : '') + ' h' + (p.tipo !== 'fisso' ? ' · ' + tipoLabel(p.tipo) : '');
       return '<button class="plm-chip' + (pi === selIdx ? ' plm-chip-active' : '') + '" onclick="App.plSelectPerson(' + pi + ')">' +
-        '<div class="plm-chip-name">' + esc(p.nome) + '</div>' +
-        '<div class="plm-chip-ore">' + fmtOre(ore) + (p.ore ? ' / ' + fmtOre(p.ore) : '') + ' h' + (p.tipo !== 'fisso' ? ' · ' + tipoLabel(p.tipo) : '') + '</div></button>';
+        '<div class="plm-chip-name">' + esc(p.nome) + (PL_RO && io ? ' (tu)' : '') + '</div>' +
+        '<div class="plm-chip-ore">' + sotto + '</div></button>';
     }).join('');
-    var p = people[selIdx];
+    var p = people[selIdx], pIo = p.nome.toLowerCase() === me;
     var head = '<div class="plm-head"><div><div class="plm-head-name">' + esc(p.nome) + '</div>' +
       '<div class="plm-head-ore">' + (p.tipo !== 'fisso' ? '<span class="pl-tipo pl-tipo-' + p.tipo + '">' + tipoLabel(p.tipo) + '</span>' : '') +
-      plOreHtml(p, plOreSett(p.nome, dates)) + '</div></div>' +
-      '<button class="pl-btn" onclick="App.plOpenPersona(' + selIdx + ')">Dati</button></div>';
+      (PL_RO ? (pIo ? '<span>' + fmtOre(plOreSett(p.nome, dates)) + ' h in settimana</span>' : '') : plOreHtml(p, plOreSett(p.nome, dates))) + '</div></div>' +
+      (PL_RO ? '' : '<button class="pl-btn" onclick="App.plOpenPersona(' + selIdx + ')">Dati</button>') + '</div>';
     var list = dates.map(function(ds){
       var d = parseDate(ds);
       var shifts = plShiftsOf(p.nome, ds);
@@ -1602,15 +1743,19 @@
       var html = plAssenzaHtml(p.nome, ds, 'plm-ferie') + rtBadge(p.nome, ds);
       html += shifts.map(function(s){
         var col = plColor(s.modello, s.oi);
-        return '<button class="plm-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';" onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'' + esc(s.id) + '\')">' +
+        var tag = PL_RO ? 'div' : 'button';
+        return '<' + tag + ' class="plm-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';"' +
+          (PL_RO ? '' : ' onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'' + esc(s.id) + '\')"') + '>' +
           '<div class="plm-shift-time">' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</div>' +
-          '<div class="plm-shift-name">' + esc(s.modello || 'Orario personalizzato') + '</div></button>';
+          '<div class="plm-shift-name">' + esc(s.modello || 'Orario personalizzato') + '</div></' + tag + '>';
       }).join('');
       var empty = !shifts.length && !plHasFerie(p.nome, ds);
-      html += '<button class="plm-add' + (empty ? ' plm-add-empty' : '') + '" onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'\')">' + (empty ? 'Riposo · + Aggiungi turno' : '+ Aggiungi turno') + '</button>';
+      if (PL_RO) { if (empty) html += '<div class="plm-ferie" style="background:transparent;border:1px dashed rgba(20,15,40,0.15);color:var(--text-muted3);font-weight:600;">Riposo</div>'; }
+      else html += '<button class="plm-add' + (empty ? ' plm-add-empty' : '') + '" onclick="App.plOpenTurno(' + selIdx + ',\'' + ds + '\',\'\')">' + (empty ? 'Riposo · + Aggiungi turno' : '+ Aggiungi turno') + '</button>';
       return '<div class="plm-day' + (ds === t ? ' plm-day-today' : '') + '">' +
         '<div class="plm-day-label">' + GIORNI_LABELS[(d.getDay()+6)%7] + ' ' + d.getDate() +
-        '<div class="plm-day-sub">' + inTurno + ' in turno</div></div>' +
+        '<div class="plm-day-sub">' + inTurno + ' in turno</div>' +
+        evDi(ds).map(function(e){ return '<div class="pl-ev" style="margin:4px 0 0;max-width:50px;" title="' + esc(e.titolo) + '">📅 ' + esc(e.titolo) + '</div>'; }).join('') + '</div>' +
         '<div class="plm-day-body">' + html + '</div></div>';
     }).join('');
     return '<div class="plm-people">' + chips + '</div>' + head + '<div class="plm-list">' + list + '</div>';
@@ -2707,9 +2852,9 @@
     if (isTitolare(state.user)) return '';
     ensureLoaded('Richieste_Turno');
     ensureLoaded('Turni_Modello');
-    var head = '<div class="oreferie-title" style="margin-top:26px;">Richieste di turno</div>' +
+    var head = '<div class="oreferie-title" style="margin-top:26px;">Le mie richieste di turno</div>' +
       '<div class="screen-sub">Hai un impegno? Chiedi alla titolare un turno o un giorno di riposo, meglio la settimana prima.</div>' +
-      '<button class="btn-submit" style="margin-top:12px;" onclick="App.rtOpen()">📝 Chiedi un turno alla titolare</button>';
+      '<button class="pl-btn pl-btn-primary" style="margin-top:10px;" onclick="App.rtOpen()">📝 Chiedi un turno alla titolare</button>';
     if (!state.cache.Richieste_Turno) return head + '<div class="center-loading">Carico…</div>';
     var me = state.user.nome.toLowerCase(), limite = fmtDate(addDays(new Date(), -30));
     var mine = rtRows().filter(function(r){ return r.nome.toLowerCase() === me && r.data >= limite; })
@@ -2849,6 +2994,434 @@
       '<button class="btn-submit" onclick="App.rtInvia()">Invia alla titolare</button>' + close;
   }
 
+  // ---------- Home "a colpo d'occhio" ----------
+  var GIORNI_LUNGHI = ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+  function dashCard(title, link, body){
+    return '<div class="dash-card"><div class="dash-head"><div class="dash-title">' + title + '</div>' + (link || '') + '</div>' + body + '</div>';
+  }
+  function dashLink(label, onclick){ return '<button class="dash-link" onclick="' + onclick + '">' + label + '</button>'; }
+  var DASH_LOAD = '<div class="dash-empty">Carico…</div>';
+
+  function renderDashboard(){
+    var man = isManager(state.user) || canManageTurni(state.user), tit = isTitolare(state.user);
+    ['Turni','Utenti','Assenze','Tipi_Assenza','Impostazioni','Festivi','Bacheca','Checklist','Checklist_Log','Eventi','Turni_Modello']
+      .forEach(function(s){ ensureLoaded(s); });
+    if (man) ['Scorte','Manutenzione','Richieste_Turno'].forEach(function(s){ ensureLoaded(s); });
+    var col1 = dashCard(icona('calendario') + 'I miei prossimi turni', dashLink('Vedi tutti →', 'App.goto(\'' + (canManageTurni(state.user) ? 'planner' : 'turni') + '\')'), dashMieiTurni()) +
+      dashCard(icona('persone') + 'Oggi al Virtus', '', dashOggi());
+    var col2 = dashCard(icona('checklist') + 'Da fare', '', dashDaFare()) +
+      dashCard(icona('megafono') + 'Bacheca', dashLink('Vedi tutto →', 'App.goto(\'bacheca\')'), dashBacheca());
+    var col3 = dashCard(icona('ombrellone') + 'Le mie ferie', dashLink('Apri →', 'App.goto(\'assenze\')'), dashFerie()) +
+      dashCard(icona('stella') + 'Prossimi eventi', '<span>' + (tit ? dashLink('+ Aggiungi', 'App.evOpen(\'\')') : '') + dashLink('Tutti →', 'App.goto(\'eventi\')') + '</span>', dashEventi());
+    var tre = usaBarraLaterale() || (man && window.innerWidth >= 900);
+    return '<div class="dash' + (tre ? ' dash-3' : '') + '"><div class="dash-col">' + col1 + '</div><div class="dash-col">' + col2 + '</div><div class="dash-col">' + col3 + '</div></div>';
+  }
+
+  function dashMieiTurni(){
+    var c = state.cache;
+    if (!c.Turni) return DASH_LOAD;
+    var me = state.user.nome, out = '';
+    for (var i = 0; i < 5; i++) {
+      var dt = addDays(new Date(), i), ds = fmtDate(dt);
+      var sh = plShiftsOf(me, ds), a = c.Assenze ? asOn(me, ds, false)[0] : null, body;
+      if (sh.length) body = sh.map(function(s){
+        var col = plColor(s.modello, s.oi);
+        return '<div class="dash-shift" style="background:' + col.bg + ';border-color:' + col.bd + ';color:' + col.fg + ';"><b>' + hourLabel(s.oi) + ' – ' + hourLabel(s.of) + '</b>' + (s.modello ? '<span>' + esc(s.modello) + '</span>' : '') + '</div>';
+      }).join('');
+      else if (a) { var ac = asColore(a.tipo); body = '<div class="dash-shift" style="background:' + ac.bg + ';border-color:' + ac.bd + ';color:' + ac.fg + ';"><b>' + esc(a.tipo) + '</b></div>'; }
+      else body = '<div class="dash-rest">Riposo</div>';
+      var lbl = i === 0 ? 'Oggi' : i === 1 ? 'Domani' : GIORNI_LABELS[(dt.getDay()+6)%7] + ' ' + dt.getDate();
+      out += '<div class="dash-day' + (i === 0 ? ' dash-today' : '') + '"><div class="dash-day-label">' + lbl + '</div><div class="dash-day-body">' + body + '</div></div>';
+    }
+    // Totale della settimana in corso (da lunedì a domenica)
+    var lun = mondayOf(new Date()), settimana = [];
+    for (var k = 0; k < 7; k++) settimana.push(fmtDate(addDays(lun, k)));
+    var oreSett = plOreSett(me, settimana);
+    var ym = todayStr().slice(0, 7), oreMese = plOreSett(me, rpGiorniMese(ym));
+    out += '<div class="dash-day" style="padding-top:10px;"><div class="dash-day-label" style="padding-top:2px;">Le mie ore</div>' +
+      '<div class="dash-day-body" style="font-size:13px;"><div><b>' + fmtOre(oreSett) + ' h</b> questa settimana · <b>' + fmtOre(oreMese) + ' h</b> a ' +
+      MESI_LUNGHI[new Date().getMonth()].toLowerCase() + '</div></div></div>';
+    return out;
+  }
+
+  function dashOggi(){
+    var c = state.cache;
+    if (!c.Turni) return DASH_LOAD;
+    var ds = todayStr(), now = new Date(), h = now.getHours() + now.getMinutes() / 60;
+    var list = c.Turni.filter(function(r){ return String(val(r,'data')).slice(0,10) === ds; }).map(function(r){
+      return { nome: String(val(r,'dipendente')||'').trim(), oi: parseHourStr(val(r,'ora inizio')), of: parseHourStr(val(r,'ora fine')), modello: String(val(r,'modello')||'') };
+    }).filter(function(x){ return x.nome && x.oi != null && x.of != null; }).sort(function(a,b){ return a.oi - b.oi; });
+    // Una riga per persona, con tutti i suoi orari di oggi (es. pranzo e cena)
+    var perNome = {}, ordine = [];
+    list.forEach(function(x){
+      if (!perNome[x.nome]) { perNome[x.nome] = { nome: x.nome, turni: [] }; ordine.push(x.nome); }
+      perNome[x.nome].turni.push(x);
+    });
+    function riga(p, live){
+      var pc = personColor(p.nome);
+      return '<div class="dash-person"><span class="dash-av" style="background:' + pc.bg + ';color:' + pc.fg + ';">' + esc(initials(p.nome)) + '</span>' +
+        (live ? '<span class="dash-live"></span>' : '') + esc(p.nome) + '<small>' + p.turni.map(function(x){ return hourLabel(x.oi) + '–' + hourLabel(x.of); }).join(' · ') + '</small></div>';
+    }
+    var persone = ordine.map(function(n){ return perNome[n]; });
+    var ora = persone.filter(function(p){ return p.turni.some(function(x){ return x.oi <= h && h < x.of; }); });
+    var dopo = persone.filter(function(p){ return ora.indexOf(p) === -1 && p.turni.some(function(x){ return x.oi > h; }); });
+    var html = '';
+    if (ora.length) html += '<div class="dash-group">In turno adesso</div>' + ora.map(function(x){ return riga(x, true); }).join('');
+    if (dopo.length) html += '<div class="dash-group">Più tardi</div>' + dopo.map(function(x){ return riga(x, false); }).join('');
+    if (!ora.length && !dopo.length) html += '<div class="dash-empty">' + (list.length ? 'I turni di oggi sono finiti.' : 'Nessun turno oggi.') + '</div>';
+    if ((isManager(state.user) || canManageTurni(state.user)) && c.Assenze) {
+      var ass = asRows().filter(function(a){ return a.stato === 'approvata' && a.dal <= ds && a.al >= ds; });
+      if (ass.length) html += '<div class="dash-group">Assenti oggi</div>' + ass.map(function(a){
+        var pc = personColor(a.nome);
+        return '<div class="dash-person"><span class="dash-av" style="background:' + pc.bg + ';color:' + pc.fg + ';opacity:0.55;">' + esc(initials(a.nome)) + '</span>' + esc(a.nome) +
+          '<small>' + esc(a.tipo) + '</small></div>';
+      }).join('');
+    }
+    var ev = evRows().filter(function(e){ return e.dal <= ds && (e.al || e.dal) >= ds; });
+    if (ev.length) html += '<div class="dash-group">Evento di oggi</div>' + ev.map(function(e){ return '<div class="dash-person">' + iconaS('stella') + ' <b>' + esc(e.titolo) + '</b><small>' + esc(e.ora) + '</small></div>'; }).join('');
+    return html;
+  }
+
+  function dashChecklist(li, fi){ state.filters.locale = LOCALI[li]; state.filters.fase = FASI[fi]; goto('checklist'); }
+  function dashDaFare(){
+    var c = state.cache, tit = isTitolare(state.user), man = isManager(state.user), html = '';
+    function todo(icon, label, n, onclick){
+      return '<button class="dash-todo" onclick="' + onclick + '">' + icona(icon) + label + '<b' + (n ? ' style="color:var(--danger);"' : '') + '>' + n + '</b></button>';
+    }
+    if (tit) {
+      if (c.Assenze) { var nf = asRows().filter(function(a){ return a.stato === 'in attesa'; }).length; if (nf) html += todo('ombrellone', 'Ferie e permessi da approvare', nf, 'App.goto(\'assenze\');App.asSetTab(\'approva\')'); }
+      if (c.Richieste_Turno) { var nt = rtPending().length; if (nt) html += todo('matita', 'Richieste di turno', nt, 'App.goto(\'planner\');App.rtOpenLista()'); }
+    }
+    if (man) {
+      if (c.Scorte) { var ns = c.Scorte.filter(function(r){ return String(val(r,'stato')||'').toLowerCase().indexOf('risolt') !== 0; }).length; if (ns) html += todo('scatola', 'Prodotti da ordinare', ns, 'App.goto(\'scorte\')'); }
+      if (c.Manutenzione) { var nm = c.Manutenzione.filter(function(r){ return String(val(r,'stato')||'').toLowerCase().indexOf('risolt') !== 0; }).length; if (nm) html += todo('chiave_inglese', 'Guasti aperti', nm, 'App.goto(\'manutenzione\')'); }
+    }
+    // Checklist di oggi: avanzamento per locale e fase
+    if (c.Checklist && c.Checklist_Log) {
+      var t = todayStr(), righe = '';
+      LOCALI.forEach(function(l, li){
+        FASI.forEach(function(f, fi){
+          var voci = c.Checklist.filter(function(it){ return String(val(it,'locale')).trim().toLowerCase() === l.toLowerCase() && String(val(it,'fase')).trim().toLowerCase() === f; });
+          if (!voci.length) return;
+          var fatte = voci.filter(function(it){
+            var att = String(val(it,'attività') || val(it,'attivita'));
+            return c.Checklist_Log.some(function(lg){
+              return String(val(lg,'data')) === t && String(val(lg,'locale')).trim().toLowerCase() === l.toLowerCase() &&
+                String(val(lg,'fase')).trim().toLowerCase() === f && String(val(lg,'attività') || val(lg,'attivita')) === att;
+            });
+          }).length;
+          var pct = Math.round(fatte / voci.length * 100);
+          righe += '<button class="dash-todo" onclick="App.dashChecklist(' + li + ',' + fi + ')">' + icona('checklist') + esc(l) + ' · ' + f +
+            '<span class="dash-prog"><i style="width:' + pct + '%;"></i></span><b style="margin-left:6px;">' + fatte + '/' + voci.length + '</b></button>';
+        });
+      });
+      if (righe) html += '<div class="dash-group" style="margin-top:' + (html ? '10px' : '0') + ';">Checklist di oggi</div>' + righe;
+    }
+    return html || '<div class="dash-empty">Tutto in ordine ✨</div>';
+  }
+
+  function dashBacheca(){
+    var rows = state.cache.Bacheca;
+    if (!rows) return DASH_LOAD;
+    var vis = bachecaVisibleRows(rows).slice().reverse().slice(0, 3);
+    if (!vis.length) return '<div class="dash-empty">Nessun avviso.</div>';
+    return vis.map(function(r){
+      var urg = String(val(r,'priorità') || val(r,'priorita') || '').toLowerCase() === 'urgente';
+      return '<div class="dash-msg" onclick="App.goto(\'bacheca\')"><div class="dash-msg-t' + (urg ? ' dash-urg' : '') + '">' + (urg ? '<span class="dash-red"></span>' : '') + esc(val(r,'messaggio')) + '</div>' +
+        '<div class="dash-msg-m">' + esc(val(r,'autore')) + ' · ' + esc(val(r,'data')) + '</div></div>';
+    }).join('');
+  }
+
+  function dashFerie(){
+    var c = state.cache;
+    if (!c.Assenze || !c.Utenti || !c.Impostazioni) return DASH_LOAD;
+    var y = new Date().getFullYear(), s = asSaldo(state.user.nome, y);
+    var mie = asRows().filter(function(a){ return a.nome.toLowerCase() === state.user.nome.toLowerCase() && a.stato === 'in attesa'; }).length;
+    return '<div style="display:flex;align-items:flex-end;gap:10px;"><div class="dash-big" style="color:' + (s.residue < 0 ? 'var(--danger)' : 'oklch(0.5 0.13 150)') + ';">' + fmtOre(s.residue) + '</div>' +
+      '<div class="as-item-sub" style="margin:0 0 3px;">giorni residui ' + y + '</div></div>' +
+      '<div class="as-item-sub">' + fmtOre(s.approvate) + ' approvati · ' + fmtOre(s.attesa) + ' in attesa' + (mie ? ' · ' + mie + ' richiest' + (mie === 1 ? 'a' : 'e') + ' in sospeso' : '') + '</div>' +
+      '<button class="btn-submit" style="margin-top:12px;padding:11px;font-size:14px;" onclick="App.asOpenRichiesta(-1,\'\',false)">+ Richiedi ferie o permesso</button>';
+  }
+
+  // ---------- Eventi del circolo (tornei, feste, chiusure…) ----------
+  var evMemo = { src: null, rows: [] };
+  function evRows(){
+    var src = state.cache.Eventi;
+    if (evMemo.src === src) return evMemo.rows;
+    evMemo.src = src;
+    evMemo.rows = (src || []).map(function(r){
+      var dal = String(val(r,'dal')||'').slice(0,10);
+      return { id: r[findKey(r,'ID')], titolo: String(val(r,'titolo')||'').trim(), dal: dal, al: String(val(r,'al')||'').slice(0,10) || dal,
+        ora: String(val(r,'ora')||''), luogo: String(val(r,'luogo')||''),
+        descrizione: String(val(r,'descrizione')||'') || String(val(r,'note')||''), foto: String(val(r,'foto')||'').trim(),
+        autore: String(val(r,'creato da')||'').trim(), pubblicato: String(val(r,'pubblicato il')||'').slice(0,10) };
+    }).filter(function(e){ return e.titolo && e.dal; }).sort(function(a,b){ return a.dal.localeCompare(b.dal); });
+    return evMemo.rows;
+  }
+  function evDi(ds){ return evRows().filter(function(e){ return e.dal <= ds && e.al >= ds; }); }
+  function evQuando(e){
+    var d1 = parseDate(e.dal), d2 = parseDate(e.al);
+    var s = e.dal === e.al ? GIORNI_LABELS[(d1.getDay()+6)%7] + ' ' + d1.getDate() + ' ' + MESI_SHORT[d1.getMonth()]
+      : d1.getDate() + ' ' + MESI_SHORT[d1.getMonth()] + ' – ' + d2.getDate() + ' ' + MESI_SHORT[d2.getMonth()];
+    return s + (e.ora ? ' · ' + e.ora : '');
+  }
+  // -- Reazioni agli eventi (🎉 👏 ❤️ 🎾) --
+  var EV_REAZIONI = ['🎉', '👏', '❤️', '🎾'];
+  function evReazioni(id){
+    var me = state.user.nome.toLowerCase(), out = {};
+    EV_REAZIONI.forEach(function(em){ out[em] = { n: 0, mia: false }; });
+    (state.cache.Reazioni_Eventi || []).forEach(function(r){
+      if (String(val(r,'evento')) !== String(id)) return;
+      var em = String(val(r,'emoji'));
+      if (!out[em]) return;
+      out[em].n++;
+      if (String(val(r,'persona')||'').toLowerCase() === me) out[em].mia = true;
+    });
+    return out;
+  }
+  function evReagisci(id, i){
+    var em = EV_REAZIONI[i];
+    if (!em || !state.cache.Reazioni_Eventi) return;
+    var me = state.user.nome, rows = state.cache.Reazioni_Eventi;
+    // Aggiorno subito lo schermo, poi salvo
+    var idx = rows.findIndex(function(r){ return String(val(r,'evento')) === String(id) && String(val(r,'emoji')) === em && String(val(r,'persona')||'').toLowerCase() === me.toLowerCase(); });
+    if (idx !== -1) rows.splice(idx, 1); else rows.push({ ID: 'tmp', Evento: String(id), Persona: me, Emoji: em });
+    state.cache.Reazioni_Eventi = rows.slice();
+    render();
+    apiPost({ action: 'reazione', evento: String(id), emoji: em, nome: me });
+  }
+  function evDataPub(e){
+    if (!e.pubblicato) return '';
+    var d = parseDate(e.pubblicato);
+    return d.getDate() + ' ' + MESI_SHORT[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  // Evento come "post": titolo, autore, testo, data/luogo, foto, reazioni
+  function evPostHtml(e, opts){
+    opts = opts || {};
+    var rx = evReazioni(e.id), pc = personColor(e.autore || 'Virtus');
+    var autore = e.autore ? '<div class="ev-post-a"><span class="dash-av" style="background:' + pc.bg + ';color:' + pc.fg + ';">' + esc(initials(e.autore)) + '</span>' +
+      esc(e.autore) + (e.pubblicato ? ' · ' + evDataPub(e) : '') + '</div>' : '';
+    return '<div class="ev-post' + (opts.flat ? ' ev-post-flat' : '') + '">' +
+      '<div class="row-between"><div class="ev-post-t">' + esc(e.titolo) + '</div>' +
+      (isTitolare(state.user) && !opts.noEdit ? '<button class="dash-link" onclick="App.evOpen(\'' + esc(e.id) + '\')">Modifica</button>' : '') + '</div>' +
+      autore +
+      (e.descrizione ? '<div class="ev-post-d">' + esc(e.descrizione) + '</div>' : '') +
+      '<div class="ev-chips"><span class="ev-chip">' + iconaS('calendario') + esc(evQuando(e)) + '</span>' +
+      (e.luogo ? '<span class="ev-chip">' + iconaS('pin') + esc(e.luogo) + '</span>' : '') + '</div>' +
+      (e.foto ? '<img class="ev-img" src="' + esc(e.foto) + '" alt="" loading="lazy" referrerpolicy="no-referrer"/>' : '') +
+      '<div class="ev-rx">' + EV_REAZIONI.map(function(em, i){
+        var r = rx[em];
+        return '<button class="' + (r.mia ? 'on' : '') + '" onclick="App.evReagisci(\'' + esc(e.id) + '\',' + i + ')">' + em + (r.n ? ' <b>' + r.n + '</b>' : '') + '</button>';
+      }).join('') + '</div></div>';
+  }
+
+  // -- Pagina "Eventi": tutti i post, in programma e passati --
+  function renderEventi(){
+    ensureLoaded('Eventi');
+    ensureLoaded('Reazioni_Eventi');
+    var add = isTitolare(state.user) ? '<button class="btn-round" onclick="App.evOpen(\'\')">+</button>' : '';
+    var top = renderTopBarWithAction('Eventi', add);
+    if (!state.cache.Eventi || !state.cache.Reazioni_Eventi) return '<div>' + top + '<div class="center-loading">Carico gli eventi…</div></div>';
+    var t = todayStr(), prossimi = evRows().filter(function(e){ return e.al >= t; });
+    var passati = evRows().filter(function(e){ return e.al < t; }).reverse().slice(0, 10);
+    return '<div class="ev-feed">' + top +
+      (prossimi.length ? prossimi.map(function(e){ return evPostHtml(e); }).join('') :
+        '<div class="empty-state">Nessun evento in programma.' + (isTitolare(state.user) ? '<br>Tocca + per pubblicare un torneo, una festa o una chiusura.' : '') + '</div>') +
+      (passati.length ? '<div class="section-label" style="margin-top:22px;">Eventi passati</div>' + passati.map(function(e){ return evPostHtml(e); }).join('') : '') +
+      '</div>';
+  }
+
+  function dashEventi(){
+    ensureLoaded('Reazioni_Eventi');
+    if (!state.cache.Eventi) return DASH_LOAD;
+    var t = todayStr(), list = evRows().filter(function(e){ return e.al >= t; }).slice(0, 4);
+    if (!list.length) return '<div class="dash-empty">Nessun evento in programma.' + (isTitolare(state.user) ? ' Aggiungi tornei, feste o chiusure con "+ Aggiungi".' : '') + '</div>';
+    // Il prossimo evento in grande, come un post; gli altri in elenco
+    var primo = evPostHtml(list[0], { flat: true });
+    return primo + list.slice(1).map(function(e){
+      var d = parseDate(e.dal);
+      return '<button class="dash-ev" onclick="App.evOpen(\'' + esc(e.id) + '\')"><div class="dash-ev-date"><small>' + MESI_SHORT[d.getMonth()] + '</small><b>' + d.getDate() + '</b></div>' +
+        '<div style="min-width:0;"><div class="dash-ev-t">' + esc(e.titolo) + '</div><div class="dash-ev-s">' + esc(evQuando(e)) + (e.luogo ? ' · ' + iconaS('pin') + ' ' + esc(e.luogo) : '') + '</div></div></button>';
+    }).join('');
+  }
+  function evOpen(id){
+    var e = id ? evRows().find(function(x){ return String(x.id) === String(id); }) : null;
+    state.evForm = e ? { id: e.id, titolo: e.titolo, dal: e.dal, al: e.al === e.dal ? '' : e.al, ora: e.ora, luogo: e.luogo, descrizione: e.descrizione, foto: e.foto }
+      : { id: '', titolo: '', dal: todayStr(), al: '', ora: '', luogo: '', descrizione: '', foto: '' };
+    state.activeModal = isTitolare(state.user) ? 'ev_form' : 'ev_dett';
+    render();
+  }
+  function evField(k, v){ if (state.evForm) state.evForm[k] = v; }
+  function evLuogo(i){ if (state.evForm) { state.evForm.luogo = EV_LUOGHI[i]; render(); } }
+  var EV_LUOGHI = ['Bar interno', 'Bar piscina', 'Ristorante', 'Campi da tennis', 'Tutto il circolo'];
+  function evSalva(){
+    var f = state.evForm;
+    if (!f || state.busy) return;
+    if (!String(f.titolo || '').trim()) { alert('Scrivi il nome dell\'evento'); return; }
+    if (!f.dal) { alert('Scegli la data'); return; }
+    if (f.al && f.al < f.dal) { alert('La data di fine è prima di quella di inizio.'); return; }
+    if (f.caricando) { alert('Attendi la fine del caricamento della foto.'); return; }
+    var data = { Titolo: f.titolo.trim(), Dal: f.dal, Al: f.al || f.dal, Ora: String(f.ora || '').trim(), Luogo: String(f.luogo || '').trim(),
+      Descrizione: String(f.descrizione || '').trim(), Foto: f.foto || '' };
+    var req = f.id ? { sheet: 'Eventi', action: 'update', id: f.id, data: data } : { sheet: 'Eventi', data: Object.assign(data, { 'Creato da': state.user.nome }) };
+    state.busy = true;
+    render();
+    apiPost(req).then(function(res){
+      state.busy = false;
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); render(); return; }
+      state.activeModal = null;
+      reload('Eventi');
+      render();
+    });
+  }
+  function evElimina(){
+    var f = state.evForm;
+    if (!f || !f.id || state.busy || !confirm('Eliminare l\'evento "' + f.titolo + '"?')) return;
+    state.busy = true;
+    render();
+    apiPost({ sheet: 'Eventi', action: 'delete', id: f.id }).then(function(res){
+      state.busy = false;
+      if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); render(); return; }
+      state.activeModal = null;
+      reload('Eventi');
+      render();
+    });
+  }
+  // Foto: la rimpicciolisco nel telefono/computer (max 1200 px) e la carico su Drive
+  function evFoto(input){
+    var f = state.evForm, file = input && input.files && input.files[0];
+    if (!f || !file) return;
+    if (!/^image\//.test(file.type)) { alert('Scegli un\'immagine (foto).'); return; }
+    var reader = new FileReader();
+    reader.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var max = 1200, sc = Math.min(1, max / Math.max(img.width, img.height));
+        var cv = document.createElement('canvas');
+        cv.width = Math.round(img.width * sc); cv.height = Math.round(img.height * sc);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        var dati = cv.toDataURL('image/jpeg', 0.82);
+        f.caricando = true; f.anteprima = dati;
+        render();
+        apiPost({ action: 'foto_evento', dati: dati }).then(function(res){
+          f.caricando = false;
+          if (!res || res.error) { f.anteprima = ''; if (!(res && res.auth)) alert((res && res.error) || 'Caricamento non riuscito'); render(); return; }
+          f.foto = res.url;
+          render();
+        });
+      };
+      img.onerror = function(){ alert('Non riesco a leggere questa immagine.'); };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  function evTogliFoto(){ if (state.evForm) { state.evForm.foto = ''; state.evForm.anteprima = ''; render(); } }
+
+  function renderEvModal(type){
+    if (state.busy) return '<div class="overlay"><div class="sheet"><div class="center-loading">Salvataggio in corso…</div></div></div>';
+    var f = state.evForm;
+    var open = '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">', close = '</div></div>';
+    if (type === 'ev_dett') {
+      var ev = evRows().find(function(x){ return String(x.id) === String(f.id); });
+      return open + '<div class="sheet-header"><div class="sheet-title">Evento</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+        (ev ? evPostHtml(ev, { flat: true, noEdit: true }) : '') + close;
+    }
+    var fotoSrc = f.anteprima || f.foto;
+    var fotoHtml = '<div class="field-label">Foto (facoltativa)</div>' +
+      (fotoSrc ? '<img class="ev-img" style="margin:0 0 8px;" src="' + esc(fotoSrc) + '" alt="" referrerpolicy="no-referrer"/>' +
+        (f.caricando ? '<div class="as-item-sub" style="margin-bottom:12px;">Carico la foto…</div>' : '<button class="btn-resolve" style="margin:0 0 14px;" onclick="App.evTogliFoto()">Togli foto</button>')
+        : '<label class="ev-upload">' + icona('documento') + 'Scegli una foto dal telefono o dal computer<input type="file" accept="image/*" onchange="App.evFoto(this)" style="display:none;"/></label>');
+    var luoghi = EV_LUOGHI.map(function(l, i){
+      return '<button class="chip-select ' + (f.luogo === l ? 'chip-select-active' : '') + '" onclick="App.evLuogo(' + i + ')">' + esc(l) + '</button>';
+    }).join('');
+    return open + '<div class="sheet-header"><div class="sheet-title">' + (f.id ? 'Modifica evento' : '📅 Nuovo evento') + '</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+      '<div class="field"><div class="field-label">Nome dell\'evento</div><input value="' + esc(f.titolo) + '" oninput="App.evField(\'titolo\', this.value)" placeholder="Es. Torneo sociale di doppio, Cena di Natale"/></div>' +
+      '<div class="field"><div class="field-label">Dal</div><input type="date" value="' + esc(f.dal) + '" onchange="App.evField(\'dal\', this.value)"/></div>' +
+      '<div class="field"><div class="field-label">Al (solo se dura più giorni)</div><input type="date" value="' + esc(f.al) + '" onchange="App.evField(\'al\', this.value)"/></div>' +
+      '<div class="field"><div class="field-label">Orario (facoltativo)</div><input value="' + esc(f.ora) + '" oninput="App.evField(\'ora\', this.value)" placeholder="Es. 20:00, oppure tutto il giorno"/></div>' +
+      '<div class="field-label">Dove</div><div class="chips-wrap">' + luoghi + '</div>' +
+      '<div class="field"><input value="' + esc(f.luogo) + '" oninput="App.evField(\'luogo\', this.value)" placeholder="Oppure scrivi il luogo"/></div>' +
+      '<div class="field"><div class="field-label">Testo del post</div><textarea oninput="App.evField(\'descrizione\', this.value)" placeholder="Es. Ultimo giorno per iscriversi! Ci vediamo in campo 🎾 — Servono 2 persone in più al bar dalle 18">' + esc(f.descrizione) + '</textarea></div>' +
+      fotoHtml +
+      '<div class="as-item-sub">' + (f.id ? '' : 'Tutto lo staff riceverà una notifica del nuovo evento.') + '</div>' +
+      '<button class="btn-submit" onclick="App.evSalva()">Salva evento</button>' +
+      (f.id ? '<button class="btn-danger-soft" onclick="App.evElimina()">Elimina evento</button>' : '') + close;
+  }
+
+  // ---------- Icone a linea (outline) ----------
+  var ICONE = {
+    home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/>',
+    calendario: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17.5h2"/>',
+    ombrellone: '<path d="M12 4a9 9 0 0 1 9 8H3a9 9 0 0 1 9-8z"/><path d="M12 12v7.5a1.5 1.5 0 0 0 3 0"/><path d="M12 2.5V4"/>',
+    megafono: '<path d="M3 10.5v3a1 1 0 0 0 1 1h2.5L12 19V5L6.5 9.5H4a1 1 0 0 0-1 1z"/><path d="M15.5 9a3.5 3.5 0 0 1 0 6"/><path d="M18 6.5a7 7 0 0 1 0 11"/>',
+    menu: '<path d="M4 6.5h16M4 12h16M4 17.5h16"/>',
+    checklist: '<rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="m8 12 3 3 5-6"/>',
+    calice: '<path d="M7.5 3h9v4.5a4.5 4.5 0 0 1-9 0V3z"/><path d="M12 12v8M8 21h8"/>',
+    scatola: '<path d="m3 7.5 9-4.5 9 4.5-9 4.5-9-4.5z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><path d="M12 12v9"/>',
+    chiave_inglese: '<path d="M14.5 6.5a4 4 0 0 0-5.3 5.2L3.5 17.4V20.5h3.1l5.7-5.7a4 4 0 0 0 5.2-5.3l-2.6 2.6-2.3-.6-.6-2.3 2.5-2.6z"/>',
+    documento: '<path d="M14 3H6.5A2 2 0 0 0 4.5 5v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8.5z"/><path d="M14 3v5.5h5.5M8.5 13h7M8.5 16.5h5"/>',
+    orologio: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    grafico: '<path d="M3.5 20.5h17"/><path d="M7 17v-5M12 17V7M17 17v-8"/>',
+    campanella: '<path d="M6 9a6 6 0 0 1 12 0c0 6.5 2.5 8.5 2.5 8.5h-17S6 15.5 6 9z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+    lucchetto: '<rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>',
+    esci: '<path d="M9.5 20.5H6a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2h3.5"/><path d="m15.5 16.5 4.5-4.5-4.5-4.5M20 12H9.5"/>',
+    persone: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 20a6.5 6.5 0 0 0-3-5.6"/>',
+    stella: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
+    pin: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    matita: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+    griglia: '<rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 3.5v17"/>',
+    attrezzi: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/>'
+  };
+  function icona(nome){ return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + (ICONE[nome] || '') + '</svg>'; }
+  function iconaS(nome){ return '<svg class="ico-s" viewBox="0 0 24 24" aria-hidden="true">' + (ICONE[nome] || '') + '</svg>'; }
+
+  // ---------- Menù in basso a icone (telefono) ----------
+  function tabKeyFor(screen){
+    if (screen === 'home') return 'home';
+    if (screen === 'planner' || screen === 'turni') return 'turni';
+    if (screen === 'assenze') return 'assenze';
+    if (screen === 'bacheca') return 'bacheca';
+    return 'altro';
+  }
+  function altroVoci(){
+    var man = isManager(state.user), gest = canManageTurni(state.user);
+    var v = [];
+    v.push({ k:'eventi', i:'stella', l:'Eventi' }, { k:'checklist', i:'checklist', l:'Checklist' }, { k:'vendita', i:'calice', l:'Vendita e prodotto' }, { k:'scorte', i:'scatola', l:'Scorte' },
+      { k:'manutenzione', i:'chiave_inglese', l:'Manutenzione' }, { k:'documenti', i:'documento', l:'Documenti' });
+    if (man) v.push({ k:'report', i:'orologio', l:'Report ore' }, { k:'cruscotto', i:'grafico', l:'Cruscotto' });
+    return v;
+  }
+  function renderTabbar(){
+    var gest = canManageTurni(state.user);
+    var turniDest = gest ? 'planner' : 'turni';
+    var tabs = [
+      { k:'home', i:'home', l:'Home', go:'home' },
+      { k:'turni', i:'calendario', l:'Turni', go: turniDest, dot: moduleUnseen(turniDest) },
+      { k:'assenze', i:'ombrellone', l:'Ferie', go:'assenze', dot: moduleUnseen('assenze') },
+      { k:'bacheca', i:'megafono', l:'Bacheca', go:'bacheca', dot: moduleUnseen('bacheca') },
+      { k:'altro', i:'menu', l:'Altro', go: null, dot: altroVoci().some(function(x){ return moduleUnseen(x.k); }) }
+    ];
+    var act = state.activeModal === 'menu_altro' ? 'altro' : tabKeyFor(state.screen);
+    return '<nav class="tabbar">' + tabs.map(function(t){
+      return '<button class="tab' + (act === t.k ? ' tab-active' : '') + '" onclick="' + (t.go ? 'App.goto(\'' + t.go + '\')' : 'App.openAltro()') + '">' +
+        '<span class="tab-ico">' + icona(t.i) + '</span>' + (t.dot ? '<span class="tab-dot"></span>' : '') + '<span>' + t.l + '</span></button>';
+    }).join('') + '</nav>';
+  }
+  function openAltro(){ state.activeModal = 'menu_altro'; render(); }
+  function renderAltroModal(){
+    var voci = altroVoci().map(function(x){
+      return '<button class="altro-item" onclick="App.goto(\'' + x.k + '\')">' + icona(x.i) + '<span>' + esc(x.l) + '</span>' +
+        (moduleUnseen(x.k) ? '<span class="tab-dot"></span>' : '') + '</button>';
+    }).join('');
+    return '<div class="overlay" onclick="App.closeModal()"><div class="sheet" onclick="event.stopPropagation()">' +
+      '<div class="sheet-header"><div class="sheet-title">Tutte le sezioni</div><button class="btn-close" onclick="App.closeModal()">&times;</button></div>' +
+      '<div class="altro-grid">' + voci + '</div>' +
+      '<button class="dash-todo" onclick="App.closeModal();App.enableNotifiche()">' + icona('campanella') + 'Attiva notifiche</button>' +
+      '<button class="dash-todo" onclick="App.closeModal();App.diagnosticaNotifiche()">' + icona('attrezzi') + 'Diagnostica notifiche</button>' +
+      '<button class="dash-todo" onclick="App.openModal(\'set_pin\')">' + icona('lucchetto') + 'Imposta il tuo PIN</button>' +
+      '<button class="dash-todo" onclick="App.closeModal();App.logout()">' + icona('esci') + 'Cambia utente</button></div></div>';
+  }
+
   // ---------- Barra laterale (titolare/responsabili su computer e tablet) ----------
   function usaBarraLaterale(){
     return state.screen !== 'login' && !!state.user && (isManager(state.user) || canManageTurni(state.user)) && window.innerWidth >= 768;
@@ -2874,14 +3447,19 @@
     if (dc) { ensureLoaded(dc.sheet); return hasUnseen(dc.sheet, dc.urgentOnly); }
     return false;
   }
+  var ICONA_SEZIONE = { home:'home', planner:'griglia', turni:'calendario', assenze:'ombrellone', report:'orologio', checklist:'checklist',
+    bacheca:'megafono', eventi:'stella', vendita:'calice', scorte:'scatola', manutenzione:'chiave_inglese', documenti:'documento', cruscotto:'grafico' };
   function renderSidebar(){
-    var items = [{ k:'home', i:'🏠', l:'Home' }];
-    if (canManageTurni(state.user)) items.push({ k:'planner', i:'🧩', l:'Pianificatore turni' });
+    var items = [{ k:'home', l:'Home' }];
+    if (canManageTurni(state.user)) items.push({ k:'planner', l:'Pianificatore turni' });
     MODULES.forEach(function(m){
-      items.push({ k: m.key, i: m.icon, l: m.label });
-      if (m.key === 'assenze' && isManager(state.user)) items.push({ k:'report', i:'⏱️', l:'Report ore' });
+      if (m.key === 'turni' && canManageTurni(state.user)) return; // per chi gestisce c'è il Pianificatore
+      items.push({ k: m.key, l: m.label });
+      if (m.key === 'assenze' && isManager(state.user)) items.push({ k:'report', l:'Report ore' });
+      if (m.key === 'bacheca') items.push({ k:'eventi', l:'Eventi' });
     });
-    if (isManager(state.user)) items.push({ k:'cruscotto', i:'📊', l:'Cruscotto' });
+    if (isManager(state.user)) items.push({ k:'cruscotto', l:'Cruscotto' });
+    items.forEach(function(it){ it.i = icona(ICONA_SEZIONE[it.k] || 'documento'); });
     var role = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
     return '<nav class="side"><div class="side-brand">🎾 Virtus Staff</div><div class="side-user">' + esc(state.user.nome) + ' · ' + role + '</div>' +
       items.map(function(it){
@@ -2889,9 +3467,9 @@
           '<span class="side-ico">' + it.i + '</span>' + esc(it.l) + (moduleUnseen(it.k) ? '<span class="side-dot"></span>' : '') + '</button>';
       }).join('') +
       '<div class="side-foot"><div class="side-sep"></div>' +
-      '<button class="side-item side-small" onclick="App.enableNotifiche()"><span class="side-ico">🔔</span>Attiva notifiche</button>' +
-      '<button class="side-item side-small" onclick="App.openModal(\'set_pin\')"><span class="side-ico">🔑</span>Imposta il tuo PIN</button>' +
-      '<button class="side-item side-small" onclick="App.logout()"><span class="side-ico">↩️</span>Cambia utente</button></div></nav>';
+      '<button class="side-item side-small" onclick="App.enableNotifiche()"><span class="side-ico">' + icona('campanella') + '</span>Attiva notifiche</button>' +
+      '<button class="side-item side-small" onclick="App.openModal(\'set_pin\')"><span class="side-ico">' + icona('lucchetto') + '</span>Imposta il tuo PIN</button>' +
+      '<button class="side-item side-small" onclick="App.logout()"><span class="side-ico">' + icona('esci') + '</span>Cambia utente</button></div></nav>';
   }
 
   // ---------- Report ore per persona (ore previste dai turni + assenze) ----------
@@ -3062,7 +3640,7 @@
   // ---------- Screen dispatch ----------
   function renderScreen(){
     switch (state.screen) {
-      case 'turni': return renderTurni();
+      case 'turni': return canManageTurni(state.user) ? renderPlanner(false) : renderPlanner(true);
       case 'checklist': return renderChecklist();
       case 'bacheca': return renderBacheca();
       case 'vendita': return renderVendita();
@@ -3070,9 +3648,10 @@
       case 'manutenzione': return renderManutenzione();
       case 'documenti': return renderDocumenti();
       case 'cruscotto': return renderCruscotto();
-      case 'planner': return canManageTurni(state.user) ? renderPlanner() : renderHome();
+      case 'planner': return canManageTurni(state.user) ? renderPlanner(false) : renderPlanner(true);
       case 'assenze': return renderAssenze();
       case 'report': return isManager(state.user) ? renderReport() : renderHome();
+      case 'eventi': return renderEventi();
       default: return renderHome();
     }
   }
@@ -3354,6 +3933,8 @@
     if (type && type.indexOf('pl_') === 0) return renderPlannerModal(type);
     if (type && type.indexOf('as_') === 0) return renderAssenzeModal(type);
     if (type && type.indexOf('rt_') === 0) return renderRtModal(type);
+    if (type && type.indexOf('ev_') === 0) return renderEvModal(type);
+    if (type === 'menu_altro') return renderAltroModal();
 
     if (type === 'ferieRange') {
       var pf = state.pendingFerie;
@@ -3553,6 +4134,7 @@
     plDragStart: plDragStart, plDragOver: plDragOver, plDragLeave: plDragLeave, plDragEnd: plDragEnd, plDrop: plDrop, plDropAzione: plDropAzione,
     plToggleDup: plToggleDup, plDuplica: plDuplica, plSpostaA: plSpostaA,
     rpPersona: rpPersona, rpShiftMonth: rpShiftMonth, rpEsporta: rpEsporta,
+    openAltro: openAltro, dashChecklist: dashChecklist, evOpen: evOpen, evReagisci: evReagisci, evFoto: evFoto, evTogliFoto: evTogliFoto, evField: evField, evLuogo: evLuogo, evSalva: evSalva, evElimina: evElimina,
     asSetTab: asSetTab, asShiftYear: asShiftYear, asShiftMonth: asShiftMonth, asOpenRichiesta: asOpenRichiesta,
     asFormField: asFormField, asFormTipo: asFormTipo, asFormPerson: asFormPerson, asFormOra: asFormOra, asInvia: asInvia,
     asDecidi: asDecidi, asAnnulla: asAnnulla, asCellClick: asCellClick, asEditSaldo: asEditSaldo,

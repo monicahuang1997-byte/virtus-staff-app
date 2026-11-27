@@ -30,6 +30,8 @@ var SCHEMA = {
   Tipi_Assenza:       ['ID', 'Nome', 'Colore', 'A ore', 'Scala ferie', 'Scala permessi', 'Approvazione'],
   Richieste_Turno:    ['ID', 'Dipendente', 'Data', 'Modello', 'Dalle', 'Alle', 'Riposo', 'Motivo', 'Stato', 'Risposta', 'Richiesto il', 'Gestito da'],
   Festivi:            ['ID', 'Data', 'Nome'],
+  Eventi:             ['ID', 'Titolo', 'Dal', 'Al', 'Ora', 'Luogo', 'Descrizione', 'Foto', 'Note', 'Creato da', 'Pubblicato il'],
+  Reazioni_Eventi:    ['ID', 'Evento', 'Persona', 'Emoji'],
   Impostazioni:       ['Chiave', 'Valore'],
   Turni:              ['ID', 'Data', 'Ora inizio', 'Ora fine', 'Dipendente', 'Modello', 'Note', 'Creato da'],
   Turni_Modello:      ['ID', 'Nome', 'Ora inizio', 'Ora fine', 'Colore'],
@@ -48,7 +50,7 @@ var SCHEMA = {
 // Schede che solo titolare e responsabili possono modificare
 var PROTETTE = { Turni: true, Turni_Modello: true, Utenti: true, Ferie: true };
 // Schede che solo la titolare può modificare (regole di ferie e permessi)
-var SOLO_TITOLARE = { Tipi_Assenza: true, Festivi: true, Impostazioni: true };
+var SOLO_TITOLARE = { Tipi_Assenza: true, Festivi: true, Impostazioni: true, Eventi: true };
 
 var TIPI_ASSENZA_INIZIALI = [
   // Nome, Colore, A ore, Scala ferie, Scala permessi, Approvazione
@@ -160,6 +162,8 @@ function doPost(e) {
     if (action === 'login') return json_(login_(body));
     if (action === 'set_pin') return json_(setPin_(body));
     if (action === 'notifica_turni') return json_(notificaTurni_(body));
+    if (action === 'reazione') return json_(reazione_(body));
+    if (action === 'foto_evento') return json_(fotoEvento_(body));
 
     var nome = body.sheet;
     if (!nome || !SCHEMA[nome]) return json_({ error: 'Scheda non valida' });
@@ -187,6 +191,11 @@ function doPost(e) {
     Object.keys(data).forEach(function (k) { if (k.toLowerCase() === 'pin') delete data[k]; }); // il PIN si cambia solo con set_pin
 
     if (action === 'add') {
+      if (nome === 'Eventi') {
+        var autore = userFromToken_(body.token);
+        data['Creato da'] = autore ? autore.nome : (data['Creato da'] || '');
+        data['Pubblicato il'] = Utilities.formatDate(new Date(), 'Europe/Rome', 'yyyy-MM-dd HH:mm');
+      }
       if (SCHEMA[nome].indexOf('ID') !== -1 && !data.ID) {
         data.ID = Date.now() + '-' + Math.floor(Math.random() * 10000);
       }
@@ -375,6 +384,44 @@ function assenze_(sh, body, action) {
   return { error: 'Azione sconosciuta' };
 }
 
+// ---------- EVENTI: reazioni e foto ----------
+// Reazione (🎉 👏 ❤️ 🎾): se c'è già la toglie, altrimenti la aggiunge
+function reazione_(body) {
+  var me = userFromToken_(body.token);
+  var chi = me ? me.nome : String(body.nome || '').trim();
+  if (!me && !getUser_(chi)) return { error: 'Nome non trovato.' };
+  var evento = String(body.evento || ''), emoji = String(body.emoji || '');
+  if (!evento || !emoji) return { error: 'Dati mancanti.' };
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Reazioni_Eventi');
+  var v = sh.getDataRange().getValues(), h = v[0].map(function (x) { return String(x).trim(); });
+  var ce = h.indexOf('Evento'), cp = h.indexOf('Persona'), cm = h.indexOf('Emoji');
+  for (var i = v.length - 1; i >= 1; i--) {
+    if (String(v[i][ce]) === evento && String(v[i][cp]).toLowerCase() === chi.toLowerCase() && String(v[i][cm]) === emoji) {
+      sh.deleteRow(i + 1);
+      return { ok: true, attiva: false };
+    }
+  }
+  appendObj_(sh, { ID: Date.now() + '-' + Math.floor(Math.random() * 10000), Evento: evento, Persona: chi, Emoji: emoji });
+  return { ok: true, attiva: true };
+}
+
+// Foto dell'evento: salvata nella cartella Drive "Virtus Staff – Foto eventi", visibile a chi ha il link
+function fotoEvento_(body) {
+  var me = userFromToken_(body.token);
+  if (!me || me.ruolo !== 'titolare') return { error: 'Solo la titolare può caricare le foto degli eventi.', auth: !me };
+  var b64 = String(body.dati || '').replace(/^data:image\/\w+;base64,/, '');
+  if (!b64) return { error: 'Foto mancante.' };
+  if (b64.length > 4000000) return { error: 'La foto è troppo grande.' };
+  var props = PropertiesService.getScriptProperties();
+  var folder = null, id = props.getProperty('FOTO_FOLDER_ID');
+  if (id) { try { folder = DriveApp.getFolderById(id); } catch (e) { folder = null; } }
+  if (!folder) { folder = DriveApp.createFolder('Virtus Staff – Foto eventi'); props.setProperty('FOTO_FOLDER_ID', folder.getId()); }
+  var nomeFile = 'evento-' + Utilities.formatDate(new Date(), 'Europe/Rome', 'yyyyMMdd-HHmmss') + '.jpg';
+  var file = folder.createFile(Utilities.newBlob(Utilities.base64Decode(b64), 'image/jpeg', nomeFile));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return { ok: true, url: 'https://drive.google.com/thumbnail?id=' + file.getId() + '&sz=w1200' };
+}
+
 // ---------- RICHIESTE DI TURNO (es. "il 3 dicembre vorrei fare la mattina") ----------
 function richiesteTurno_(sh, body, action) {
   var me = userFromToken_(body.token);
@@ -472,6 +519,9 @@ function notifyAfterAdd_(nome, data) {
       var titolo = (urgente ? '🔴 Urgente · ' : '📣 ') + 'Bacheca · ' + (data.Autore || '');
       var dest = String(data.Destinatario || '').trim();
       sendPush_(titolo, data.Messaggio || '', dest ? [dest] : null);
+    } else if (nome === 'Eventi') {
+      var quando = fmtIt_(String(data.Dal || '').slice(0, 10)) + (data.Al && data.Al !== data.Dal ? '–' + fmtIt_(String(data.Al).slice(0, 10)) : '');
+      sendPush_('📅 Nuovo evento: ' + (data.Titolo || ''), quando + (data.Ora ? ' · ' + data.Ora : '') + (data.Luogo ? ' · ' + data.Luogo : ''), null);
     }
   } catch (err) {
     Logger.log('Notifica non inviata: ' + err.message); // la riga è comunque salvata
