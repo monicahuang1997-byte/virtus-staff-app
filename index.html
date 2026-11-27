@@ -870,13 +870,19 @@
       alert('Diagnostica: questo browser non supporta i service worker (necessari per le notifiche).');
       return;
     }
+    // Solo lettura: elenca i "ricevitori" registrati senza toccarli
+    // (registrarli di nuovo senza l'ID dell'app rompeva le notifiche)
     navigator.serviceWorker.getRegistrations().then(function(regs){
-      var elenco = regs.length ? regs.map(function(r){ return '- scope: ' + r.scope + (r.active ? ' (attivo)' : ' (non attivo)'); }).join('\n') : '(nessuna registrazione trovata)';
-      navigator.serviceWorker.register('/virtus-staff-app/OneSignalSDKWorker.js', { scope: '/virtus-staff-app/' }).then(function(reg){
-        alert('Diagnostica notifiche\n\nRegistrazioni esistenti:\n' + elenco + '\n\nNuova registrazione: RIUSCITA\nScope: ' + reg.scope);
-      }).catch(function(err){
-        alert('Diagnostica notifiche\n\nRegistrazioni esistenti:\n' + elenco + '\n\nNuova registrazione: FALLITA\nErrore: ' + (err && err.message ? err.message : err));
-      });
+      var elenco = regs.length ? regs.map(function(r){
+        var sw = r.active || r.waiting || r.installing;
+        return '- ' + r.scope + (sw ? '\n  file: ' + sw.scriptURL : '') + (r.active ? ' (attivo)' : ' (non attivo)');
+      }).join('\n') : '(nessuna registrazione trovata)';
+      var stato = 'non disponibile';
+      try {
+        var OS = window.OneSignal;
+        if (OS && OS.User) stato = 'iscritto: ' + (OS.User.PushSubscription.optedIn ? 'sì' : 'no') + ' · permesso: ' + (OS.Notifications.permission ? 'sì' : 'no');
+      } catch (e) {}
+      alert('Diagnostica notifiche\n\nRicevitori registrati:\n' + elenco + '\n\nOneSignal: ' + stato);
     }).catch(function(err){
       alert('Diagnostica: errore nel leggere le registrazioni esistenti: ' + (err && err.message ? err.message : err));
     });
