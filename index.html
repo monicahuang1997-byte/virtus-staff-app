@@ -19,7 +19,12 @@
       appId: "71900c39-f127-4a4d-9635-d0aaefc73706",
       path: '/virtus-staff-app/',
       serviceWorkerParam: { scope: '/virtus-staff-app/' },
-      serviceWorkerPath: 'OneSignalSDKWorker.js'
+      serviceWorkerPath: 'OneSignalSDKWorker.js',
+      // Messaggio che arriva appena un telefono attiva le notifiche
+      welcomeNotification: {
+        title: 'Virtus Staff',
+        message: 'Notifiche attive ✅ Qui riceverai turni, ferie e avvisi del Virtus.'
+      }
     });
   });
 </script>
