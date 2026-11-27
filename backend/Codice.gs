@@ -175,8 +175,8 @@ function doPost(e) {
 
     if (SOLO_TITOLARE[nome]) {
       var tit = userFromToken_(body.token);
-      if (!tit || tit.ruolo !== 'titolare') {
-        return json_({ error: 'Queste impostazioni le può cambiare solo la titolare. Esci e rientra con il tuo PIN.', auth: !tit });
+      if (!pieniPoteri_(tit)) {
+        return json_({ error: 'Questa modifica la possono fare solo titolare e responsabile. Esci e rientra con il tuo PIN.', auth: !tit });
       }
     }
 
@@ -308,11 +308,15 @@ function getUser_(nome) {
 function isManager_(u) {
   return u.ruolo === 'titolare' || u.ruolo === 'responsabile' || !!u.gestisce;
 }
+// Titolare e responsabile hanno gli stessi poteri (approvazioni, eventi, impostazioni)
+function pieniPoteri_(u) {
+  return !!u && (u.ruolo === 'titolare' || u.ruolo === 'responsabile');
+}
 
 // ---------- FERIE E PERMESSI ----------
 function assenze_(sh, body, action) {
   var me = userFromToken_(body.token);
-  var titolare = !!(me && me.ruolo === 'titolare');
+  var titolare = pieniPoteri_(me);
   var data = body.data || {};
 
   if (action === 'add') {
@@ -408,7 +412,7 @@ function reazione_(body) {
 // Foto dell'evento: salvata nella cartella Drive "Virtus Staff – Foto eventi", visibile a chi ha il link
 function fotoEvento_(body) {
   var me = userFromToken_(body.token);
-  if (!me || me.ruolo !== 'titolare') return { error: 'Solo la titolare può caricare le foto degli eventi.', auth: !me };
+  if (!pieniPoteri_(me)) return { error: 'Solo titolare e responsabile possono caricare le foto degli eventi.', auth: !me };
   var b64 = String(body.dati || '').replace(/^data:image\/\w+;base64,/, '');
   if (!b64) return { error: 'Foto mancante.' };
   if (b64.length > 4000000) return { error: 'La foto è troppo grande.' };
@@ -425,7 +429,7 @@ function fotoEvento_(body) {
 // ---------- RICHIESTE DI TURNO (es. "il 3 dicembre vorrei fare la mattina") ----------
 function richiesteTurno_(sh, body, action) {
   var me = userFromToken_(body.token);
-  var titolare = !!(me && me.ruolo === 'titolare');
+  var titolare = pieniPoteri_(me);
   var data = body.data || {};
 
   if (action === 'add') {
@@ -482,7 +486,7 @@ function tipoAssenza_(nome) {
 }
 function titolari_() {
   return readRows_('Utenti')
-    .filter(function (u) { return String(u.Ruolo || '').trim().toLowerCase() === 'titolare'; })
+    .filter(function (u) { var r = String(u.Ruolo || '').trim().toLowerCase(); return r === 'titolare' || r === 'responsabile'; })
     .map(function (u) { return String(u.Nome).trim(); });
 }
 function periodoTxt_(r) {
