@@ -19,7 +19,7 @@
  * NOTIFICHE: chiave OneSignal in Impostazioni progetto -> Proprietà script, nome ONESIGNAL_API_KEY.
  */
 
-var ONESIGNAL_APP_ID = '7ad21254-c48a-4b34-8581-08d2abd4d3c9';
+var ONESIGNAL_APP_ID = '71900c39-f127-4a4d-9635-d0aaefc73706';
 var APP_URL = 'https://monicahuang1997-byte.github.io/virtus-staff-app/';
 var TOKEN_DAYS = 30;
 
