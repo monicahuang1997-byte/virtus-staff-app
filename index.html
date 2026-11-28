@@ -1000,8 +1000,6 @@
     if (isManager(state.user)) {
       tiles += '<button class="home-tile" onclick="App.goto(\'report\')">' +
         '<div class="home-tile-icon">⏱️</div><div class="home-tile-label">Report ore</div></button>';
-      tiles += '<button class="home-tile" onclick="App.goto(\'cruscotto\')">' +
-        '<div class="home-tile-icon">📊</div><div class="home-tile-label">Cruscotto</div></button>';
     }
     var roleLabel = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
     var oggi = new Date();
@@ -3590,7 +3588,7 @@
     var v = [];
     v.push({ k:'assenze', i:'ombrellone', l:'Ferie e permessi' }, { k:'vendita', i:'calice', l:'Vendita e prodotto' }, { k:'scorte', i:'scatola', l:'Scorte' },
       { k:'manutenzione', i:'chiave_inglese', l:'Manutenzione' }, { k:'documenti', i:'documento', l:'Documenti' });
-    if (man) v.push({ k:'report', i:'orologio', l:'Report ore' }, { k:'cruscotto', i:'grafico', l:'Cruscotto' });
+    if (man) v.push({ k:'report', i:'orologio', l:'Report ore' });
     return v;
   }
   function renderTabbar(){
@@ -3668,7 +3666,6 @@
       items.push({ k: m.key, l: m.label });
       if (m.key === 'assenze' && isManager(state.user)) items.push({ k:'report', l:'Report ore' });
     });
-    if (isManager(state.user)) items.push({ k:'cruscotto', l:'Cruscotto' });
     items.forEach(function(it){ it.i = icona(ICONA_SEZIONE[it.k] || 'documento'); });
     var role = state.user.ruolo === 'titolare' ? 'Titolare' : state.user.ruolo === 'responsabile' ? 'Responsabile' : 'Dipendente';
     return '<nav class="side"><div class="side-brand">🎾 Virtus Staff</div><div class="side-user">' + esc(state.user.nome) + ' · ' + role + '</div>' +
@@ -3858,7 +3855,7 @@
       case 'scorte': return renderScorte();
       case 'manutenzione': return renderManutenzione();
       case 'documenti': return renderDocumenti();
-      case 'cruscotto': return renderCruscotto();
+      case 'cruscotto': return renderHome(); // sezione tolta: ora c'è il Report ore
       case 'planner': return canManageTurni(state.user) ? renderPlanner(false) : renderPlanner(true);
       case 'assenze': return renderAssenze();
       case 'report': return isManager(state.user) ? renderReport() : renderHome();
