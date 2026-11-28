@@ -553,8 +553,10 @@ function notificaTurni_(body) {
   var lista = Object.keys(nomi);
   if (!lista.length) return { ok: true, inviati: 0 };
   var attive = !!PropertiesService.getScriptProperties().getProperty('ONESIGNAL_API_KEY');
-  sendPush_('🗓️ Turni pubblicati', 'Sono pronti i turni dal ' + fmtIt_(dal) + ' al ' + fmtIt_(al) + '. Apri l\'app per vederli.', lista);
-  return { ok: true, inviati: lista.length, notificheAttive: attive };
+  var esito = sendPush_('🗓️ Turni pubblicati', 'Sono pronti i turni dal ' + fmtIt_(dal) + ' al ' + fmtIt_(al) + '. Apri l\'app per vederli.', lista);
+  // OneSignal dice quali nomi non ha trovato (persone che non hanno ancora attivato le notifiche)
+  var non = esitoNonRaggiunti_(esito, lista);
+  return { ok: true, inviati: lista.length, raggiunti: lista.length - non.length, nonRaggiunti: non, notificheAttive: attive };
 }
 function fmtIt_(s) { var p = String(s).split('-'); return p.length === 3 ? p[2] + '/' + p[1] : s; }
 
@@ -581,9 +583,28 @@ function sendPush_(titolo, testo, persone) {
     muteHttpExceptions: true
   });
   Logger.log('OneSignal: ' + res.getResponseCode() + ' ' + res.getContentText());
+  try { return JSON.parse(res.getContentText()); } catch (e) { return null; }
 }
 
 // Prova le notifiche: seleziona "testNotifica" e premi Esegui
+// Elenco dei nomi che OneSignal non ha potuto raggiungere
+function esitoNonRaggiunti_(esito, lista) {
+  if (!esito) return lista.slice();
+  var err = esito.errors;
+  if (err && err.invalid_aliases && err.invalid_aliases.external_id) return err.invalid_aliases.external_id;
+  if (Array.isArray(err) && String(err.join(' ')).indexOf('not subscribed') !== -1) return lista.slice();
+  if (!esito.id) return lista.slice();
+  return [];
+}
+
+// Prova: notifica a UNA persona (cambia il nome qui sotto e premi Esegui)
+function testNotificaPersona() {
+  var nome = 'Monica';
+  var esito = sendPush_('Prova per ' + nome, 'Se leggi questo, il tuo telefono è collegato al tuo nome ✅', [nome]);
+  var non = esitoNonRaggiunti_(esito, [nome]);
+  Logger.log(non.length ? '❌ ' + nome + ' NON raggiunta: il telefono non è collegato al nome. Apri l\'app → Altro → Attiva notifiche.' : '✅ Notifica inviata a ' + nome);
+}
+
 function testNotifica() {
   sendPush_('Prova Virtus Staff', 'Se leggi questo, le notifiche funzionano 🎾', null);
 }

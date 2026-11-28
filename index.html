@@ -856,6 +856,8 @@
           return;
         }
         OneSignal.Notifications.requestPermission().then(function(){
+          // Collega (di nuovo) il nome della persona a questo telefono: serve per le notifiche personali
+          try { if (state.user && state.user.nome) OneSignal.login(state.user.nome).catch(function(){}); } catch (e) {}
           if (!OneSignal.Notifications.permission) {
             finish('Permesso non concesso (hai rifiutato, o le notifiche sono bloccate nelle impostazioni del telefono per questa app).');
             return;
@@ -865,7 +867,7 @@
             tries++;
             var sub = OneSignal.User.PushSubscription;
             if (sub.id || tries >= 10) {
-              var info = 'Permesso: concesso\nIscritto: ' + (sub.optedIn ? 'si' : 'no') + '\nID iscrizione: ' + (sub.id || '(nessuno dopo ' + tries + ' tentativi)');
+              var info = 'Permesso: concesso\nIscritto: ' + (sub.optedIn ? 'si' : 'no') + '\nCollegato al nome: ' + (state.user ? state.user.nome : '-') + '\nID iscrizione: ' + (sub.id || '(nessuno dopo ' + tries + ' tentativi)');
               finish('Notifiche attivate su questo telefono.\n\n' + info);
             } else {
               setTimeout(check, 1000);
@@ -895,7 +897,7 @@
       var stato = 'non disponibile';
       try {
         var OS = window.OneSignal;
-        if (OS && OS.User) stato = 'iscritto: ' + (OS.User.PushSubscription.optedIn ? 'sì' : 'no') + ' · permesso: ' + (OS.Notifications.permission ? 'sì' : 'no');
+        if (OS && OS.User) stato = 'iscritto: ' + (OS.User.PushSubscription.optedIn ? 'sì' : 'no') + ' · permesso: ' + (OS.Notifications.permission ? 'sì' : 'no') + ' · nome collegato: ' + (OS.User.externalId || 'NESSUNO');
       } catch (e) {}
       alert('Diagnostica notifiche\n\nRicevitori registrati:\n' + elenco + '\n\nOneSignal: ' + stato);
     }).catch(function(err){
@@ -2053,7 +2055,8 @@
       if (!res || res.error) { if (!(res && res.auth)) alert((res && res.error) || 'Errore'); return; }
       if (!res.inviati) alert('Nessuno ha turni in questa settimana.');
       else if (!res.notificheAttive) alert('Le notifiche non sono ancora attive (manca la chiave OneSignal). Persone con turni: ' + res.inviati + '.');
-      else alert('Notifica inviata a ' + res.inviati + ' persone.');
+      else if (res.nonRaggiunti && res.nonRaggiunti.length) alert('Notifica inviata a ' + (res.raggiunti || 0) + ' su ' + res.inviati + ' persone.\n\nNon raggiunti: ' + res.nonRaggiunti.join(', ') + '.\nNon hanno ancora attivato le notifiche (Altro → Attiva notifiche).');
+      else alert('Notifica inviata a tutte le ' + res.inviati + ' persone con turni ✅');
     });
   }
 
