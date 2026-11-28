@@ -23,7 +23,7 @@
       // Messaggio che arriva appena un telefono attiva le notifiche
       welcomeNotification: {
         title: 'Virtus Staff',
-        message: 'Notifiche attive ✅ Qui riceverai turni, ferie e avvisi del Virtus.'
+        message: 'Notifiche attive ✅ Qui riceverai turni, ferie e avvisi della Virtus.'
       }
     });
   });
@@ -3033,7 +3033,7 @@
       .forEach(function(s){ ensureLoaded(s); });
     if (man) ['Scorte','Manutenzione','Richieste_Turno'].forEach(function(s){ ensureLoaded(s); });
     var col1 = dashCard(icona('calendario') + 'I miei prossimi turni', dashLink('Vedi tutti →', 'App.goto(\'' + (canManageTurni(state.user) ? 'planner' : 'turni') + '\')'), dashMieiTurni()) +
-      dashCard(icona('persone') + 'Oggi al Virtus', '', dashOggi());
+      dashCard(icona('persone') + 'Oggi alla Virtus', '', dashOggi());
     var col2 = dashCard(icona('checklist') + 'Da fare', '', dashDaFare()) +
       dashCard(icona('megafono') + 'Bacheca', dashLink('Vedi tutto →', 'App.newsVai(\'avvisi\')'), dashBacheca());
     var col3 = dashCard(icona('ombrellone') + 'Le mie ferie', dashLink('Apri →', 'App.goto(\'assenze\')'), dashFerie()) +
