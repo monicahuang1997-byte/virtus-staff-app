@@ -587,14 +587,23 @@ function sendPush_(titolo, testo, persone) {
 }
 
 // Prova le notifiche: seleziona "testNotifica" e premi Esegui
-// Elenco dei nomi che OneSignal non ha potuto raggiungere
+// Chiede a OneSignal se una persona (per nome) ha almeno un dispositivo con le notifiche attive
+function haNotificheAttive_(nome) {
+  var key = String(PropertiesService.getScriptProperties().getProperty('ONESIGNAL_API_KEY') || '').replace(/\s+/g, '');
+  if (!key) return false;
+  var auth = /^os_v2_/.test(key) ? 'Key ' + key : 'Basic ' + key;
+  var res = UrlFetchApp.fetch('https://api.onesignal.com/apps/' + ONESIGNAL_APP_ID + '/users/by/external_id/' + encodeURIComponent(nome), {
+    method: 'get', headers: { Authorization: auth }, muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) return false;
+  try {
+    var subs = JSON.parse(res.getContentText()).subscriptions || [];
+    return subs.some(function (x) { return /Push/i.test(String(x.type)) && x.enabled !== false && x.notification_types !== -2 && x.notification_types !== 0; });
+  } catch (e) { return false; }
+}
+// Elenco dei nomi che non hanno notifiche attive (quindi non raggiunti)
 function esitoNonRaggiunti_(esito, lista) {
-  if (!esito) return lista.slice();
-  var err = esito.errors;
-  if (err && err.invalid_aliases && err.invalid_aliases.external_id) return err.invalid_aliases.external_id;
-  if (Array.isArray(err) && String(err.join(' ')).indexOf('not subscribed') !== -1) return lista.slice();
-  if (!esito.id) return lista.slice();
-  return [];
+  return lista.filter(function (n) { return !haNotificheAttive_(n); });
 }
 
 // Prova: notifica a UNA persona (cambia il nome qui sotto e premi Esegui)
@@ -602,6 +611,7 @@ function testNotificaPersona() {
   var nome = 'Monica';
   var esito = sendPush_('Prova per ' + nome, 'Se leggi questo, il tuo telefono è collegato al tuo nome ✅', [nome]);
   var non = esitoNonRaggiunti_(esito, [nome]);
+  Logger.log('Risposta OneSignal: ' + JSON.stringify(esito));
   Logger.log(non.length ? '❌ ' + nome + ' NON raggiunta: il telefono non è collegato al nome. Apri l\'app → Altro → Attiva notifiche.' : '✅ Notifica inviata a ' + nome);
 }
 
